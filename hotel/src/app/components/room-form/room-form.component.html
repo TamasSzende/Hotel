@@ -1,0 +1,83 @@
+<div class="container">
+  <h2>Register New Room</h2>
+  <hr/>
+  <form (ngSubmit)="submit()" [formGroup]="roomForm">
+
+    <div class="form-group">
+      <label for="from">Room Name</label>
+      <input
+        class="form-control"
+        formControlName="name"
+        id="from"
+        name="from"
+        placeholder="Enter name for the room"
+      />
+      <small *ngIf="roomForm.get('name').errors?.serverError" class="text-danger">
+        {{roomForm.get('name').errors['serverError']}}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label
+        for="numberOfBeds">Number of beds</label>
+      <input
+        class="form-control"
+        formControlName="numberOfBeds"
+        id="numberOfBeds"
+        placeholder="Enter the number of people that can sleep in the room"
+        type="number"
+      />
+      <small *ngIf="roomForm.get('numberOfBeds').errors?.serverError" class="text-danger">
+        {{roomForm.get('numberOfBeds').errors['serverError']}}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label
+        for="pricePerNight">Price per night</label>
+      <input
+        class="form-control"
+        formControlName="pricePerNight"
+        id="pricePerNight"
+        placeholder="Enter the price per night"
+        type="number"
+      />
+      <small *ngIf="roomForm.get('pricePerNight').errors?.serverError" class="text-danger">
+        {{roomForm.get('pricePerNight').errors['serverError']}}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label
+        for="description">Description</label>
+      <textarea
+        aria-multiline="true"
+        class="form-control"
+        formControlName="description"
+        id="description"
+        placeholder="Enter room description"
+        rows="3"
+      ></textarea>
+      <small *ngIf="roomForm.get('description').errors?.serverError" class="text-danger">
+        {{roomForm.get('description').errors['serverError']}}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label
+        for="imageUrl">Image</label>
+      <input
+        class="form-control"
+        formControlName="imageUrl"
+        id="imageUrl"
+        placeholder="Enter an url for the room image"
+      />
+      <small *ngIf="roomForm.get('imageUrl').errors?.serverError" class="text-danger">
+        {{roomForm.get('imageUrl').errors['serverError']}}
+      </small>
+    </div>
+
+    <br/>
+    <button class="btn btn-primary my-buttons">Save Room</button>
+  </form>
+</div>

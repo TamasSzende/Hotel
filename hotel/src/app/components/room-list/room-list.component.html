@@ -1,0 +1,17 @@
+<div class="container">
+
+  <div *ngFor="let room of roomListItems">
+    <div class="row">
+      <div class="col-auto">
+        <img (click)="details(room.id)" alt="Room" class="room-list-item__image" src="{{room.imageUrl}}"/>
+      </div>
+      <div class="col text-left">
+        <h3>{{room.name}}</h3>
+        <p><strong>Number of beds: </strong> {{room.numberOfBeds}}</p>
+        <p><strong>Price per night: </strong> {{room.pricePerNight}}</p>
+      </div>
+    </div>
+  </div>
+
+
+</div>
