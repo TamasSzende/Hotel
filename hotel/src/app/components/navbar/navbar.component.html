@@ -1,16 +1,29 @@
-<nav class="navbar navbar-light bg-light navbar-expand-lg fixed-top">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/">Hotel</a>
-    <button aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed"
-            data-target="#myNavbar" data-toggle="collapse" type="button">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+  <a id="nav-index" class="navbar-brand" routerLink="/">hotel</a>
+  <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#navbar"
+          aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <div class="navbar-collapse collapse" id="myNavbar">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item"><a class="nav-link" routerLink="/room-list">Room List</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/room-form">Create Room</a></li>
-      </ul>
-    </div>
+  <div id="navbar" class="navbar-collapse collapse">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+
+      <li class="nav-item">
+        <a class="nav-link" id="hotel-form-link" routerLink="/hotel-form" routerLinkActive="active">New Hotel</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" id="hotel-list-link" routerLink="/hotel-list" routerLinkActive="active">Hotel list</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" id="room-form-link" routerLink="/room-form" routerLinkActive="active">New Room</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" id="room-list-link" routerLink="/room-list" routerLinkActive="active">Room list</a>
+      </li>
+
+    </ul>
   </div>
 </nav>

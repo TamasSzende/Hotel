@@ -1,9 +1,7 @@
-export interface RoomFormData {
+import {RoomFeatureTypeOptionModel} from "./roomFeatureTypeOption.model";
+import {RoomTypeOptionModel} from "./roomTypeOption.model";
 
-  name: string;
-  numberOfBeds: number;
-  pricePerNight: number;
-  description: string;
-  imageUrl: string;
-
+export interface RoomFormDataModel {
+	roomType: RoomTypeOptionModel[];
+	roomFeatures: RoomFeatureTypeOptionModel[];
 }

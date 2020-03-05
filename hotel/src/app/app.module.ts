@@ -6,6 +6,9 @@ import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {RoomFormComponent} from './components/room-form/room-form.component';
 import {RoomListComponent} from './components/room-list/room-list.component';
+import {HotelListComponent} from "./components/hotel-list/hotel-list.component";
+import {HotelFormComponent} from "./components/hotel-form/hotel-form.component";
+import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.component";
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RoomDetailsComponent} from './components/room-details/room-details.component';
@@ -16,7 +19,10 @@ import {RoomDetailsComponent} from './components/room-details/room-details.compo
     NavbarComponent,
     RoomFormComponent,
     RoomListComponent,
-    RoomDetailsComponent
+    RoomDetailsComponent,
+    HotelFormComponent,
+    HotelListComponent,
+    HotelDetailsComponent,
   ],
   imports: [
     HttpClientModule,

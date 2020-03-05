@@ -10,19 +10,39 @@ import {Router} from "@angular/router";
 })
 export class RoomListComponent implements OnInit {
 
-  roomListItems: Array<RoomListItemModel>;
+  roomList: RoomListItemModel[] = [];
 
   constructor(private roomService: RoomService,
               private router: Router) {
   }
 
   ngOnInit() {
+    this.listRoom();
+  }
+
+  listRoom = () => {
     this.roomService.getRoomList().subscribe(
-      roomListItems => this.roomListItems = roomListItems
+      (roomList: RoomListItemModel[]) => {
+        this.roomList = roomList;
+      }
+    );
+  };
+
+  deleteRoom(id: number): void {
+    this.roomService.deleteRoom(id).subscribe(
+      (response: RoomListItemModel[]) => {
+        this.roomList = response;
+      },
+      error => console.warn(error),
     );
   }
 
-  details(id: number) {
-    this.router.navigate(['/room-details/', id]);
+  updateRoom(id: number): void {
+    this.router.navigate(['/room-form/', id])
   }
+
+  roomDetail(id: number): void {
+    this.router.navigate(['/room-detail/', id])
+  }
+
 }

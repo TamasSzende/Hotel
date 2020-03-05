@@ -1,0 +1,103 @@
+<div class="container">
+
+<h2>Hotel-detail</h2>
+<br>
+<h5>
+  Name:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.name}}
+</p>
+<br>
+
+<h5>
+  Postal code:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.postalCode}}
+</p>
+<br>
+
+<h5>
+  City:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.city}}
+</p>
+<br>
+
+<h5>
+  Street address:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.streetAddress}}
+</p>
+<br>
+
+<h5>
+  Hotel type:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.hotelType}}
+</p>
+<br>
+
+<h5>
+  Hotel capacity:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.hotelCapacity}}
+</p>
+<br>
+
+<h5>
+  Hotel image:
+</h5>
+<img [src]="hotel.hotelImageUrl" *ngIf="hotel.hotelImageUrl" alt="hotelImage" style="width: 100%">
+
+<br>
+
+<h5>
+  Description:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.description}}
+</p>
+<br>
+
+<h5>
+  Hotel features:
+</h5><p style=" white-space: pre-wrap;">
+  {{hotel?.hotelFeatures}}
+</p>
+<br>
+
+<h5>
+  Rooms:
+</h5>
+<div *ngFor="let room of hotel?.rooms" class="card mb-3">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img [src]="room.roomImageUrl" *ngIf="room.roomImageUrl" class="card-img" alt="roomImage">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ room.roomName }} - {{ room.roomType }}</h5>
+        <p class="card-text">
+          Number of beds: {{ room.numberOfBeds }}    - Room area: {{ room.roomArea }}    - Price per Night
+          : {{ room.pricePerNight }}
+        </p>
+        <br>
+        <p class="card-text">
+          {{ room.description}}
+        </p>
+        <p class="card-text"><small *ngFor="let roomFeature of room.roomFeatures"
+                                    class="text-muted">{{ roomFeature }}</small></p>
+        <div class="btn-toolbar" role="toolbar">
+          <div class="btn-group mr-4">
+            <button class="btn btn-primary btn-sm">details</button>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-secondary btn-sm">&nbsp;&nbsp;edit&nbsp;&nbsp;</button>
+            <button class="btn btn-danger btn-sm">delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

@@ -1,67 +1,94 @@
 package com.progmasters.hotel.service;
 
-import com.progmasters.hotel.domain.Room;
-import com.progmasters.hotel.dto.RoomDetails;
-import com.progmasters.hotel.dto.RoomForm;
-import com.progmasters.hotel.dto.RoomListItem;
+import com.progmasters.hotel.domain.Hotel;
+import com.progmasters.hotel.domain.HotelFeatureType;
+import com.progmasters.hotel.domain.HotelType;
+import com.progmasters.hotel.dto.*;
+import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * Created by szfilep.
- */
 @Service
+@Transactional
 public class HotelService {
 
-    private RoomRepository roomRepository;
+	private HotelRepository hotelRepository;
+	private RoomRepository roomRepository;
 
-    @Autowired
-    public HotelService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
-    }
+	@Autowired
+	public HotelService(RoomRepository roomRepository, HotelRepository hotelRepository) {
+		this.hotelRepository = hotelRepository;
+		this.roomRepository = roomRepository;
+	}
 
-    public List<RoomListItem> getRoomList() {
-        List<RoomListItem> roomListItems = new ArrayList<>();
-        List<Room> rooms = roomRepository.findAll();
-        for (Room room : rooms) {
-            RoomListItem item = new RoomListItem();
-            updateRoomListItemValues(item, room);
-            roomListItems.add(item);
-        }
-        return roomListItems;
-    }
+	public List<Hotel> findAllHotel() {
+		return hotelRepository.findAll();
+	}
 
-    public void createRoom(RoomForm roomForm) {
-        roomRepository.save(new Room(roomForm));
-    }
+	public List<HotelListItem> getHotelListItemList() {
+		return findAllHotel().stream().map(HotelListItem::new).collect(Collectors.toList());
+	}
 
-    public RoomDetails getRoomDetails(Long roomId) {
-        RoomDetails roomDetails = new RoomDetails();
+	public List<HotelFeatureTypeOption> getHotelFeatureTypeOptionList() {
+		return Arrays.stream(HotelFeatureType.values()).map(HotelFeatureTypeOption::new).collect(Collectors.toList());
+	}
+	public List<HotelTypeOption> getHotelTypeOptionList() {
+		return Arrays.stream(HotelType.values()).map(HotelTypeOption::new).collect(Collectors.toList());
+	}
 
-        Optional<Room> room = roomRepository.findById(roomId);
-        if (room.isPresent()) {
-            roomDetails.setId(room.get().getId());
-            roomDetails.setName(room.get().getName());
-            roomDetails.setNumberOfBeds(room.get().getNumberOfBeds());
-            roomDetails.setPricePerNight(room.get().getPricePerNight());
-            roomDetails.setDescription(room.get().getDescription());
-            roomDetails.setImageUrl(room.get().getImageUrl());
-        } else {
-            throw new IllegalArgumentException("There is no Room for this id:" + roomId);
-        }
-        return roomDetails;
-    }
+	public void saveHotel(HotelCreateItem hotelCreateItem) {
+		Hotel hotel = new Hotel(hotelCreateItem);
+		this.hotelRepository.save(hotel);
+	}
 
-    private void updateRoomListItemValues(RoomListItem item, Room room) {
-        item.setId(room.getId());
-        item.setName(room.getName());
-        item.setNumberOfBeds(room.getNumberOfBeds());
-        item.setPricePerNight(room.getPricePerNight());
-        item.setImageUrl(room.getImageUrl());
-    }
+	public HotelDetailItem getHotelDetailItem (Long id) {
+		HotelDetailItem hotelDetailItem = null;
+		 Optional<Hotel> hotelOptional = hotelRepository.findById(id);
+		if (hotelOptional.isPresent()) {
+			hotelDetailItem = new HotelDetailItem(hotelOptional.get());
+		}
+		return hotelDetailItem;
+	}
+
+	public HotelCreateItem getHotelCreateItem (Long id) {
+		HotelCreateItem hotelCreateItem = null;
+		 Optional<Hotel> hotelOptional = hotelRepository.findById(id);
+		if (hotelOptional.isPresent()) {
+			hotelCreateItem = new HotelCreateItem(hotelOptional.get());
+		}
+		return hotelCreateItem;
+	}
+
+	public Boolean updateHotel(HotelCreateItem hotelCreateItem, Long id) {
+		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
+		if (hotelOptional.isPresent()) {
+			Hotel hotel = new Hotel(hotelCreateItem);
+
+			hotel.setId(id);
+			this.hotelRepository.save(hotel);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean deleteHotel(Long id) {
+		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
+		if (hotelOptional.isPresent()) {
+			Hotel hotel = hotelOptional.get();
+            //TODO megnézni máshol van-e...
+			hotelRepository.delete(hotel);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

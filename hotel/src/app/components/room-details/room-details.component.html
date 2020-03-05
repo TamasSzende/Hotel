@@ -1,1 +1,69 @@
-<p>room-details works!</p>
+<div class="container">
+
+<h2>Room-detail</h2>
+<br>
+<h5>
+  Hotel:
+</h5>
+<p style=" white-space: pre-wrap;">
+  {{ room.hotelId }} - {{ room.hotelName }}
+
+<h5>
+  Room name:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.roomName}}
+</p>
+<br>
+
+<h5>
+  Room type:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.roomType}}
+</p>
+<br>
+
+<h5>
+  Number of beds:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.numberOfBeds}}
+</p>
+<br>
+
+<h5>
+  Room area:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.roomArea}}
+</p>
+<br>
+
+<h5>
+  Price per night:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.pricePerNight}}
+</p>
+<br>
+
+<h5>
+  Room image:
+</h5>
+
+<img [src]="room.roomImageUrl" *ngIf="room.roomImageUrl" alt="roomImage" style="width: 100%" >
+
+<br>
+
+<h5>
+  Description:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.description}}
+</p>
+<br>
+
+<h5>
+  Room features:
+</h5><p style=" white-space: pre-wrap;">
+  {{room?.roomFeatures}}
+</p>
+<br>
+<!--<button class="btn btn-primary btn-sm" (click)="backToList(room.id)">details</button>-->
+
+</div>

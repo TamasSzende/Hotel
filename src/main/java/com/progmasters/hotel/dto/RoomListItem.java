@@ -1,57 +1,38 @@
 package com.progmasters.hotel.dto;
 
-/**
- * Created by szfilep.
- */
+import com.progmasters.hotel.domain.Room;
+import com.progmasters.hotel.domain.RoomFeatureType;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class RoomListItem {
 
     private Long id;
-
-    private String name;
-
+    private String roomName;
+    private String roomType;
     private Integer numberOfBeds;
+    private Integer roomArea;
+    private Double pricePerNight;
+    private String roomImageUrl;
+    private String description;
+    private List<String> roomFeatures = new ArrayList<>();
 
-    private Integer pricePerNight;
-
-    private String imageUrl;
-
-    public Long getId() {
-        return id;
+    RoomListItem() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public RoomListItem(Room room) {
+        this.id = room.getId();
+        this.roomName = room.getRoomName();
+        this.roomType = room.getRoomType().getDisplayName();
+        this.numberOfBeds = room.getNumberOfBeds();
+        this.roomArea = room.getRoomArea();
+        this.pricePerNight = room.getPricePerNight();
+        this.roomImageUrl = room.getRoomImageUrl();
+        this.description = room.getDescription();
+        for (RoomFeatureType roomFeaturesType : room.getRoomFeatures()) {
+            this.roomFeatures.add(roomFeaturesType.getDisplayName());
+        }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getNumberOfBeds() {
-        return numberOfBeds;
-    }
-
-    public void setNumberOfBeds(Integer numberOfBeds) {
-        this.numberOfBeds = numberOfBeds;
-    }
-
-    public Integer getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public void setPricePerNight(Integer pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 }

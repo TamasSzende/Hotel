@@ -1,5 +1,5 @@
-export interface RoomListItemModel {
-  id: number;
+export interface RoomCreateItemModel {
+  id?: number;
   roomName: string;
   roomType: string;
   numberOfBeds: number;
@@ -8,4 +8,6 @@ export interface RoomListItemModel {
   roomImageUrl: string;
   description: string;
   roomFeatures: string[];
+  hotelId?: number;
+
 }
