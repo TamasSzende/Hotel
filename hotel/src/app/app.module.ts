@@ -12,6 +12,7 @@ import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.com
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RoomDetailsComponent} from './components/room-details/room-details.component';
+import {RegistrationComponent} from './components/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {RoomDetailsComponent} from './components/room-details/room-details.compo
     HotelFormComponent,
     HotelListComponent,
     HotelDetailsComponent,
+    RegistrationComponent,
   ],
   imports: [
     HttpClientModule,
