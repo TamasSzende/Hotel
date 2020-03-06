@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.progmasters</groupId>
-    <artifactId>angular-hotel</artifactId>
+    <artifactId>project</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>angular-hotel</name>
     <description>Book your holiday now</description>
