@@ -45,6 +45,9 @@ public class RoomCreateItem {
         this.hotelId = room.getHotel().getId();
     }
 
+    RoomCreateItem() {
+    }
+
     public String getRoomName() {
         return roomName;
     }

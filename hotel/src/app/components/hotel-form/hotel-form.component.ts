@@ -6,7 +6,7 @@ import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.m
 import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {HotelCreateItemModel} from "../../models/hotelCreateItem.model";
-import {validationHandler} from "../../utils/validationHandler";
+// import {validationHandler} from "../../utils/validationHandler";
 
 @Component({
 	selector: 'app-hotel-form',
@@ -57,7 +57,7 @@ export class HotelFormComponent implements OnInit {
 
   onSubmit() {
     const data = {...this.hotelForm.value};
-    data.roomFeatures = this.createHotelFeaturesArrayToSend();
+    data.hotelFeatures = this.createHotelFeaturesArrayToSend();
     this.id ? this.updateHotel(data) : this.createHotel(data);
   }
 
@@ -65,7 +65,7 @@ export class HotelFormComponent implements OnInit {
 		this.hotelService.createHotel(data).subscribe(
 			() => {
 				this.router.navigate(['/hotel-list']);
-			},			error => validationHandler(error, this.hotelForm),
+			},			error => console.error(error),
 		);
 	}
 
@@ -90,14 +90,14 @@ export class HotelFormComponent implements OnInit {
     this.hotelService.updateHotel(data, this.id).subscribe(
       () => {
         this.router.navigate(['/hotel-list']);
-      },			error => validationHandler(error, this.hotelForm),
+      },			error => console.error(error),
     );
   }
 
   private createHotelFeaturesCheckboxControl() {
     this.hotelFeatureTypeOption.forEach(() => {
         const control = new FormControl(false);
-        (this.hotelForm.controls.roomFeatures as FormArray).push(control);
+        (this.hotelForm.controls.hotelFeatures as FormArray).push(control);
       }
     );
   }

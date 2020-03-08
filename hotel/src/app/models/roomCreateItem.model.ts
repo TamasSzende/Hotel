@@ -9,5 +9,4 @@ export interface RoomCreateItemModel {
   description: string;
   roomFeatures: string[];
   hotelId?: number;
-
 }

@@ -41,8 +41,6 @@ public class Room {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String imageUrl;
-
     @OneToMany(mappedBy = "room")
     private List<Reservation> reservations;
 
@@ -101,10 +99,6 @@ public class Room {
         return description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
     public List<Reservation> getReservations() {
         return reservations;
     }
@@ -147,10 +141,6 @@ public class Room {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public void setReservations(List<Reservation> reservations) {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
+import {RoomService} from "../../services/room.service";
 
 @Component({
   selector: 'app-hotel-detail',
@@ -12,7 +13,7 @@ export class HotelDetailsComponent implements OnInit {
 
 	hotel: HotelDetailsModel;
 
-	constructor(private  hotelService: HotelService, private route: ActivatedRoute, private router: Router) {}
+	constructor(private  hotelService: HotelService, private roomService: RoomService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(
@@ -34,7 +35,14 @@ export class HotelDetailsComponent implements OnInit {
     );
   }
 
-  backToList() {
-    this.router.navigate(['/hotel-list/'])
+  createRoomInHotel() {
+    const hotelId = this.hotel.id;
+    this.router.navigate(['hotel-room/' , this.hotel.id])
+  }
+
+  deleteRoom(id: number) {
+	  this.roomService.deleteRoom(id);
+
+
   }
 }

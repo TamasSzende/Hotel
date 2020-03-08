@@ -30,7 +30,7 @@
         name="roomType"
         class="form-control"
       >
-        <option value="" disabled>&#45;&#45; Please choose a(n) room type &#45;&#45;</option>
+        <option value="" disabled>&#45;&#45; Please choose a room type &#45;&#45;</option>
         <option *ngFor="let roomType of roomTypeOption, let i = index"
                 value="{{roomType?.name}}"> {{roomType?.displayName}} </option>
       </select>
@@ -88,7 +88,7 @@
         Description:
       </label>
       <textarea
-        rows="10"
+        rows="5"
         type="text"
         id="description"
         formControlName="description"
@@ -113,8 +113,8 @@
         placeholder="Enter an url for the room image"
         class="form-control"
       />
-      <small *ngIf="roomForm.get('imageUrl').errors?.serverError" class="text-danger">
-        {{roomForm.get('imageUrl').errors['serverError']}}
+      <small *ngIf="roomForm.get('roomImageUrl').errors?.serverError" class="text-danger">
+        {{roomForm.get('roomImageUrl').errors['serverError']}}
       </small>
     </div>
 
@@ -133,4 +133,6 @@
     <br/>
     <button class="btn btn-primary my-buttons">Save Room</button>
   </form>
+  <br>
+  <br>
 </div>

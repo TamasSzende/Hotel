@@ -17,6 +17,7 @@ const routes: Routes = [
   {path: 'hotel-form', component: HotelFormComponent},
   {path: 'hotel-form/:id', component: HotelFormComponent},
   {path: 'hotel-detail/:id', component: HotelDetailsComponent},
+  {path: 'hotel-room/:id', component: RoomFormComponent},
 ];
 
 @NgModule({

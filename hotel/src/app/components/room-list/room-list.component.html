@@ -23,7 +23,6 @@
       <td>{{ room.numberOfBeds }}</td>
       <td>{{ room.pricePerNight }}</td>
       <td>
-        {{ room.roomImageUrl }}
         <img [src]="room.roomImageUrl" *ngIf="room.roomImageUrl" alt="roomImage" height=100 width=100 >
       </td>
       <td>{{ room.roomFeatures }}</td>
