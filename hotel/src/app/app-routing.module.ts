@@ -6,6 +6,7 @@ import {RoomDetailsComponent} from "./components/room-details/room-details.compo
 import {HotelListComponent} from "./components/hotel-list/hotel-list.component";
 import {HotelFormComponent} from "./components/hotel-form/hotel-form.component";
 import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.component";
+import {RegistrationComponent} from "./components/registration/registration.component";
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'hotel-form', component: HotelFormComponent},
   {path: 'hotel-form/:id', component: HotelFormComponent},
   {path: 'hotel-detail/:id', component: HotelDetailsComponent},
+  {path: "registration", component: RegistrationComponent}
   {path: 'hotel-room/:id', component: RoomFormComponent},
 ];
 

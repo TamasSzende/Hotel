@@ -19,6 +19,25 @@ spring:
       enabled: true
       force: true
 
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hotel.team.five@gmail.com
+    password: "!Test1234"
+    protocol: smtp
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+            ssl.enable: true
+          ssl.trust: smtp.gmail.com
+
+
 logging:
   level:
     com.progmasters: debug
