@@ -42,7 +42,7 @@ public class Room {
     private String description;
 
     @OneToMany(mappedBy = "room")
-    private List<Reservation> reservations;
+    private List<RoomReservation> reservations;
 
     @ManyToOne
     @JoinColumn(name = "hotel_id")
@@ -99,7 +99,7 @@ public class Room {
         return description;
     }
 
-    public List<Reservation> getReservations() {
+    public List<RoomReservation> getReservations() {
         return reservations;
     }
 
@@ -143,7 +143,7 @@ public class Room {
         this.description = description;
     }
 
-    public void setReservations(List<Reservation> reservations) {
+    public void setReservations(List<RoomReservation> reservations) {
         this.reservations = reservations;
     }
 

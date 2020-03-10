@@ -61,7 +61,7 @@ public class RoomController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RoomCreateItem> updateRoom(@Valid @RequestBody RoomCreateItem roomCreateItem, @PathVariable Long id) {
-        Boolean roomIsUpdated = roomService.updateRoom(roomCreateItem, id);
+        boolean roomIsUpdated = roomService.updateRoom(roomCreateItem, id);
         return roomIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

@@ -14,9 +14,9 @@ import {RoomDetailsComponent} from './components/room-details/room-details.compo
 import {RegistrationComponent} from './components/registration/registration.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PopupComponent} from './popup/popup.component';
+import {MaterialModule} from "./material.module";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
-import {MaterialModule} from "./material.module";
 
 @NgModule({
   declarations: [
