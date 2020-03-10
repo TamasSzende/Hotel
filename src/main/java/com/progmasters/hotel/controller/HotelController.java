@@ -42,9 +42,9 @@ public class HotelController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> saveHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem) {
-		hotelService.saveHotel(hotelCreateItem);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+	public ResponseEntity<Long> saveHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem) {
+		Long hotelId = hotelService.saveHotel(hotelCreateItem);
+        return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
     }
 
 	@GetMapping
@@ -76,7 +76,7 @@ public class HotelController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<HotelCreateItem> updateHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem, @PathVariable Long id) {
-		Boolean hotelIsUpdated = hotelService.updateHotel(hotelCreateItem, id);
+		boolean hotelIsUpdated = hotelService.updateHotel(hotelCreateItem, id);
 		return hotelIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 

@@ -23,8 +23,8 @@ export class HotelService {
 		return this.http.delete<Array<HotelListItemModel>>(BASE_URL + '/' + id);
 	}
 
-	createHotel(data: HotelCreateItemModel): Observable<any> {
-		return this.http.post(BASE_URL, data);
+	createHotel(data: HotelCreateItemModel): Observable<number> {
+		return this.http.post<number>(BASE_URL, data);
 	}
 
 	getHotelFormData(): Observable<HotelFormDataModel> {

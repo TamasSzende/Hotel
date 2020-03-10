@@ -31,42 +31,35 @@ public class RoomService {
     public List<RoomFeatureTypeOption> getRoomFeatureTypeOptionList() {
         return Arrays.stream(RoomFeatureType.values()).map(RoomFeatureTypeOption::new).collect(Collectors.toList());
     }
+
     public List<RoomTypeOption> getRoomTypeOptionList() {
         return Arrays.stream(RoomType.values()).map(RoomTypeOption::new).collect(Collectors.toList());
     }
 
-    public void createRoom(RoomCreateItem roomCreateItem) {
-        new Room(roomCreateItem);
-        roomRepository.save(new Room(roomCreateItem));
-    }
-
-    public boolean createRoomInHotel(RoomCreateItem roomCreateItem, Long id) {
+    public boolean createRoomInHotel(RoomCreateItem roomCreateItem) {
         boolean result = false;
         Room room = new Room(roomCreateItem);
-        Optional<Hotel> optionalHotel = hotelRepository.findById(id);
+        Long hotelId = roomCreateItem.getHotelId();
+        Optional<Hotel> optionalHotel = hotelRepository.findById(hotelId);
         if (optionalHotel.isPresent()) {
             Hotel hotel = optionalHotel.get();
             room.setHotel(hotel);
-            roomRepository.save(room); //TODO ezt beraktam ide (a capacity aktualizálása miatt és ha nincs hotel, nincs szobamentés...)
-            hotel.actualizeCapacity();
+            roomRepository.save(room);
             result = true;
         }
         return result;
     }
 
-    public List<RoomListItem> getRoomList() {
-        List<RoomListItem> roomListItems = new ArrayList<>();
-        List<Room> rooms = roomRepository.findAll();
-        for (Room room : rooms) {
-            RoomListItem item = new RoomListItem(room);
-            roomListItems.add(item);
-        }
-        return roomListItems;
+    public List<RoomListItem> getRoomList(Long hotelId) {
+        return roomRepository.findAllByHotel_Id(hotelId)
+                .stream()
+                .map(RoomListItem::new)
+                .collect(Collectors.toList());
     }
+
 
     public RoomDetails getRoomDetails(Long roomId) {
         RoomDetails roomDetails = new RoomDetails();
-
         Optional<Room> optionalRoom = roomRepository.findById(roomId);
         if (optionalRoom.isPresent()) {
             roomDetails = new RoomDetails(optionalRoom.get());
@@ -80,7 +73,7 @@ public class RoomService {
         Optional<Room> roomOptional = roomRepository.findById(id);
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
-            //TODO megnézni máshol van-e...
+            //TODO megnézni máshol is van-e.... pl.RoomReservation
             roomRepository.delete(room);
             return true;
         } else {
@@ -88,7 +81,7 @@ public class RoomService {
         }
     }
 
-    public RoomCreateItem getRoomCreateItem (Long id) {
+    public RoomCreateItem getRoomCreateItem(Long id) {
         RoomCreateItem roomCreateItem = null;
         Optional<Room> roomOptional = roomRepository.findById(id);
         if (roomOptional.isPresent()) {
@@ -104,7 +97,7 @@ public class RoomService {
 
             room.setId(id);
             Long hotelId = roomCreateItem.getHotelId();
-            Optional<Hotel>hotelOptional = this.hotelRepository.findById(hotelId);
+            Optional<Hotel> hotelOptional = this.hotelRepository.findById(hotelId);
             if (hotelOptional.isPresent()) {
                 Hotel hotel = hotelOptional.get();
                 room.setHotel(hotel);
@@ -117,5 +110,15 @@ public class RoomService {
         }
     }
 
+    public Long getHotelIdByRoomId(Long id) {
+        Optional<Room> roomOptional = roomRepository.findById(id);
+        if (roomOptional.isPresent()) {
+            Room room = roomOptional.get();
+            Long hotelId = room.getHotel().getId();
+            return hotelId;
+        } else {
+            return null; //TODO ez jó kérdés, hogy itt mivel kellene visszatérni...
+        }
+    }
 
 }

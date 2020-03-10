@@ -4,101 +4,102 @@ import com.progmasters.hotel.domain.Hotel;
 
 public class HotelListItem {
 
-	private static final int SHORTDESCRIPTIONLENGTH = 200;
+    private static final int SHORTDESCRIPTIONLENGTH = 200;
 
     private Long id;
-	private String name;
-	private String postalCode;
-	private String city;
-	private String streetAddress;
-	private String hotelType;
-	private String hotelImageUrl;
-	private String shortDescription;
+    private String name;
+    private String postalCode;
+    private String city;
+    private String streetAddress;
+    private String hotelType;
+    private String hotelImageUrl;
+    private String shortDescription;
 
-	HotelListItem() {
-	}
+    HotelListItem() {
+    }
 
-	public HotelListItem(Hotel hotel) {
-		this.id = hotel.getId();
-		this.name = hotel.getName();
-		this.postalCode = hotel.getPostalCode();
-		this.city = hotel.getCity();
-		this.streetAddress = hotel.getStreetAddress();
-		this.hotelType = hotel.getHotelType().getDisplayName();
-		this.hotelImageUrl = hotel.getHotelImageUrl();
-		String hotelFullDescription = hotel.getDescription();
-		if (hotelFullDescription.length() > SHORTDESCRIPTIONLENGTH) {
-			String endOfTheDescription = hotelFullDescription.substring(SHORTDESCRIPTIONLENGTH).split("")[0] + "...";
-			this.shortDescription = hotelFullDescription.substring(0, SHORTDESCRIPTIONLENGTH) + endOfTheDescription;
-		} else{
-			this.shortDescription = hotel.getDescription();
-		}
-	}
+    public HotelListItem(Hotel hotel) {
+        this.id = hotel.getId();
+        this.name = hotel.getName();
+        this.postalCode = hotel.getPostalCode();
+        this.city = hotel.getCity();
+        this.streetAddress = hotel.getStreetAddress();
+        this.hotelType = hotel.getHotelType().getDisplayName();
+        this.hotelImageUrl = hotel.getHotelImageUrl();
+
+        if (hotel.getDescription() != null && hotel.getDescription().length() > SHORTDESCRIPTIONLENGTH) {
+            String hotelFullDescription = hotel.getDescription();
+            String endOfTheDescription = (hotelFullDescription.substring(SHORTDESCRIPTIONLENGTH).split(" "))[0] + "...";
+            this.shortDescription = hotelFullDescription.substring(0, SHORTDESCRIPTIONLENGTH) + endOfTheDescription;
+        } else {
+            this.shortDescription = hotel.getDescription();
+        }
+    }
 
     public Long getId() {
         return id;
     }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getPostalCode() {
-		return postalCode;
-	}
+    public String getPostalCode() {
+        return postalCode;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public String getStreetAddress() {
-		return streetAddress;
-	}
+    public String getStreetAddress() {
+        return streetAddress;
+    }
 
-	public String getHotelType() {
-		return hotelType;
-	}
+    public String getHotelType() {
+        return hotelType;
+    }
 
-	public String getHotelImageUrl() {
-		return hotelImageUrl;
-	}
+    public String getHotelImageUrl() {
+        return hotelImageUrl;
+    }
 
-	public String getShortDescription() {
-		return shortDescription;
-	}
+    public String getShortDescription() {
+        return shortDescription;
+    }
 
 
     public void setId(Long id) {
         this.id = id;
     }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public void setStreetAddress(String streetAddress) {
-		this.streetAddress = streetAddress;
-	}
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+    }
 
-	public void setHotelType(String hotelType) {
-		this.hotelType = hotelType;
-	}
+    public void setHotelType(String hotelType) {
+        this.hotelType = hotelType;
+    }
 
-	public void setHotelImageUrl(String hotelImageUrl) {
-		this.hotelImageUrl = hotelImageUrl;
-	}
+    public void setHotelImageUrl(String hotelImageUrl) {
+        this.hotelImageUrl = hotelImageUrl;
+    }
 
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
 
 
 }

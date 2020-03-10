@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {RoomDetailsModel} from "../../models/roomDetails.model";
 import {RoomService} from "../../services/room.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-room-details',
@@ -11,31 +12,39 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class RoomDetailsComponent implements OnInit {
 
   room: RoomDetailsModel;
+  hotelId: number;
 
-  constructor(private  roomService: RoomService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private roomService: RoomService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
+    this.hotelId = this.loginService.getHotelId();
     this.route.paramMap.subscribe(
       paramMap => {
-        const itemId = paramMap.get('id');
-        if (itemId) {
-          this.getRoomDetail(itemId);
+        const roomId = paramMap.get('id');
+        if (roomId) {
+          this.getRoomDetail(roomId);
         }
       },
       error => console.warn(error),
     );
   }
 
-  getRoomDetail = (itemId: string) => {
-    this.roomService.roomDetail(itemId).subscribe(
+  getRoomDetail = (roomId: string) => {
+    this.roomService.roomDetail(roomId).subscribe(
       (response: RoomDetailsModel) => {
-        this.room = response;
+        if (response.hotelId === this.hotelId) {
+          this.room = response;
+        }
       }
     );
   }
 
-  // backToList() {
-  //   this.router.navigate(['/room-list/'])
-  // }
+  updateRoom(id: number): void {
+    this.router.navigate(['/admin/hotel/update-room/', id])
+  }
+
+  backToTheHotel() {
+    this.router.navigate(['/admin/hotel'])
+  }
 
 }

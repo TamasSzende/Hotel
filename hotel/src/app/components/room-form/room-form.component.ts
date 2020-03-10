@@ -7,6 +7,7 @@ import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.mod
 import {RoomTypeOptionModel} from "../../models/roomTypeOption.model";
 import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomCreateItemModel} from "../../models/roomCreateItem.model";
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-room-form',
@@ -18,10 +19,12 @@ export class RoomFormComponent implements OnInit {
   roomForm: FormGroup;
   roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   roomTypeOption: RoomTypeOptionModel[];
-  private id: number;
+  private hotelId: number;
+  private roomId: number;
 
   constructor(private route: ActivatedRoute,
               private roomService: RoomService,
+              private loginService: LoginService,
               private router: Router) {
     this.roomForm = new FormGroup({
         'roomName': new FormControl(''),
@@ -37,6 +40,8 @@ export class RoomFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.hotelId = this.loginService.getHotelId();
+
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {
         this.roomTypeOption = roomFormData.roomType;
@@ -45,10 +50,10 @@ export class RoomFormComponent implements OnInit {
 
         this.route.paramMap.subscribe(
           paramMap => {
-            const editableId = paramMap.get('id');
-            if (editableId) {
-              this.id = +editableId;
-              this.getRoomCreateData(editableId);
+            const updateRoomId = paramMap.get('id');
+            if (updateRoomId) {
+              this.roomId = +updateRoomId;
+              this.getRoomCreateData(updateRoomId);
             }
           },
           error => console.warn(error),
@@ -60,14 +65,15 @@ export class RoomFormComponent implements OnInit {
   onSubmit() {
     const data = {...this.roomForm.value};
     data.roomFeatures = this.createRoomFeaturesArrayToSend();
-    this.id ? this.updateRoom(data) : this.createRoom(data);
+    data.hotelId = this.hotelId;
+    this.roomId ? this.updateRoom(data) : this.createRoom(data);
   }
 
   private createRoom(data: RoomCreateItemModel) {
     this.roomService.createRoom(data).subscribe(
       () => {
-        this.router.navigate(['/room-list']);
-      },			error => validationHandler(error, this.roomForm),
+        this.router.navigate(['admin/hotel']);
+      }, error => validationHandler(error, this.roomForm),
     );
   }
 
@@ -75,26 +81,28 @@ export class RoomFormComponent implements OnInit {
   getRoomCreateData = (id: string) => {
     this.roomService.getRoomFormForUpdate(id).subscribe(
       (response: RoomCreateItemModel) => {
-        this.roomForm.patchValue({
-          roomName: response.roomName,
-          roomType: response.roomType,
-          numberOfBeds: response.numberOfBeds,
-          roomArea: response.roomArea,
-          hotelId: response.hotelId,
-          pricePerNight: response.pricePerNight,
-          roomImageUrl: response.roomImageUrl,
-          description: response.description,
-          roomFeatures: this.createRoomFeaturesFormArray(response.roomFeatures),
-        });
+        if (this.hotelId === response.hotelId) {
+          this.roomForm.patchValue({
+            roomName: response.roomName,
+            roomType: response.roomType,
+            numberOfBeds: response.numberOfBeds,
+            roomArea: response.roomArea,
+            hotelId: response.hotelId,
+            pricePerNight: response.pricePerNight,
+            roomImageUrl: response.roomImageUrl,
+            description: response.description,
+            roomFeatures: this.createRoomFeaturesFormArray(response.roomFeatures),
+          });
+        }
       },
     );
   }
 
   private updateRoom(data: RoomCreateItemModel) {
-    this.roomService.updateRoom(data, this.id).subscribe(
+    this.roomService.updateRoom(data, this.roomId).subscribe(
       () => {
-        this.router.navigate(['/room-list']);
-      },			error => validationHandler(error, this.roomForm),
+        this.router.navigate(['/admin/hotel']);
+      }, error => validationHandler(error, this.roomForm),
     );
   }
 

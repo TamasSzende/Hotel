@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class MailService {
+
   private BASE_URL = 'http://localhost:8080/api/registrations';
 
   constructor(private http: HttpClient) {

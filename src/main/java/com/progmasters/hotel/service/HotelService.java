@@ -3,6 +3,7 @@ package com.progmasters.hotel.service;
 import com.progmasters.hotel.domain.Hotel;
 import com.progmasters.hotel.domain.HotelFeatureType;
 import com.progmasters.hotel.domain.HotelType;
+import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
@@ -43,9 +44,11 @@ public class HotelService {
 		return Arrays.stream(HotelType.values()).map(HotelTypeOption::new).collect(Collectors.toList());
 	}
 
-	public void saveHotel(HotelCreateItem hotelCreateItem) {
+	public Long saveHotel(HotelCreateItem hotelCreateItem) {
 		Hotel hotel = new Hotel(hotelCreateItem);
 		this.hotelRepository.save(hotel);
+		Long hotelId = hotel.getId();
+		return hotelId;
 	}
 
 	public HotelDetailItem getHotelDetailItem (Long id) {
@@ -66,7 +69,7 @@ public class HotelService {
 		return hotelCreateItem;
 	}
 
-	public Boolean updateHotel(HotelCreateItem hotelCreateItem, Long id) {
+	public boolean updateHotel(HotelCreateItem hotelCreateItem, Long id) {
 		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
 		if (hotelOptional.isPresent()) {
 			Hotel hotel = new Hotel(hotelCreateItem);
@@ -83,7 +86,11 @@ public class HotelService {
 		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
 		if (hotelOptional.isPresent()) {
 			Hotel hotel = hotelOptional.get();
-            //TODO megnézni máshol van-e...
+            //TODO megnézni máshol van-e...(pl. booking...)
+			List<Room> deletedRooms = hotel.getRooms();
+			for (Room deletedRoom : deletedRooms) {
+				this.roomRepository.delete(deletedRoom);
+			}
 			hotelRepository.delete(hotel);
 			return true;
 		} else {

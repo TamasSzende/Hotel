@@ -5,7 +5,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
 import {RoomFormComponent} from './components/room-form/room-form.component';
-import {RoomListComponent} from './components/room-list/room-list.component';
 import {HotelListComponent} from "./components/hotel-list/hotel-list.component";
 import {HotelFormComponent} from "./components/hotel-form/hotel-form.component";
 import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.component";
@@ -19,7 +18,6 @@ import {RegistrationComponent} from './components/registration/registration.comp
     AppComponent,
     NavbarComponent,
     RoomFormComponent,
-    RoomListComponent,
     RoomDetailsComponent,
     HotelFormComponent,
     HotelListComponent,

@@ -3,6 +3,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
 import {RoomService} from "../../services/room.service";
+import {LoginService} from "../../services/login.service";
+import {RoomListItemModel} from "../../models/roomListItem.model";
 
 @Component({
   selector: 'app-hotel-detail',
@@ -12,19 +14,28 @@ import {RoomService} from "../../services/room.service";
 export class HotelDetailsComponent implements OnInit {
 
 	hotel: HotelDetailsModel;
+	id: number;
+	hotelIdString: string;
 
-	constructor(private  hotelService: HotelService, private roomService: RoomService, private route: ActivatedRoute, private router: Router) {}
+	constructor(private  hotelService: HotelService, private roomService: RoomService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(
-      paramMap => {
-        const itemId = paramMap.get('id');
-        if (itemId) {
-          this.getHotelDetail(itemId);
-        }
-      },
-      error => console.warn(error),
-    );
+
+    this.id = this.loginService.getHotelId();
+    if (this.id) {
+      this.getHotelDetail(String(this.id));
+    } else {
+      this.route.paramMap.subscribe(
+        paramMap => {
+          const hotelIdFromRoute = paramMap.get('id');
+          if (hotelIdFromRoute) {
+            this.hotelIdString = hotelIdFromRoute;
+            this.getHotelDetail(this.hotelIdString);
+          }
+        },
+        error => console.warn(error),
+      );
+    }
   }
 
   getHotelDetail = (itemId: string) => {
@@ -33,16 +44,37 @@ export class HotelDetailsComponent implements OnInit {
         this.hotel = response;
       }
     );
-  }
+  };
 
   createRoomInHotel() {
-    const hotelId = this.hotel.id;
-    this.router.navigate(['hotel-room/' , this.hotel.id])
+    this.router.navigate(['/admin/hotel/create-room'])
+  }
+
+  updateHotel() {
+    this.router.navigate(['/admin/hotel-update'])
   }
 
   deleteRoom(id: number) {
-	  this.roomService.deleteRoom(id);
-
-
+    this.roomService.deleteRoom(id).subscribe(
+      (response: RoomListItemModel[]) => {
+        this.hotel.rooms = response;
+      },
+      error => console.warn(error),
+    );
   }
+
+  updateRoom(id: number): void {
+    this.router.navigate(['/admin/hotel/update-room/', id])
+  }
+
+  roomDetail(id: number): void {
+    this.router.navigate(['/admin/hotel/room/', id])
+  }
+
+  backToHotelList() {
+    this.router.navigate(['/hotel'])
+  }
+
+
+
 }

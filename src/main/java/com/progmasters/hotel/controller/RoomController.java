@@ -30,11 +30,6 @@ public class RoomController {
         return new ResponseEntity<>(roomFormData, HttpStatus.OK);
     }
 
-    @GetMapping
-    public List<RoomListItem> rooms() {
-        return roomService.getRoomList();
-    }
-
     @GetMapping("/{id}")
     public RoomDetails roomDetail(@PathVariable("id") Long id) {
         return roomService.getRoomDetails(id);
@@ -42,22 +37,17 @@ public class RoomController {
 
     @PostMapping
     public ResponseEntity createRoom(@RequestBody @Valid RoomCreateItem roomCreateItem) {
-        roomService.createRoom(roomCreateItem);
-        return new ResponseEntity(HttpStatus.CREATED);
-    }
-
-    @PostMapping("/{id}")
-    public ResponseEntity createRoomInHotel(@RequestBody @Valid RoomCreateItem roomCreateItem, @PathVariable Long id) {
-        boolean roomIsCreated = roomService.createRoomInHotel(roomCreateItem, id);
+        boolean roomIsCreated = roomService.createRoomInHotel(roomCreateItem);
         return roomIsCreated ? new ResponseEntity<>(HttpStatus.CREATED) : new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<List<RoomListItem>> deleteRoom(@PathVariable Long id) {
+        Long hotelId = roomService.getHotelIdByRoomId(id);
         boolean isDeleteSuccessful = roomService.deleteRoom(id);
         ResponseEntity<List<RoomListItem>> result;
         if (isDeleteSuccessful) {
-            result = new ResponseEntity<>(roomService.getRoomList(), HttpStatus.OK);
+            result = new ResponseEntity<>(roomService.getRoomList(hotelId), HttpStatus.OK);
         } else {
             result = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -74,6 +64,5 @@ public class RoomController {
         Boolean roomIsUpdated = roomService.updateRoom(roomCreateItem, id);
         return roomIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 
 }

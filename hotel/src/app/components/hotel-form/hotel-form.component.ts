@@ -6,6 +6,7 @@ import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.m
 import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {HotelCreateItemModel} from "../../models/hotelCreateItem.model";
+import {LoginService} from "../../services/login.service";
 // import {validationHandler} from "../../utils/validationHandler";
 
 @Component({
@@ -19,8 +20,9 @@ export class HotelFormComponent implements OnInit {
 	hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
 	hotelTypeOption: HotelTypeOptionModel[];
 	private id: number;
+	private isUpdate: boolean;
 
-	constructor(private hotelService: HotelService, private route: ActivatedRoute, private router: Router) {
+	constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
 		this.hotelForm = new FormGroup({
 				'name': new FormControl(''),
 				'postalCode': new FormControl(''),
@@ -35,39 +37,60 @@ export class HotelFormComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.hotelService.getHotelFormData().subscribe(
-			(hotelFormData: HotelFormDataModel) => {
-				this.hotelTypeOption = hotelFormData.hotelType;
-				this.hotelFeatureTypeOption = hotelFormData.hotelFeatures;
+    this.hotelService.getHotelFormData().subscribe(
+      (hotelFormData: HotelFormDataModel) => {
+        this.hotelTypeOption = hotelFormData.hotelType;
+        this.hotelFeatureTypeOption = hotelFormData.hotelFeatures;
         this.createHotelFeaturesCheckboxControl();
+      }
+    );
 
-				this.route.paramMap.subscribe(
-					paramMap => {
-						const editableId = paramMap.get('id');
-						if (editableId) {
-							this.id = +editableId;
-							this.getHotelCreateData(editableId);
-						}
-					},
-					error => console.warn(error),
-				);
-			}
-		);
+	  this.id = this.loginService.getHotelId();
+
+    if (this.id) {
+      this.isUpdate = true;
+      this.getHotelCreateData(String(this.id));
+
+    } else {
+      this.isUpdate = false;
+    }
+
+		// this.hotelService.getHotelFormData().subscribe(
+		// 	(hotelFormData: HotelFormDataModel) => {
+		// 		this.hotelTypeOption = hotelFormData.hotelType;
+		// 		this.hotelFeatureTypeOption = hotelFormData.hotelFeatures;
+    //     this.createHotelFeaturesCheckboxControl();
+    //
+		// 		this.route.paramMap.subscribe(
+		// 			paramMap => {
+		// 				const editableId = paramMap.get('id');
+		// 				if (editableId) {
+		// 					this.id = +editableId;
+		// 					this.getHotelCreateData(editableId);
+		// 				}
+		// 			},
+		// 			error => console.warn(error),
+		// 		);
+		// 	}
+		// );
+
 	}
 
   onSubmit() {
     const data = {...this.hotelForm.value};
     data.hotelFeatures = this.createHotelFeaturesArrayToSend();
-    this.id ? this.updateHotel(data) : this.createHotel(data);
+    this.isUpdate ? this.updateHotel(data) : this.createHotel(data);
   }
 
-	private createHotel(data: HotelCreateItemModel) {
+	createHotel = (data: HotelCreateItemModel) => {
 		this.hotelService.createHotel(data).subscribe(
-			() => {
-				this.router.navigate(['/hotel-list']);
+			(hotelId) => {
+        console.log('hotelId:' + hotelId);
+        this.loginService.hotelId.next(hotelId);
+        this.router.navigate(['/admin/hotel']);
 			},			error => console.error(error),
 		);
-	}
+	};
 
 	getHotelCreateData = (id: string) => {
 		this.hotelService.hotelForUpdate(id).subscribe(
@@ -89,7 +112,7 @@ export class HotelFormComponent implements OnInit {
   private updateHotel(data: HotelCreateItemModel) {
     this.hotelService.updateHotel(data, this.id).subscribe(
       () => {
-        this.router.navigate(['/hotel-list']);
+        this.router.navigate(['/admin/hotel']);
       },			error => console.error(error),
     );
   }

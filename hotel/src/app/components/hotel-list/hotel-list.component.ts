@@ -36,15 +36,11 @@ export class HotelListComponent implements OnInit {
 	}
 
 	updateHotel(id: number): void {
-		this.router.navigate(['/hotel-form/', id])
+		this.router.navigate(['/admin/hotel-update'])
 	}
 
 	hotelDetail(id: number): void {
-		this.router.navigate(['/hotel-detail/', id])
-	}
-
-	goToRoomDetail(id: number) {
-		this.router.navigate(['/room-detail/', id])
+		this.router.navigate(['/hotel/', id])
 	}
 
 }

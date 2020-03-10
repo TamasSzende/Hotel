@@ -31,9 +31,10 @@ public class HotelDetailItem {
 		this.city = hotel.getCity();
 		this.streetAddress = hotel.getStreetAddress();
 		this.hotelType = hotel.getHotelType().getDisplayName();
-		this.hotelCapacity = hotel.getHotelCapacity();
+		this.hotelCapacity = 0;
 		for (Room room : hotel.getRooms()) {
 			this.rooms.add(new RoomListItem(room));
+			this.hotelCapacity += room.getNumberOfBeds();
 		}
 		this.hotelImageUrl = hotel.getHotelImageUrl();
 		this.description = hotel.getDescription();
