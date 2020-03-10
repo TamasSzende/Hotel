@@ -5,17 +5,19 @@ public enum RoomFeatureType {
 	TEAKAVEFOZO("Tea-/ kávéfőző"),
 	HAJSZARITO("Hajszárító"),
 	HUTOSZEKRENY("Hűtőszekrény"),
-	TV("TV"),
-	BABAAGY("Babaágy"),
+	TV("Síkképernyős TV"),
+	BABAAGY("Babaágy betehető"),
 	MINIBAR("Minibár"),
 	SZOBASZEF("Szobaszéf"),
-	LEGKONDICIONALT("Légkondicionált"),
-	ERKELYTERASZ("Erkély / Terasz"),
+	LEGKONDICIONALT("Légkondícionálás"),
+	ERKELYTERASZ("Erkély/terasz"),
+	WIFI("WIFI"),
+	PEZSGOFURDO("Pezsgőfürdő"),
     ;
 
     private String displayName;
 
-    private RoomFeatureType(String displayName) {
+	RoomFeatureType(String displayName) {
         this.displayName = displayName;
     }
 
