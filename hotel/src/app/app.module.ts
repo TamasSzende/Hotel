@@ -12,6 +12,11 @@ import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RoomDetailsComponent} from './components/room-details/room-details.component';
 import {RegistrationComponent} from './components/registration/registration.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {PopupComponent} from './popup/popup.component';
+import {MatIconModule} from "@angular/material/icon";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MaterialModule} from "./material.module";
 
 @NgModule({
   declarations: [
@@ -23,15 +28,21 @@ import {RegistrationComponent} from './components/registration/registration.comp
     HotelListComponent,
     HotelDetailsComponent,
     RegistrationComponent,
+    PopupComponent,
   ],
   imports: [
     HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [PopupComponent]
 })
 export class AppModule {
 }

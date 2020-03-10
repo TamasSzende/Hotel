@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
+import {PopupService} from "../../services/popup.service";
 
 @Component({
   selector: 'app-hotel-list',
@@ -10,37 +11,43 @@ import {HotelListItemModel} from "../../models/hotelListItem.model";
 })
 export class HotelListComponent implements OnInit {
 
-	hotelList: HotelListItemModel[] = [];
+  hotelList: HotelListItemModel[] = [];
 
-	constructor(private hotelService: HotelService, private router: Router) { }
+  constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService) {
+  }
 
-	ngOnInit(): void {
-		this.listHotel();
-	}
+  ngOnInit(): void {
+    this.listHotel();
+  }
 
-	listHotel = () => {
-		this.hotelService.listHotel().subscribe(
-			(hotelList: HotelListItemModel[]) => {
-				this.hotelList = hotelList;
-			}
-		);
-	};
+  listHotel = () => {
+    this.hotelService.listHotel().subscribe(
+      (hotelList: HotelListItemModel[]) => {
+        this.hotelList = hotelList;
+      }
+    );
+  };
 
-	deleteHotel(id: number): void {
-		this.hotelService.deleteHotel(id).subscribe(
-			(response: HotelListItemModel[]) => {
-				this.hotelList = response;
-			},
-			error => console.warn(error),
-		);
-	}
+  deleteHotel(id: number): void {
+    this.popupService.openConfirmPopup("Are you sure to delete this record?")
+      .afterClosed().subscribe(res => {
+      if (res) {
+        this.hotelService.deleteHotel(id).subscribe(
+          (response: HotelListItemModel[]) => {
+            this.hotelList = response;
+          },
+          error => console.warn(error),
+        );
+      }
+    })
+  }
 
-	updateHotel(id: number): void {
-		this.router.navigate(['/admin/hotel-update'])
-	}
+  updateHotel(id: number): void {
+    this.router.navigate(['/admin/hotel-update'])
+  }
 
-	hotelDetail(id: number): void {
-		this.router.navigate(['/hotel/', id])
-	}
+  hotelDetail(id: number): void {
+    this.router.navigate(['/hotel/', id])
+  }
 
 }

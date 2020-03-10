@@ -2,6 +2,7 @@
 */out/
 */target/
 *.iml
+*.yaml
 
 # dependencies
 */node_modules
