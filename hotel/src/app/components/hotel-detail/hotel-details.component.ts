@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
 import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
 import {RoomListItemModel} from "../../models/roomListItem.model";
+import {PopupService} from "../../services/popup.service";
 
 @Component({
   selector: 'app-hotel-detail',
@@ -13,11 +14,14 @@ import {RoomListItemModel} from "../../models/roomListItem.model";
 })
 export class HotelDetailsComponent implements OnInit {
 
-	hotel: HotelDetailsModel;
-	id: number;
-	hotelIdString: string;
+  hotel: HotelDetailsModel;
+  id: number;
+  hotelIdString: string;
 
-	constructor(private  hotelService: HotelService, private roomService: RoomService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private  hotelService: HotelService, private roomService: RoomService,
+              private loginService: LoginService, private route: ActivatedRoute,
+              private router: Router, private popupService: PopupService) {
+  }
 
   ngOnInit(): void {
 
@@ -55,12 +59,17 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   deleteRoom(id: number) {
-    this.roomService.deleteRoom(id).subscribe(
-      (response: RoomListItemModel[]) => {
-        this.hotel.rooms = response;
-      },
-      error => console.warn(error),
-    );
+    this.popupService.openConfirmPopup("Are you sure to delete this record?")
+      .afterClosed().subscribe(res => {
+      if (res) {
+        this.roomService.deleteRoom(id).subscribe(
+          (response: RoomListItemModel[]) => {
+            this.hotel.rooms = response;
+          },
+          error => console.warn(error),
+        );
+      }
+    })
   }
 
   updateRoom(id: number): void {
@@ -74,7 +83,6 @@ export class HotelDetailsComponent implements OnInit {
   backToHotelList() {
     this.router.navigate(['/hotel'])
   }
-
 
 
 }
