@@ -3,6 +3,7 @@ package com.progmasters.hotel.domain;
 import com.progmasters.hotel.dto.BookingCreateItem;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,9 @@ public class Booking {
     @Column(name = "remark", columnDefinition = "TEXT")
     private String remark;
 
+    @Column(name = "date_of_booking")
+    private LocalDateTime dateOfBooking;
+
     @OneToMany(mappedBy = "booking") //, fetch = FetchType.EAGER
     private List<RoomReservation> roomReservations = new ArrayList<>();
 
@@ -30,58 +34,58 @@ public class Booking {
     Booking() {
     }
 
-    public Booking(String guestName, String remark, List<RoomReservation> roomReservations, Integer numberOfGuests) {
-        this.guestName = guestName;
-        this.remark = remark;
-        this.roomReservations = roomReservations;
-        this.numberOfGuests = numberOfGuests;
-    }
-
     public Booking(BookingCreateItem bookingCreateItem) {
         this.guestName = bookingCreateItem.getGuestName();
         this.remark = bookingCreateItem.getRemark();
         this.numberOfGuests = bookingCreateItem.getNumberOfGuests();
+        this.dateOfBooking = LocalDateTime.now();
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getGuestName() {
         return guestName;
-    }
-
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
     }
 
     public String getRemark() {
         return remark;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public LocalDateTime getDateOfBooking() {
+        return dateOfBooking;
     }
 
     public List<RoomReservation> getRoomReservations() {
         return roomReservations;
     }
 
-    public void setRoomReservations(List<RoomReservation> roomReservations) {
-        this.roomReservations = roomReservations;
-    }
-
     public Integer getNumberOfGuests() {
         return numberOfGuests;
+    }
+
+    public void setDateOfBooking(LocalDateTime dateOfBooking) {
+        this.dateOfBooking = dateOfBooking;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setGuestName(String guestName) {
+        this.guestName = guestName;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public void setRoomReservations(List<RoomReservation> roomReservations) {
+        this.roomReservations = roomReservations;
     }
 
     public void setNumberOfGuests(Integer numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
     }
-
-
 }

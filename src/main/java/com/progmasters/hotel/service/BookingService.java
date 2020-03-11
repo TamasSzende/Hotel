@@ -34,7 +34,11 @@ public class BookingService {
     public boolean saveBooking(BookingCreateItem bookingCreateItem) {
         boolean result = true;
         Booking booking = new Booking(bookingCreateItem);
-        this.bookingRepository.save(booking);
+        //TODO validation
+        //Check the rooms are in the same hotel
+        //Check the time, later than now, end is later then start (and not equal)
+
+        //Check the rooms are free!
         for (Long roomId : bookingCreateItem.getRoomIdList()) {
             Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
             if (optionalRoom.isPresent()) {
@@ -46,6 +50,9 @@ public class BookingService {
             } else {
                 result = false;
             }
+        }
+        if (result) {
+            this.bookingRepository.save(booking);
         }
         return result;
     }
