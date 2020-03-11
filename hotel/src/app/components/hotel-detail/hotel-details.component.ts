@@ -58,6 +58,7 @@ export class HotelDetailsComponent implements OnInit {
     this.router.navigate(['/admin/hotel-update'])
   }
 
+  //TODO lechekkolni, hogy van-e a szobához elkövetkező foglalás!!
   deleteRoom(id: number) {
     this.popupService.openConfirmPopup("Are you sure to delete this record?")
       .afterClosed().subscribe(res => {
