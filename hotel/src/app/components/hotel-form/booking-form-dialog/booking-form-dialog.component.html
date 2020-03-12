@@ -1,0 +1,74 @@
+<h1 class="modal-title" mat-dialog-title><strong>Foglalás véglegesítése</strong></h1>
+
+<mat-dialog-content class="mat-typography">
+
+
+  <h2><strong>{{data.hotel.name}} - {{data.hotel.hotelType}}</strong></h2>
+  cím: {{data.hotel.postalCode}} {{data.hotel.city}}, {{data.hotel.streetAddress}}<br>
+  foglalás kezdete: {{data.startDate | date:'y. MMM d. EEEE'}}<br>
+  foglalás vége: {{data.endDate | date:'y. MMM d. EEEE'}}<br>
+  éjszakák száma: {{this.numberOfNights}}<br>
+  vendégek száma: {{data.numberOfGuests}} fő<br>
+  foglalás ára: {{this.priceOfBooking}} Ft<br>
+
+  <form [formGroup]="bookingForm">
+    <div class="form-group">
+      <label class="form-control-label" for="guestName">
+        Kérjük adja meg a nevét:
+      </label>
+      <input
+        class="form-control"
+        formControlName="guestName"
+        id="guestName"
+        name="guestName"
+        placeholder="Vendég neve"
+        type="text"
+      />
+    </div>
+    <h3>
+      Lefoglalt szobák:
+    </h3>
+    <div *ngFor="let room of data.roomList; let i = index">
+      <div class="card mb-3">
+        <h5 class="card-title">{{ room.roomName }} - {{ room.roomType }}</h5>
+        <h6 class="card-subtitle mb-2">
+          Number of beds: {{ room.numberOfBeds }} - Price per Night: {{ room.pricePerNight }} Ft
+        </h6>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-control-label" for="remark">
+        Mondja el nekünk különleges kérését:
+      </label>
+      <textarea
+        class="form-control"
+        formControlName="remark"
+        id="remark"
+        name="remark"
+        rows="5"
+        type="text"
+      >
+    </textarea>
+    </div>
+    <div class="form-group">
+      <label>
+        <input formControlName="aSZF" type="checkbox">
+        Elfogadom az Általános szerződési feltételeket
+      </label>
+    </div>
+
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="false" class="btn btn-secondary mr-4" data-dismiss="modal" type="button">Mégse</button>
+  <button (click)="onSubmit()" [mat-dialog-close]="true" cdkFocusInitial class="btn btn-primary mr-4" type="button">
+    Fizetés
+  </button>
+  <br>
+  <br>
+</mat-dialog-actions>
+
+
+

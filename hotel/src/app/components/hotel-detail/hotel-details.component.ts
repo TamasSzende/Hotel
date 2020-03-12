@@ -9,6 +9,9 @@ import {PopupService} from "../../services/popup.service";
 import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {BookingService} from "../../services/booking.service";
+import {BookingFormDialogComponent} from "../hotel-form/booking-form-dialog/booking-form-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 
 
 @Component({
@@ -28,7 +31,7 @@ export class HotelDetailsComponent implements OnInit {
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
               private route: ActivatedRoute, private router: Router,
-              private popupService: PopupService) {
+              private popupService: PopupService, private dialog: MatDialog) {
     this.flatpickrOptions = {
       mode: "range",
       minDate: "today",
@@ -109,30 +112,62 @@ export class HotelDetailsComponent implements OnInit {
 
   makeBooking() {
     const data = {...this.bookingForm.value};
-    const input = {
-      numberOfGuests: data.numberOfGuests,
-      startDate: data.bookingDateRange[0],
-      endDate: data.bookingDateRange[1],
-      roomIdList: this.createReservedRoomIdArrayToSend(),
-      guestName: "",
-      remark: ""
-    };
-    this.bookingService.createBooking(input).subscribe(
-      (next) => {
-        console.log('it was successful')
-      }, error => console.error(error),
-    );
+    let dialogRef = this.dialog.open(BookingFormDialogComponent, {
+      height: '600px',
+      width: '800px',
+      data: {
+        hotel: this.createHotelDataToSend(),
+        numberOfGuests: data.numberOfGuests,
+        startDate: data.bookingDateRange[0],
+        endDate: data.bookingDateRange[1],
+        roomList: this.createReservedRoomArrayToSend(),
+      }
+    });
   }
 
-  createReservedRoomIdArrayToSend(): number[] {
-    const result: number[] = [];
+  // makeBooking() {
+  //   const data = {...this.bookingForm.value};
+  //   const input = {
+  //     numberOfGuests: data.numberOfGuests,
+  //     startDate: data.bookingDateRange[0],
+  //     endDate: data.bookingDateRange[1],
+  //     roomIdList: this.createReservedRoomIdArrayToSend(),
+  //     guestName: "",
+  //     remark: ""
+  //   };
+  //   this.bookingService.createBooking(input).subscribe(
+  //     (next) => {
+  //       console.log('it was successful')
+  //     }, error => console.error(error),
+  //   );
+  // }
+
+  createReservedRoomArrayToSend(): RoomShortListItemModel[] {
+    const result: RoomShortListItemModel[] = [];
     this.bookingForm.value.roomIdList.forEach((value, index) => {
         if (value) {
-          result.push(this.hotel.rooms[index].id)
+          const room = {
+            id: this.hotel.rooms[index].id,
+            roomName: this.hotel.rooms[index].roomName,
+            roomType: this.hotel.rooms[index].roomType,
+            numberOfBeds: this.hotel.rooms[index].numberOfBeds,
+            pricePerNight: this.hotel.rooms[index].pricePerNight,
+          };
+          result.push(room)
         }
       }
     );
     return result;
+  }
+
+  createHotelDataToSend() {
+    return {
+      name: this.hotel.name,
+      hotelType: this.hotel.hotelType,
+      postalCode: this.hotel.postalCode,
+      city: this.hotel.city,
+      streetAddress: this.hotel.streetAddress,
+    }
   }
 
   private createRoomBookingFormArray() {

@@ -18,6 +18,7 @@ import {MaterialModule} from "./material.module";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
+import {BookingFormDialogComponent} from "./components/hotel-form/booking-form-dialog/booking-form-dialog.component";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import {Ng2FlatpickrModule} from "ng2-flatpickr";
     HotelDetailsComponent,
     RegistrationComponent,
     PopupComponent,
+    BookingFormDialogComponent,
   ],
   imports: [
     HttpClientModule,
@@ -44,7 +46,10 @@ import {Ng2FlatpickrModule} from "ng2-flatpickr";
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [PopupComponent]
+  entryComponents: [
+    PopupComponent,
+    BookingFormDialogComponent,
+  ]
 })
 export class AppModule {
 }
