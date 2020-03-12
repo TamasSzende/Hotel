@@ -26,7 +26,6 @@ public class BookingController {
         return new ResponseEntity<>(bookingService.getBookingListItemList(), HttpStatus.OK);
     }
 
-
     @PostMapping
     public ResponseEntity<Void> saveBooking(@RequestBody BookingCreateItem bookingCreateItem) {
         boolean bookingIsCreated = bookingService.saveBooking(bookingCreateItem);

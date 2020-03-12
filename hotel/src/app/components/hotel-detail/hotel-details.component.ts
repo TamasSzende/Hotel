@@ -6,6 +6,10 @@ import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
 import {RoomListItemModel} from "../../models/roomListItem.model";
 import {PopupService} from "../../services/popup.service";
+import {FlatpickrOptions} from "ng2-flatpickr";
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {BookingService} from "../../services/booking.service";
+
 
 @Component({
   selector: 'app-hotel-detail',
@@ -15,26 +19,41 @@ import {PopupService} from "../../services/popup.service";
 export class HotelDetailsComponent implements OnInit {
 
   hotel: HotelDetailsModel;
-  id: number;
-  hotelIdString: string;
+  hotelIdFromLogin: number;
+  hotelIdFromRoute: string;
+
+  bookingForm: FormGroup;
+  flatpickrOptions: FlatpickrOptions;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
-              private loginService: LoginService, private route: ActivatedRoute,
-              private router: Router, private popupService: PopupService) {
+              private bookingService: BookingService, private loginService: LoginService,
+              private route: ActivatedRoute, private router: Router,
+              private popupService: PopupService) {
+    this.flatpickrOptions = {
+      mode: "range",
+      minDate: "today",
+      dateFormat: "Y-m-d",
+    };
+
+    this.bookingForm = new FormGroup({
+      'numberOfGuests': new FormControl(null),
+      'bookingDateRange': new FormControl(''),
+      'roomIdList': new FormArray([]),
+    });
   }
 
   ngOnInit(): void {
 
-    this.id = this.loginService.getHotelId();
-    if (this.id) {
-      this.getHotelDetail(String(this.id));
+    this.hotelIdFromLogin = this.loginService.getHotelId();
+    if (this.hotelIdFromLogin) {
+      this.getHotelDetail(String(this.hotelIdFromLogin));
     } else {
       this.route.paramMap.subscribe(
         paramMap => {
-          const hotelIdFromRoute = paramMap.get('id');
-          if (hotelIdFromRoute) {
-            this.hotelIdString = hotelIdFromRoute;
-            this.getHotelDetail(this.hotelIdString);
+          const paramMapId = paramMap.get('id');
+          if (paramMapId) {
+            this.hotelIdFromRoute = paramMapId;
+            this.getHotelDetail(this.hotelIdFromRoute);
           }
         },
         error => console.warn(error),
@@ -42,10 +61,11 @@ export class HotelDetailsComponent implements OnInit {
     }
   }
 
-  getHotelDetail = (itemId: string) => {
-    this.hotelService.hotelDetail(itemId).subscribe(
+  getHotelDetail = (hotelId: string) => {
+    this.hotelService.hotelDetail(hotelId).subscribe(
       (response: HotelDetailsModel) => {
         this.hotel = response;
+        this.createRoomBookingFormArray();
       }
     );
   };
@@ -66,6 +86,8 @@ export class HotelDetailsComponent implements OnInit {
         this.roomService.deleteRoom(id).subscribe(
           (response: RoomListItemModel[]) => {
             this.hotel.rooms = response;
+            this.clearRoomBookingFormArray();
+            this.createRoomBookingFormArray();
           },
           error => console.warn(error),
         );
@@ -85,5 +107,46 @@ export class HotelDetailsComponent implements OnInit {
     this.router.navigate(['/hotel'])
   }
 
+  makeBooking() {
+    const data = {...this.bookingForm.value};
+    const input = {
+      numberOfGuests: data.numberOfGuests,
+      startDate: data.bookingDateRange[0],
+      endDate: data.bookingDateRange[1],
+      roomIdList: this.createReservedRoomIdArrayToSend(),
+      guestName: "",
+      remark: ""
+    };
+    this.bookingService.createBooking(input).subscribe(
+      (next) => {
+        console.log('it was successful')
+      }, error => console.error(error),
+    );
+  }
+
+  createReservedRoomIdArrayToSend(): number[] {
+    const result: number[] = [];
+    this.bookingForm.value.roomIdList.forEach((value, index) => {
+        if (value) {
+          result.push(this.hotel.rooms[index].id)
+        }
+      }
+    );
+    return result;
+  }
+
+  private createRoomBookingFormArray() {
+    this.hotel.rooms.forEach(() => {
+        const control = new FormControl(false);
+        (this.bookingForm.controls.roomIdList as FormArray).push(control);
+      }
+    );
+  }
+
+  private clearRoomBookingFormArray() {
+    while ((this.bookingForm.controls.roomIdList as FormArray).length !== 0) {
+      (this.bookingForm.controls.roomIdList as FormArray).removeAt(0)
+    }
+  }
 
 }

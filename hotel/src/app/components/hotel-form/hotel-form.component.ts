@@ -7,6 +7,7 @@ import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {HotelCreateItemModel} from "../../models/hotelCreateItem.model";
 import {LoginService} from "../../services/login.service";
+
 // import {validationHandler} from "../../utils/validationHandler";
 
 @Component({
@@ -19,7 +20,7 @@ export class HotelFormComponent implements OnInit {
 	hotelForm: FormGroup;
 	hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
 	hotelTypeOption: HotelTypeOptionModel[];
-	private id: number;
+  private hotelIdFromLogin: number;
 	private isUpdate: boolean;
 
 	constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
@@ -45,35 +46,15 @@ export class HotelFormComponent implements OnInit {
       }
     );
 
-	  this.id = this.loginService.getHotelId();
+    this.hotelIdFromLogin = this.loginService.getHotelId();
 
-    if (this.id) {
+    if (this.hotelIdFromLogin) {
       this.isUpdate = true;
-      this.getHotelCreateData(String(this.id));
+      this.getHotelCreateData(String(this.hotelIdFromLogin));
 
     } else {
       this.isUpdate = false;
     }
-
-		// this.hotelService.getHotelFormData().subscribe(
-		// 	(hotelFormData: HotelFormDataModel) => {
-		// 		this.hotelTypeOption = hotelFormData.hotelType;
-		// 		this.hotelFeatureTypeOption = hotelFormData.hotelFeatures;
-    //     this.createHotelFeaturesCheckboxControl();
-    //
-		// 		this.route.paramMap.subscribe(
-		// 			paramMap => {
-		// 				const editableId = paramMap.get('id');
-		// 				if (editableId) {
-		// 					this.id = +editableId;
-		// 					this.getHotelCreateData(editableId);
-		// 				}
-		// 			},
-		// 			error => console.warn(error),
-		// 		);
-		// 	}
-		// );
-
 	}
 
   onSubmit() {
@@ -107,10 +88,10 @@ export class HotelFormComponent implements OnInit {
 				});
 			},
 		);
-	}
+  };
 
   private updateHotel(data: HotelCreateItemModel) {
-    this.hotelService.updateHotel(data, this.id).subscribe(
+    this.hotelService.updateHotel(data, this.hotelIdFromLogin).subscribe(
       () => {
         this.router.navigate(['/admin/hotel']);
       },			error => console.error(error),

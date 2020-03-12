@@ -17,6 +17,7 @@ import {PopupComponent} from './popup/popup.component';
 import {MaterialModule} from "./material.module";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
+import {Ng2FlatpickrModule} from "ng2-flatpickr";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     BrowserAnimationsModule,
     MaterialModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    Ng2FlatpickrModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

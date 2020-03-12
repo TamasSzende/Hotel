@@ -26,9 +26,9 @@
               {{ hotelFeature }}
             </li>
           </ul>
-          <div class="btn-toolbar"  class="text-right" role="toolbar">
+          <div class="btn-toolbar" class="text-right" role="toolbar">
             <div class="btn-group mr-4">
-            <button (click)="updateHotel()" class="btn btn-success ">edit Hotel data</button>
+              <button (click)="updateHotel()" class="btn btn-success ">edit Hotel data</button>
             </div>
             <div class="btn-group mr-4">
               <button (click)="backToHotelList()" class="btn btn-primary ">back to Hotel list</button>
@@ -40,51 +40,91 @@
     </div>
   </div>
 
-  <br>
-
-  <h4>
-    Rooms:
-  </h4>
-
-  <div *ngFor="let room of hotel?.rooms" class="card mb-3" >
-    <div class="row no-gutters">
-      <div class="col-md-4">
-        <img [src]="room.roomImageUrl" *ngIf="room.roomImageUrl" class="card-img" alt="roomImage">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">{{ room.roomName }} - {{ room.roomType }}</h5>
-          <h6 class="card-subtitle mb-2">
-            Number of beds: {{ room.numberOfBeds }} - Room area: {{ room.roomArea }} m2 - Price per Night
-            : {{ room.pricePerNight }} Ft
-          </h6>
-
-          <p class="card-text">
-            {{ room.description}}
-          </p>
-
-          <p class="card-text">
-            <small *ngFor="let roomFeature of room.roomFeatures" class="text-muted">
-              &#9679;{{ roomFeature }} &shy;
-            </small>
-          </p>
-          <div class="btn-toolbar"  class="text-right" role="toolbar">
-
-            <div class="btn-group mr-4">
-              <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
-            </div>
-            <div class="btn-group">
-              <button (click)="updateRoom(room.id)" class="btn btn-secondary btn-sm">&nbsp;&nbsp;edit&nbsp;&nbsp;</button>
-              <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm" >delete</button>
-            </div>
-          </div>
-        </div>
-
+  <form [formGroup]="bookingForm">
+    <div class="form-inline">
+      <label for="numberOfGuests" lass="form-control-label">
+        Vendégek száma:&nbsp;&nbsp;
+      </label>
+      <input
+        formControlName="numberOfGuests"
+        id="numberOfGuests"
+        name="numberOfGuests"
+        type="number"
+      />
+      &nbsp;&nbsp;
+      <label>
+        Utazás időpontja:&nbsp;&nbsp;
+      </label>
+      <ng2-flatpickr
+        [config]="flatpickrOptions"
+        formControlName="bookingDateRange"
+        id="bookingDateRange"
+        name="bookingDateRange"
+        placeholder="Válasz időpontot!"
+      >
+      </ng2-flatpickr>
+      &nbsp;&nbsp;
+      <div class="btn-group mr-4">
+        <button (click)="makeBooking()" class="btn btn-warning">Foglalás</button>
       </div>
     </div>
 
 
-  </div>
+    <br>
+
+    <h4>
+      Szabad szobák:
+    </h4>
+
+    <div *ngFor="let room of hotel?.rooms; let i = index" formArrayName="roomIdList">
+      <div class="card mb-3">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img *ngIf="room.roomImageUrl" [src]="room.roomImageUrl" alt="roomImage" class="card-img">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ room.roomName }} - {{ room.roomType }}</h5>
+              <h6 class="card-subtitle mb-2">
+                Number of beds: {{ room.numberOfBeds }} - Room area: {{ room.roomArea }} m2 - Price per Night
+                : {{ room.pricePerNight }} Ft
+              </h6>
+
+              <p class="card-text">
+                {{ room.description}}
+              </p>
+
+              <p class="card-text">
+                <small *ngFor="let roomFeature of room.roomFeatures" class="text-muted">
+                  &#9679;{{ roomFeature }} &shy;
+                </small>
+              </p>
+              <div class="btn-toolbar" class="text-right" role="toolbar">
+
+                <div class="btn-group mr-4">
+                  <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
+                </div>
+                <div class="btn-group mr-4">
+                  <button (click)="updateRoom(room.id)" class="btn btn-secondary btn-sm">&nbsp;&nbsp;edit&nbsp;&nbsp;
+                  </button>
+                  <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">delete</button>
+                </div>
+
+                <label>
+                  Lefoglalom&nbsp;
+                  <input [formControlName]="i" type="checkbox">
+                </label>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </form>
 
   <button (click)="createRoomInHotel()" type="button" class="btn btn-primary btn-lg btn-block">Add new room</button>
 
@@ -93,7 +133,6 @@
   <br>
 
 </div>
-
 
 
 <!--DELETE ROOM MODAL-->
