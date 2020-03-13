@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    List<Room> findAllByHotel_Id(Long hotelId);
+    List<Room> findAllByHotel_IdOrderByPricePerNight(Long hotelId);
 }

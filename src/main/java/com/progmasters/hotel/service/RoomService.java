@@ -50,7 +50,7 @@ public class RoomService {
     }
 
     public List<RoomListItem> getRoomList(Long hotelId) {
-        return roomRepository.findAllByHotel_Id(hotelId)
+        return roomRepository.findAllByHotel_IdOrderByPricePerNight(hotelId)
                 .stream()
                 .map(RoomListItem::new)
                 .collect(Collectors.toList());

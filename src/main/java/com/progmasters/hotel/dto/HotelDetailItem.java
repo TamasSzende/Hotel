@@ -2,7 +2,6 @@ package com.progmasters.hotel.dto;
 
 import com.progmasters.hotel.domain.Hotel;
 import com.progmasters.hotel.domain.HotelFeatureType;
-import com.progmasters.hotel.domain.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +31,6 @@ public class HotelDetailItem {
 		this.streetAddress = hotel.getStreetAddress();
 		this.hotelType = hotel.getHotelType().getDisplayName();
 		this.hotelCapacity = 0;
-		for (Room room : hotel.getRooms()) {
-			this.rooms.add(new RoomListItem(room));
-			this.hotelCapacity += room.getNumberOfBeds();
-		}
 		this.hotelImageUrl = hotel.getHotelImageUrl();
 		this.description = hotel.getDescription();
 		for (HotelFeatureType hotelFeatureType : hotel.getHotelFeatures()) {

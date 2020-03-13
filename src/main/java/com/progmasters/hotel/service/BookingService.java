@@ -85,6 +85,7 @@ public class BookingService {
             this.bookingRepository.save(booking);
             resultBookingId = booking.getId();
         }
+        //TODO send an email!!!!
         return resultBookingId;
     }
 
