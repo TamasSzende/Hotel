@@ -18,7 +18,7 @@ import {MaterialModule} from "./material.module";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
-import {BookingFormDialogComponent} from "./components/hotel-form/booking-form-dialog/booking-form-dialog.component";
+import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
 
 @NgModule({
   declarations: [

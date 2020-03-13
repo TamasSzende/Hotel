@@ -9,7 +9,7 @@ import {PopupService} from "../../services/popup.service";
 import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {BookingService} from "../../services/booking.service";
-import {BookingFormDialogComponent} from "../hotel-form/booking-form-dialog/booking-form-dialog.component";
+import {BookingFormDialogComponent} from "./booking-form-dialog/booking-form-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 
