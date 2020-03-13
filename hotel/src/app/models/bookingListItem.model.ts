@@ -8,4 +8,5 @@ export interface BookingListItemModel {
   reservedRooms: RoomShortListItemModel[];
   numberOfGuests: number;
   dateOfBooking: Date;
+  priceOfBooking: number;
 }

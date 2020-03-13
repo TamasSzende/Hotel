@@ -21,6 +21,7 @@ public class BookingListItem {
     private Integer numberOfGuests;
     @JsonFormat(pattern = "yyyy-MM-dd' 'HH:mm")
     private LocalDateTime dateOfBooking;
+    private Double priceOfBooking;
 
 
     BookingListItem() {
@@ -36,6 +37,7 @@ public class BookingListItem {
         }
         this.numberOfGuests = booking.getNumberOfGuests();
         this.dateOfBooking = booking.getDateOfBooking();
+        this.priceOfBooking = booking.getPriceOfBooking();
     }
 
     public Long getId() {
@@ -66,6 +68,10 @@ public class BookingListItem {
         return dateOfBooking;
     }
 
+    public Double getPriceOfBooking() {
+        return priceOfBooking;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -92,5 +98,9 @@ public class BookingListItem {
 
     public void setDateOfBooking(LocalDateTime dateOfBooking) {
         this.dateOfBooking = dateOfBooking;
+    }
+
+    public void setPriceOfBooking(Double priceOfBooking) {
+        this.priceOfBooking = priceOfBooking;
     }
 }

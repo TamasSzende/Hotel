@@ -31,6 +31,9 @@ public class Booking {
     @Column(name = "number_of_guests")
     private Integer numberOfGuests;
 
+    @Column(name = "full_price")
+    private Double priceOfBooking;
+
     Booking() {
     }
 
@@ -65,6 +68,10 @@ public class Booking {
         return numberOfGuests;
     }
 
+    public Double getPriceOfBooking() {
+        return priceOfBooking;
+    }
+
     public void setDateOfBooking(LocalDateTime dateOfBooking) {
         this.dateOfBooking = dateOfBooking;
     }
@@ -87,5 +94,9 @@ public class Booking {
 
     public void setNumberOfGuests(Integer numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
+    }
+
+    public void setPriceOfBooking(Double priceOfBooking) {
+        this.priceOfBooking = priceOfBooking;
     }
 }

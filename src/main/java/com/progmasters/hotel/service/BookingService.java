@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,9 +35,13 @@ public class BookingService {
     public boolean saveBooking(BookingCreateItem bookingCreateItem) {
         boolean result = true;
         Booking booking = new Booking(bookingCreateItem);
-        //TODO validation
+        //TODO validation (nnd refractoring???)
         //Check the rooms are in the same hotel
         //Check the time, later than now, end is later then start (and not equal)
+
+        Integer numberOfNights = Period.between(bookingCreateItem.getStartDate(),
+                bookingCreateItem.getStartDate()).getDays();
+        Double priceOfBooking = 0.0;
 
         //Check the rooms are free!
         for (Long roomId : bookingCreateItem.getRoomIdList()) {
@@ -47,11 +52,13 @@ public class BookingService {
                 roomReservation.setBooking(booking);
                 roomReservation.setRoom(room);
                 this.roomReservationRepository.save(roomReservation);
+                priceOfBooking += room.getPricePerNight() * numberOfNights;
             } else {
                 result = false;
             }
         }
         if (result) {
+            booking.setPriceOfBooking(priceOfBooking);
             this.bookingRepository.save(booking);
         }
         return result;
@@ -60,5 +67,6 @@ public class BookingService {
     public List<BookingListItem> getBookingListItemList() {
         return bookingRepository.findAll().stream().map(BookingListItem::new).collect(Collectors.toList());
     }
+
 
 }
