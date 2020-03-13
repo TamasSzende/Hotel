@@ -111,36 +111,19 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   makeBooking() {
-    const data = {...this.bookingForm.value};
+    const input = {...this.bookingForm.value};
     let dialogRef = this.dialog.open(BookingFormDialogComponent, {
       height: '600px',
       width: '800px',
       data: {
         hotel: this.createHotelDataToSend(),
-        numberOfGuests: data.numberOfGuests,
-        startDate: data.bookingDateRange[0],
-        endDate: data.bookingDateRange[1],
+        numberOfGuests: input.numberOfGuests,
+        startDate: input.bookingDateRange[0],
+        endDate: input.bookingDateRange[1],
         roomList: this.createReservedRoomArrayToSend(),
       }
     });
   }
-
-  // makeBooking() {
-  //   const data = {...this.bookingForm.value};
-  //   const input = {
-  //     numberOfGuests: data.numberOfGuests,
-  //     startDate: data.bookingDateRange[0],
-  //     endDate: data.bookingDateRange[1],
-  //     roomIdList: this.createReservedRoomIdArrayToSend(),
-  //     guestName: "",
-  //     remark: ""
-  //   };
-  //   this.bookingService.createBooking(input).subscribe(
-  //     (next) => {
-  //       console.log('it was successful')
-  //     }, error => console.error(error),
-  //   );
-  // }
 
   createReservedRoomArrayToSend(): RoomShortListItemModel[] {
     const result: RoomShortListItemModel[] = [];

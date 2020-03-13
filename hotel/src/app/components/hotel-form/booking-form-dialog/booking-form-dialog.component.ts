@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BookingCreateItemModel} from "../../../models/bookingCreateItem.model";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -7,7 +7,8 @@ import {BookingService} from "../../../services/booking.service";
 @Component({
   selector: 'app-booking-form-dialog',
   templateUrl: './booking-form-dialog.component.html',
-  styleUrls: ['./booking-form-dialog.component.css']
+  styleUrls: ['./booking-form-dialog.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BookingFormDialogComponent implements OnInit {
 
@@ -41,14 +42,7 @@ export class BookingFormDialogComponent implements OnInit {
 
   onSubmit() {
     const input = {...this.bookingForm.value};
-    const bookingData: BookingCreateItemModel = {
-      guestName: input.guestName,
-      remark: input.remark,
-      numberOfGuests: this.data.numberOfGuests,
-      startDate: this.data.startDate,
-      endDate: this.data.endDate,
-      roomIdList: this.data.roomList.map(room => room.id)
-    };
+    const bookingData: BookingCreateItemModel = this.createBookingData(input);
     this.bookingService.createBooking(bookingData).subscribe(
       (next) => {
         console.log('it was successful')
@@ -57,5 +51,15 @@ export class BookingFormDialogComponent implements OnInit {
     this.closeDialog();
   }
 
+  createBookingData = (input): BookingCreateItemModel => {
+    return {
+      guestName: input.guestName,
+      remark: input.remark,
+      numberOfGuests: this.data.numberOfGuests,
+      startDate: this.data.startDate,
+      endDate: this.data.endDate,
+      roomIdList: this.data.roomList.map(room => room.id)
+    }
+  }
 
 }
