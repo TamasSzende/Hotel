@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BookingCreateItemModel} from "../../../models/bookingCreateItem.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BookingService} from "../../../services/booking.service";
+import {BookingDetailsModel} from "../../../models/bookingDetails.model";
 
 @Component({
   selector: 'app-booking-form-dialog',
@@ -15,6 +16,8 @@ export class BookingFormDialogComponent implements OnInit {
   bookingForm: FormGroup;
   numberOfNights: number;
   priceOfBooking: number;
+  bookingDetails: BookingDetailsModel;
+  bookingStatus: string = 'booking';
 
   constructor(public dialogRef: MatDialogRef<BookingFormDialogComponent>,
               private bookingService: BookingService,
@@ -44,11 +47,20 @@ export class BookingFormDialogComponent implements OnInit {
     const input = {...this.bookingForm.value};
     const bookingData: BookingCreateItemModel = this.createBookingData(input);
     this.bookingService.createBooking(bookingData).subscribe(
-      (next) => {
-        console.log('it was successful')
-      }, error => console.error(error),
+      (bookingId: number) => {
+        this.bookingService.bookingDetail(bookingId).subscribe(
+          (response: BookingDetailsModel) => {
+            this.bookingStatus = 'created';
+            this.bookingDetails = response;
+            this.numberOfNights = Math.round((response.endDate.getTime() - response.startDate.getTime()) / 86400000);
+          }, error => {
+            this.bookingStatus = 'failed';
+          }
+        )
+      }, error => {
+        this.bookingStatus = 'failed';
+      },
     );
-    this.closeDialog();
   }
 
   createBookingData = (input): BookingCreateItemModel => {
@@ -60,6 +72,14 @@ export class BookingFormDialogComponent implements OnInit {
       endDate: this.data.endDate,
       roomIdList: this.data.roomList.map(room => room.id)
     }
-  }
+  };
 
+  backToHotelList() {
+    this.closeDialog();
+    //TODO megírni az átírányítást
+    //TODO megírni a sikertelen foglalást!!
+
+    // this.router.navigate(['/hotel'])
+
+  }
 }

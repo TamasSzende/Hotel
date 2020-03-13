@@ -1,6 +1,7 @@
 package com.progmasters.hotel.controller;
 
 import com.progmasters.hotel.dto.BookingCreateItem;
+import com.progmasters.hotel.dto.BookingDetails;
 import com.progmasters.hotel.dto.BookingListItem;
 import com.progmasters.hotel.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,18 @@ public class BookingController {
         return new ResponseEntity<>(bookingService.getBookingListItemList(), HttpStatus.OK);
     }
 
+
+    @GetMapping("/{id}")
+    public BookingDetails bookingDetail(@PathVariable("id") Long id) {
+        return bookingService.getBookingDetails(id);
+    }
+
     @PostMapping
-    public ResponseEntity<Void> saveBooking(@RequestBody BookingCreateItem bookingCreateItem) {
-        boolean bookingIsCreated = bookingService.saveBooking(bookingCreateItem);
-        return bookingIsCreated ? new ResponseEntity<>(HttpStatus.CREATED) : new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
+    public ResponseEntity<Long> saveBooking(@RequestBody BookingCreateItem bookingCreateItem) {
+        Long bookingId = bookingService.saveBooking(bookingCreateItem);
+        return bookingId != null ?
+                new ResponseEntity<>(bookingId, HttpStatus.CREATED) :
+                new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
     }
 
 }

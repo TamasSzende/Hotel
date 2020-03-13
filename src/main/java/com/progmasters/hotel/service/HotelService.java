@@ -60,6 +60,15 @@ public class HotelService {
 		return hotelDetailItem;
 	}
 
+	public HotelShortItem getHotelShortItem(Long id) {
+		HotelShortItem hotelShortItem = null;
+		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
+		if (hotelOptional.isPresent()) {
+			hotelShortItem = new HotelShortItem(hotelOptional.get());
+		}
+		return hotelShortItem;
+	}
+
 	public HotelCreateItem getHotelCreateItem (Long id) {
 		HotelCreateItem hotelCreateItem = null;
 		 Optional<Hotel> hotelOptional = hotelRepository.findById(id);

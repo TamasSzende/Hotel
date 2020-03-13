@@ -115,14 +115,15 @@ export class HotelDetailsComponent implements OnInit {
     let dialogRef = this.dialog.open(BookingFormDialogComponent, {
       height: '600px',
       width: '800px',
-      data: {
-        hotel: this.createHotelDataToSend(),
-        numberOfGuests: input.numberOfGuests,
-        startDate: input.bookingDateRange[0],
-        endDate: input.bookingDateRange[1],
-        roomList: this.createReservedRoomArrayToSend(),
-      }
+      data: this.createBookingFormDialogData(input),
     });
+    dialogRef.afterClosed().subscribe(
+      response => {
+        if (response) {
+          this.router.navigate(['/hotel']);
+        }
+      }
+    )
   }
 
   createReservedRoomArrayToSend(): RoomShortListItemModel[] {
@@ -141,6 +142,16 @@ export class HotelDetailsComponent implements OnInit {
       }
     );
     return result;
+  }
+
+  createBookingFormDialogData(input) {
+    return {
+      hotel: this.createHotelDataToSend(),
+      numberOfGuests: input.numberOfGuests,
+      startDate: input.bookingDateRange[0],
+      endDate: input.bookingDateRange[1],
+      roomList: this.createReservedRoomArrayToSend(),
+    }
   }
 
   createHotelDataToSend() {
