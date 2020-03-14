@@ -84,5 +84,14 @@ public class RoomReservation {
         this.booking = booking;
     }
 
-
+    @Override
+    public String toString() {
+        return "RoomReservation{" +
+                "id=" + id +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", room=" + room.getId() +
+                ", booking=" + booking.getId() +
+                '}';
+    }
 }

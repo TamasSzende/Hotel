@@ -7,13 +7,14 @@ import com.progmasters.hotel.dto.BookingCreateItem;
 import com.progmasters.hotel.dto.BookingDetails;
 import com.progmasters.hotel.dto.BookingListItem;
 import com.progmasters.hotel.repository.BookingRepository;
-import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import com.progmasters.hotel.repository.RoomReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,66 +28,37 @@ public class BookingService {
     private BookingRepository bookingRepository;
     private RoomReservationRepository roomReservationRepository;
     private RoomRepository roomRepository;
-    private HotelRepository hotelRepository;
 
     @Autowired
-    public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository, HotelRepository hotelRepository) {
+    public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository) {
         this.bookingRepository = bookingRepository;
         this.roomReservationRepository = roomReservationRepository;
         this.roomRepository = roomRepository;
-        this.hotelRepository = hotelRepository;
     }
 
     public Long saveBooking(BookingCreateItem bookingCreateItem) {
-        boolean isCreated = true;
         Booking booking = new Booking(bookingCreateItem);
-        Long resultBookingId = null;
 
-
-        //TODO validation (and refractoring???)
         //Check the rooms are in the same hotel
-        Long hotelId = null;
-        for (Long roomId : bookingCreateItem.getRoomIdList()) {
-            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
-            if (optionalRoom.isPresent()) {
-                Room room = optionalRoom.get();
-                Long actualHotelId = room.getHotel().getId();
-                if (hotelId != null && actualHotelId != hotelId) {
-                    return resultBookingId;
-                } else {
-                    hotelId = actualHotelId;
-                }
-            }
-        }
-        //Check the time, later than now, end is later then start (and not equal)
+        Long hotelId = getHotelIdAndValidate(bookingCreateItem);
+        if (hotelId == null) return null;
+
+        //Check the time: later than now, end is later then start (and not equal)
         Long numberOfNights = DAYS.between(bookingCreateItem.getStartDate(), bookingCreateItem.getEndDate());
-        if (numberOfNights < 1) {
-            return resultBookingId;
-        }
-        Double priceOfBooking = 0.0;
+        if (numberOfNights < 1) return null;
 
-        //TODO Check the rooms are free!
+        //Check the rooms are free and exist (and create RoomReservation List)
+        List<RoomReservation> roomReservations = getRoomReservationsAndValidate(bookingCreateItem, booking);
+        if (roomReservations.isEmpty()) return null;
 
-        for (Long roomId : bookingCreateItem.getRoomIdList()) {
-            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
-            if (optionalRoom.isPresent()) {
-                Room room = optionalRoom.get();
-                RoomReservation roomReservation = new RoomReservation(bookingCreateItem);
-                roomReservation.setBooking(booking);
-                roomReservation.setRoom(room);
-                this.roomReservationRepository.save(roomReservation);
-                priceOfBooking += room.getPricePerNight() * numberOfNights;
-            } else {
-                isCreated = false;
-            }
-        }
-        if (isCreated) {
-            booking.setPriceOfBooking(priceOfBooking);
-            this.bookingRepository.save(booking);
-            resultBookingId = booking.getId();
-        }
+        double priceOfBooking = getPriceOfBooking(numberOfNights, bookingCreateItem);
+        booking.setPriceOfBooking(priceOfBooking);
+
+        roomReservations.forEach(this.roomReservationRepository::save);
+        this.bookingRepository.save(booking);
+
         //TODO send an email!!!!
-        return resultBookingId;
+        return booking.getId();
     }
 
     public List<BookingListItem> getBookingListItemList() {
@@ -94,7 +66,7 @@ public class BookingService {
     }
 
     public BookingDetails getBookingDetails(Long bookingId) {
-        BookingDetails bookingDetails = null;
+        BookingDetails bookingDetails;
         Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
         if (optionalBooking.isPresent()) {
             bookingDetails = new BookingDetails(optionalBooking.get());
@@ -102,6 +74,58 @@ public class BookingService {
             throw new IllegalArgumentException("There is no Booking for this id:" + bookingId);
         }
         return bookingDetails;
+    }
+
+    private List<RoomReservation> getRoomReservationsAndValidate(BookingCreateItem bookingCreateItem, Booking booking) {
+        List<RoomReservation> roomReservations = new ArrayList<>();
+        for (Long roomId : bookingCreateItem.getRoomIdList()) {
+            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
+            if (optionalRoom.isPresent()
+                    && isRoomFree(roomId, bookingCreateItem.getStartDate(), bookingCreateItem.getEndDate())) {
+                RoomReservation roomReservation = new RoomReservation(bookingCreateItem);
+                roomReservation.setRoom(optionalRoom.get());
+                roomReservation.setBooking(booking);
+                roomReservations.add(roomReservation);
+            } else {
+                return new ArrayList<>();
+            }
+        }
+        return roomReservations;
+    }
+
+    public boolean isRoomFree(Long roomId, LocalDate startDate, LocalDate enDate) {
+        List<RoomReservation> roomReservations =
+                this.roomReservationRepository.findAllByRoomIdAndEndDateAfterAndStartDateBefore(roomId, startDate, enDate);
+        return roomReservations.isEmpty();
+    }
+
+    private Long getHotelIdAndValidate(BookingCreateItem bookingCreateItem) {
+        Long hotelId = null;
+        for (Long roomId : bookingCreateItem.getRoomIdList()) {
+            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
+            if (optionalRoom.isPresent()) {
+                Room room = optionalRoom.get();
+                Long actualHotelId = room.getHotel().getId();
+                if (hotelId != null && !actualHotelId.equals(hotelId)) {
+                    return null;
+                } else {
+                    hotelId = actualHotelId;
+                }
+            }
+        }
+        return hotelId;
+    }
+
+    private double getPriceOfBooking(Long numberOfNights, BookingCreateItem bookingCreateItem) {
+        double priceOfBooking = 0.0;
+        for (Long roomId : bookingCreateItem.getRoomIdList()) {
+            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
+            if (optionalRoom.isPresent()) {
+                Room room = optionalRoom.get();
+                priceOfBooking += room.getPricePerNight() * numberOfNights;
+            }
+        }
+        return priceOfBooking;
     }
 
 

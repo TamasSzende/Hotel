@@ -47,8 +47,7 @@ public class HotelService {
 	public Long saveHotel(HotelCreateItem hotelCreateItem) {
 		Hotel hotel = new Hotel(hotelCreateItem);
 		this.hotelRepository.save(hotel);
-		Long hotelId = hotel.getId();
-		return hotelId;
+        return hotel.getId();
 	}
 
 	public HotelDetailItem getHotelDetailItem(Long hotelId) {
@@ -100,7 +99,6 @@ public class HotelService {
 		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
 		if (hotelOptional.isPresent()) {
 			Hotel hotel = hotelOptional.get();
-            //TODO megnézni máshol van-e...(pl. booking...)
 			List<Room> deletedRooms = hotel.getRooms();
 			for (Room deletedRoom : deletedRooms) {
 				this.roomRepository.delete(deletedRoom);
