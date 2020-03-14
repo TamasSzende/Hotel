@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {RoomCreateItemModel} from "../models/roomCreateItem.model";
 import {Observable} from "rxjs";
 import {RoomListItemModel} from "../models/roomListItem.model";
 import {RoomFormDataModel} from "../models/roomFormData.model";
-import {RoomDetailsComponent} from "../components/room-details/room-details.component";
 import {RoomDetailsModel} from "../models/roomDetails.model";
 
 const BASE_URL = 'http://localhost:8080/api/rooms';
@@ -23,6 +22,13 @@ export class RoomService {
 
   getRoomList(): Observable<Array<RoomListItemModel>> {
     return this.http.get<Array<RoomListItemModel>>(BASE_URL);
+  }
+
+  getFreeRoomList(data: { hotelId: number; startDate: Date; endDate: Date; }): Observable<Array<RoomListItemModel>> {
+    const params = new HttpParams()
+      .set('startDate', data.startDate.toLocaleDateString())
+      .set('endDate', data.endDate.toLocaleDateString());
+    return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/free/' + data.hotelId, {params});
   }
 
   getRoomFormData(): Observable<RoomFormDataModel> {
@@ -45,8 +51,4 @@ export class RoomService {
   getRoomFormForUpdate(id: string): Observable<RoomCreateItemModel> {
     return this.http.get<RoomCreateItemModel>(BASE_URL + '/formData/' + id);
   }
-
-
-
-
 }

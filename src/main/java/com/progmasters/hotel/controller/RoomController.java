@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -28,6 +29,11 @@ public class RoomController {
         List<RoomFeatureTypeOption> roomFeatureTypeOptionList = this.roomService.getRoomFeatureTypeOptionList();
         RoomFormData roomFormData = new RoomFormData(roomTypeOptionList, roomFeatureTypeOptionList);
         return new ResponseEntity<>(roomFormData, HttpStatus.OK);
+    }
+
+    @GetMapping("/free/{id}")
+    public List<RoomListItem> getFreeRoomList(@PathVariable("id") Long hotelId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        return roomService.getFreeRoomList(hotelId, startDate, endDate);
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.progmasters.hotel.repository;
 
+import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.domain.RoomReservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,8 @@ import java.util.List;
 
 @Repository
 public interface RoomReservationRepository extends JpaRepository<RoomReservation, Long> {
+
+    List<RoomReservation> findAllByRoomAndEndDateAfterAndStartDateBefore(Room room, LocalDate startDate, LocalDate endDate);
 
     List<RoomReservation> findAllByRoomIdAndEndDateAfterAndStartDateBefore(Long roomId, LocalDate startDate, LocalDate endDate);
 

@@ -1,15 +1,14 @@
 package com.progmasters.hotel.service;
 
-import com.progmasters.hotel.domain.Hotel;
-import com.progmasters.hotel.domain.Room;
-import com.progmasters.hotel.domain.RoomFeatureType;
-import com.progmasters.hotel.domain.RoomType;
+import com.progmasters.hotel.domain.*;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
+import com.progmasters.hotel.repository.RoomReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +19,13 @@ public class RoomService {
 
     private RoomRepository roomRepository;
     private HotelRepository hotelRepository;
+    private RoomReservationRepository roomReservationRepository;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository, HotelRepository hotelRepository) {
+    public RoomService(RoomRepository roomRepository, HotelRepository hotelRepository, RoomReservationRepository roomReservationRepository) {
         this.roomRepository = roomRepository;
         this.hotelRepository = hotelRepository;
+        this.roomReservationRepository = roomReservationRepository;
     }
 
     public List<RoomFeatureTypeOption> getRoomFeatureTypeOptionList() {
@@ -56,9 +57,17 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
+    public List<RoomListItem> getFreeRoomList(Long hotelId, LocalDate startDate, LocalDate enDate) {
+        return roomRepository.findAllByHotel_IdOrderByPricePerNight(hotelId)
+                .stream()
+                .filter(room -> isRoomFree(room, startDate, enDate))
+                .map(RoomListItem::new)
+                .collect(Collectors.toList());
+    }
+
 
     public RoomDetails getRoomDetails(Long roomId) {
-        RoomDetails roomDetails = new RoomDetails();
+        RoomDetails roomDetails;
         Optional<Room> optionalRoom = roomRepository.findById(roomId);
         if (optionalRoom.isPresent()) {
             roomDetails = new RoomDetails(optionalRoom.get());
@@ -113,11 +122,17 @@ public class RoomService {
         Optional<Room> roomOptional = roomRepository.findById(id);
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
-            Long hotelId = room.getHotel().getId();
-            return hotelId;
+            return room.getHotel().getId();
         } else {
             return null; //TODO ez jó kérdés, hogy itt mivel kellene visszatérni...
         }
     }
+
+    private boolean isRoomFree(Room room, LocalDate startDate, LocalDate enDate) {
+        List<RoomReservation> roomReservations =
+                this.roomReservationRepository.findAllByRoomAndEndDateAfterAndStartDateBefore(room, startDate, enDate);
+        return roomReservations.isEmpty();
+    }
+
 
 }

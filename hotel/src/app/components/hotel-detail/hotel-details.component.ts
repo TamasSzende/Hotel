@@ -37,12 +37,12 @@ export class HotelDetailsComponent implements OnInit {
       minDate: "today",
       dateFormat: "Y-m-d",
     };
-
     this.bookingForm = new FormGroup({
       'numberOfGuests': new FormControl(null),
       'bookingDateRange': new FormControl(''),
       'roomIdList': new FormArray([]),
     });
+
   }
 
   ngOnInit(): void {
@@ -71,6 +71,23 @@ export class HotelDetailsComponent implements OnInit {
         this.createRoomBookingFormArray();
       }
     );
+  };
+
+  getFreeRoomList = () => {
+    const data = {
+      hotelId: this.hotel.id,
+      startDate: this.bookingForm.value.bookingDateRange[0],
+      endDate: this.bookingForm.value.bookingDateRange[1],
+    };
+    this.roomService.getFreeRoomList(data).subscribe(
+      (response: RoomListItemModel[]) => {
+        this.hotel.rooms = response;
+        this.clearRoomBookingFormArray();
+        this.createRoomBookingFormArray();
+      },
+      error => console.warn(error),
+    );
+
   };
 
   createRoomInHotel() {
@@ -111,11 +128,10 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   makeBooking() {
-    const input = {...this.bookingForm.value};
     let dialogRef = this.dialog.open(BookingFormDialogComponent, {
       height: '600px',
       width: '800px',
-      data: this.createBookingFormDialogData(input),
+      data: this.createBookingFormDialogData(),
     });
     dialogRef.afterClosed().subscribe(
       response => {
@@ -124,6 +140,27 @@ export class HotelDetailsComponent implements OnInit {
         }
       }
     )
+  }
+
+  createBookingFormDialogData() {
+    const input = {...this.bookingForm.value};
+    return {
+      hotel: this.createHotelDataToSend(),
+      numberOfGuests: input.numberOfGuests,
+      startDate: input.bookingDateRange[0],
+      endDate: input.bookingDateRange[1],
+      roomList: this.createReservedRoomArrayToSend(),
+    }
+  }
+
+  createHotelDataToSend() {
+    return {
+      name: this.hotel.name,
+      hotelType: this.hotel.hotelType,
+      postalCode: this.hotel.postalCode,
+      city: this.hotel.city,
+      streetAddress: this.hotel.streetAddress,
+    }
   }
 
   createReservedRoomArrayToSend(): RoomShortListItemModel[] {
@@ -142,26 +179,6 @@ export class HotelDetailsComponent implements OnInit {
       }
     );
     return result;
-  }
-
-  createBookingFormDialogData(input) {
-    return {
-      hotel: this.createHotelDataToSend(),
-      numberOfGuests: input.numberOfGuests,
-      startDate: input.bookingDateRange[0],
-      endDate: input.bookingDateRange[1],
-      roomList: this.createReservedRoomArrayToSend(),
-    }
-  }
-
-  createHotelDataToSend() {
-    return {
-      name: this.hotel.name,
-      hotelType: this.hotel.hotelType,
-      postalCode: this.hotel.postalCode,
-      city: this.hotel.city,
-      streetAddress: this.hotel.streetAddress,
-    }
   }
 
   private createRoomBookingFormArray() {
