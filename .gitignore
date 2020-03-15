@@ -3,6 +3,7 @@
 */target/
 *.iml
 *.yaml
+**/application-local.yaml
 
 # dependencies
 */node_modules
