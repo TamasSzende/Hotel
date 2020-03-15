@@ -47,6 +47,10 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    if (!localStorage.getItem('email')) {
+      this.router.navigate(['/login'])
+    }
+
     this.hotelIdFromLogin = this.loginService.getHotelId();
     if (this.hotelIdFromLogin) {
       this.getHotelDetail(String(this.hotelIdFromLogin));

@@ -1,0 +1,51 @@
+<div class="login-popup-wrap new_login_popup">
+  <div class="login-popup-heading text-center">
+    <h4><i aria-hidden="true" class="fa fa-lock"></i> Login </h4>
+  </div>
+  <form [formGroup]="loginForm" action="" id="loginMember" method="post" role="form">
+    <div class="form-group">
+      <input [ngClass]="{'is-invalid': loginForm.get('email').invalid && loginForm.get('email').touched
+                    || loginForm.get('email').errors?.serverError}" class="form-control" formControlName="email"
+             id="email" name="email"
+             placeholder="e-mail"
+             type="text"/>
+      <small
+        *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched && !loginForm.get('email').errors?.serverError"
+        class="text-danger">
+        Give me an email please!
+      </small>
+      <small *ngIf="loginForm.get('email').errors?.serverError" class="text-danger">
+        {{loginForm.get('email').errors['serverError']}}
+      </small>
+    </div>
+
+    <div class="form-group">
+      <input [ngClass]="{'is-invalid': loginForm.get('password').invalid && loginForm.get('password').touched
+                    || loginForm.get('password').errors?.serverError}" class="form-control" formControlName="password"
+             id="password" name="password"
+             placeholder="Password"
+             type="password"/>
+      <small
+        *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched && !loginForm.get('password').errors?.serverError"
+        class="text-danger">
+        Give me a password please!
+      </small>
+      <small *ngIf="loginForm.get('password').errors?.serverError" class="text-danger">
+        {{loginForm.get('password').errors['serverError']}}
+      </small>
+    </div>
+
+
+    <button (click)="doLogin()" [disabled]="loginForm.invalid" class="btn btn-default login-popup-btn"
+            name="submit" type="submit" value="1">Login
+    </button>
+  </form>
+
+  <div class="form-group text-center">
+    <a class="pwd-forget" href="javascript:void(0)" id="open_forgotPassword">Forget Password</a>
+  </div>
+
+  <div class="text-center">Not registered yet?
+    <div (click)="doRegistration()" class="btn btn-link">click me</div>
+  </div>
+</div>

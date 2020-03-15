@@ -17,6 +17,10 @@ export class HotelListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!localStorage.getItem('email')) {
+      this.router.navigate(['/login'])
+    }
+
     this.listHotel();
   }
 

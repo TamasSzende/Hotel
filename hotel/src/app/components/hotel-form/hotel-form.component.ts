@@ -38,6 +38,11 @@ export class HotelFormComponent implements OnInit {
 	}
 
 	ngOnInit() {
+
+    if (!localStorage.getItem('email')) {
+      this.router.navigate(['/login'])
+    }
+
     this.hotelService.getHotelFormData().subscribe(
       (hotelFormData: HotelFormDataModel) => {
         this.hotelTypeOption = hotelFormData.hotelType;
