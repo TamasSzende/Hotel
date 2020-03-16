@@ -4,13 +4,15 @@ import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
   declarations: [],
-  exports: [FormsModule, MatDialogModule, MatButtonModule, MatInputModule],
+  exports: [FormsModule, MatDialogModule, MatButtonModule, MatInputModule, MatSnackBarModule],
   imports: [
-    CommonModule
+    CommonModule,
+    MatSnackBarModule
   ]
 })
 export class MaterialModule {
