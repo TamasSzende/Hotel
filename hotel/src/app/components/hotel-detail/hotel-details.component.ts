@@ -56,6 +56,11 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    if (!localStorage.getItem('email')) {
+      this.router.navigate(['/login'])
+    }
+
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {
         this.roomFeatureTypeOption = roomFormData.roomFeatures;
@@ -78,7 +83,6 @@ export class HotelDetailsComponent implements OnInit {
         error => console.warn(error),
       );
     }
-
   }
 
   getHotelDetail = (hotelId: string) => {

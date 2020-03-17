@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {MailService} from "../../services/mail.service";
-import {MailModel} from "../../models/mail.model";
+import {RegistrationService} from "../../services/registration.service";
+import {validationHandler} from "../../utils/validationHandler";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-registration',
@@ -10,26 +11,31 @@ import {MailModel} from "../../models/mail.model";
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-
   registerForm: FormGroup;
 
-  constructor(private mailService: MailService, private router: Router) {
+  constructor(private registrationService: RegistrationService, private router: Router,
+              private notificationService: NotificationService) {
     this.registerForm = new FormGroup({
-      'email': new FormControl(""),
-      'password': new FormControl(""),
+      'email': new FormControl("", Validators.required),
+      'password': new FormControl("", Validators.required),
+      'firstname': new FormControl("", Validators.required),
+      'lastname': new FormControl("", Validators.required),
+      'address': new FormControl("", Validators.required),
     });
   }
 
-  submit() {
-    let formData: MailModel = this.registerForm.value;
-    this.mailService.registerMail(formData).subscribe(
+  doRegistration() {
+    this.registrationService.sendRegistrationDetails(this.registerForm.value).subscribe(
       () => {
-        this.registerForm.reset();
+        this.notificationService.success('A message has been sent to this email!');
+        this.router.navigate(['/login']);
+      },
+      errors => {
+        validationHandler(errors, this.registerForm);
       }
     );
   }
 
   ngOnInit() {
   }
-
 }

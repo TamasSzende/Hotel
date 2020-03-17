@@ -1,19 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {MailModel} from "../models/mail.model";
-import {Observable} from "rxjs";
+import {RegistrationDetailsModel} from "../models/registrationDetails.model";
 
 @Injectable({
   providedIn: 'root'
 })
-export class MailService {
-
+export class RegistrationService {
   private BASE_URL = 'http://localhost:8080/api/registrations';
 
   constructor(private http: HttpClient) {
   }
 
-  registerMail(userData: MailModel): Observable<any> {
-    return this.http.post(this.BASE_URL, userData)
+  sendRegistrationDetails(data: RegistrationDetailsModel) {
+    return this.http.post(this.BASE_URL, data);
   }
 }

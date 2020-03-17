@@ -1,4 +1,4 @@
-export interface MailModel {
+export interface LoginModel {
   email: string;
   password: string;
 }

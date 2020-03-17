@@ -8,7 +8,7 @@ import {RoomFormComponent} from './components/room-form/room-form.component';
 import {HotelListComponent} from "./components/hotel-list/hotel-list.component";
 import {HotelFormComponent} from "./components/hotel-form/hotel-form.component";
 import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.component";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RoomDetailsComponent} from './components/room-details/room-details.component';
 import {RegistrationComponent} from './components/registration/registration.component';
@@ -19,6 +19,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
+import {LoginFormComponent} from "./components/login-form/login-form.component";
+import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,
+    LoginFormComponent,
   ],
   imports: [
     HttpClientModule,
@@ -44,7 +47,9 @@ import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form
     MatDialogModule,
     Ng2FlatpickrModule,
   ],
-  providers: [],
+  providers: [[
+    {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
+  ],],
   bootstrap: [AppComponent],
   entryComponents: [
     PopupComponent,
