@@ -182,4 +182,7 @@ export class HotelDetailsComponent implements OnInit {
     }
   }
 
+  getPublicId(imgURL: string) {
+    return imgURL.substring(61, imgURL.length - 4);
+  }
 }

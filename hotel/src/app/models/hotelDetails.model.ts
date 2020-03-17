@@ -9,7 +9,7 @@ export interface HotelDetailsModel {
 	hotelType: string;
 	hotelCapacity: number;
   rooms: RoomListItemModel[]
-	hotelImageUrl: string;
+	hotelImageUrl: Array<string>;
 	description: string;
 	hotelFeatures: string[];
 }

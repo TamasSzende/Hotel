@@ -47,8 +47,7 @@ public class HotelService {
 	public Long saveHotel(HotelCreateItem hotelCreateItem) {
 		Hotel hotel = new Hotel(hotelCreateItem);
 		this.hotelRepository.save(hotel);
-		Long hotelId = hotel.getId();
-		return hotelId;
+		return hotel.getId();
 	}
 
 	public HotelDetailItem getHotelDetailItem(Long hotelId) {

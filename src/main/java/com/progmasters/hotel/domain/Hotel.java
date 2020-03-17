@@ -28,6 +28,12 @@ public class Hotel {
     @Column(name = "street_address")
     private String streetAddress;
 
+    @Column(name = "longitude")
+    private Double longitude;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "hotel_type")
     private HotelType hotelType;
@@ -35,8 +41,9 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel")//, fetch = FetchType.EAGER
     private List<Room> rooms = new ArrayList<>();
 
-    @Column(name = "hotel_image_url")
-    private String hotelImageUrl;
+    @Column(name = "hotel_image_urls")
+    @ElementCollection
+    private List<String> hotelImageUrls;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
@@ -50,14 +57,16 @@ public class Hotel {
     Hotel() {
     }
 
-    public Hotel(String name, String postalCode, String city, String streetAddress, HotelType hotelType, List<Room> rooms, String hotelImageUrl, String description, List<HotelFeatureType> hotelFeatures) {
+    public Hotel(String name, String postalCode, String city, String streetAddress, HotelType hotelType, List<Room> rooms, List<String> hotelImageUrls, String description, List<HotelFeatureType> hotelFeatures, Double longitude, Double latitude) {
         this.name = name;
         this.postalCode = postalCode;
         this.city = city;
         this.streetAddress = streetAddress;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.hotelType = hotelType;
         this.rooms = rooms;
-        this.hotelImageUrl = hotelImageUrl;
+        this.hotelImageUrls = hotelImageUrls;
         this.description = description;
         this.hotelFeatures = hotelFeatures;
     }
@@ -68,9 +77,10 @@ public class Hotel {
         this.city = hotelCreateItem.getCity();
         this.streetAddress = hotelCreateItem.getStreetAddress();
         this.hotelType = HotelType.valueOf(hotelCreateItem.getHotelType());
-        this.hotelImageUrl = hotelCreateItem.getHotelImageUrl();
+        this.hotelImageUrls = hotelCreateItem.getHotelImageUrls();
         this.description = hotelCreateItem.getDescription();
         this.hotelFeatures = hotelCreateItem.getHotelFeatures().stream().map(HotelFeatureType::valueOf).collect(Collectors.toList());
+        //TODO get longitude and latitude from some geocoding api
     }
 
     public Long getId() {
@@ -101,8 +111,8 @@ public class Hotel {
         return rooms;
     }
 
-    public String getHotelImageUrl() {
-        return hotelImageUrl;
+    public List<String> getHotelImageUrls() {
+        return hotelImageUrls;
     }
 
     public String getDescription() {
@@ -142,8 +152,24 @@ public class Hotel {
         this.rooms = rooms;
     }
 
-    public void setHotelImageUrl(String hotelImageUrl) {
-        this.hotelImageUrl = hotelImageUrl;
+    public void setHotelImageUrls(List<String> hotelImageUrl) {
+        this.hotelImageUrls = hotelImageUrl;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     public void setDescription(String description) {

@@ -14,9 +14,12 @@ import {RoomDetailsComponent} from './components/room-details/room-details.compo
 import {RegistrationComponent} from './components/registration/registration.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PopupComponent} from './popup/popup.component';
-import {MaterialModule} from "./material.module";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MaterialModule} from "./material.module";
+import {MDBBootstrapModule} from "angular-bootstrap-md";
+import {CloudinaryModule} from "@cloudinary/angular-5.x";
+import * as  Cloudinary from 'cloudinary-core';
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
 import {LoginFormComponent} from "./components/login-form/login-form.component";
@@ -45,16 +48,15 @@ import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
     MaterialModule,
     MatIconModule,
     MatDialogModule,
-    Ng2FlatpickrModule,
+    MDBBootstrapModule,
+    CloudinaryModule.forRoot(Cloudinary, { cloud_name: 'doaywchwk'}),
+    Ng2FlatpickrModule
   ],
   providers: [[
     {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
   ],],
   bootstrap: [AppComponent],
-  entryComponents: [
-    PopupComponent,
-    BookingFormDialogComponent,
-  ]
+  entryComponents: [PopupComponent]
 })
 export class AppModule {
 }

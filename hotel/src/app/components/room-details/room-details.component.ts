@@ -27,6 +27,7 @@ export class RoomDetailsComponent implements OnInit {
       },
       error => console.warn(error),
     );
+
   }
 
   getRoomDetail = (roomId: string) => {
@@ -35,9 +36,10 @@ export class RoomDetailsComponent implements OnInit {
         if (response.hotelId === this.hotelId) {
           this.room = response;
         }
-      }
+      },
+      error => {console.log(error)}
     );
-  }
+  };
 
   updateRoom(id: number): void {
     this.router.navigate(['/admin/hotel/update-room/', id])

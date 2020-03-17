@@ -25,7 +25,7 @@ public class HotelListItem {
         this.city = hotel.getCity();
         this.streetAddress = hotel.getStreetAddress();
         this.hotelType = hotel.getHotelType().getDisplayName();
-        this.hotelImageUrl = hotel.getHotelImageUrl();
+        this.hotelImageUrl = hotel.getHotelImageUrls().get(0);
 
         if (hotel.getDescription() != null && hotel.getDescription().length() > SHORTDESCRIPTIONLENGTH) {
             String hotelFullDescription = hotel.getDescription();

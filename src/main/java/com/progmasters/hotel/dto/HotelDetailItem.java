@@ -2,6 +2,7 @@ package com.progmasters.hotel.dto;
 
 import com.progmasters.hotel.domain.Hotel;
 import com.progmasters.hotel.domain.HotelFeatureType;
+import com.progmasters.hotel.domain.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class HotelDetailItem {
 	private String hotelType;
 	private Integer hotelCapacity;
 	private List<RoomListItem> rooms = new ArrayList<>();
-	private String hotelImageUrl;
+	private List<String> hotelImageUrl;
 	private String description;
 	private List<String> hotelFeatures = new ArrayList<>();
 
@@ -31,7 +32,11 @@ public class HotelDetailItem {
 		this.streetAddress = hotel.getStreetAddress();
 		this.hotelType = hotel.getHotelType().getDisplayName();
 		this.hotelCapacity = 0;
-		this.hotelImageUrl = hotel.getHotelImageUrl();
+		for (Room room : hotel.getRooms()) {
+			this.rooms.add(new RoomListItem(room));
+			this.hotelCapacity += room.getNumberOfBeds();
+		}
+		this.hotelImageUrl = hotel.getHotelImageUrls();
 		this.description = hotel.getDescription();
 		for (HotelFeatureType hotelFeatureType : hotel.getHotelFeatures()) {
 			this.hotelFeatures.add(hotelFeatureType.getDisplayName());
@@ -70,7 +75,7 @@ public class HotelDetailItem {
 		return rooms;
 	}
 
-	public String getHotelImageUrl() {
+	public List<String> getHotelImageUrl() {
 		return hotelImageUrl;
 	}
 
@@ -115,7 +120,7 @@ public class HotelDetailItem {
 		this.rooms = rooms;
 	}
 
-	public void setHotelImageUrl(String hotelImageUrl) {
+	public void setHotelImageUrl(List<String> hotelImageUrl) {
 		this.hotelImageUrl = hotelImageUrl;
 	}
 
