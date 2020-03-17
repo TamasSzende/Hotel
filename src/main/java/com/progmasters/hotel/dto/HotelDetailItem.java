@@ -37,6 +37,7 @@ public class HotelDetailItem {
 			this.hotelCapacity += room.getNumberOfBeds();
 		}
 		this.hotelImageUrl = hotel.getHotelImageUrls();
+		this.hotelCapacity = hotel.getRooms().stream().mapToInt(Room::getNumberOfBeds).sum();
 		this.description = hotel.getDescription();
 		for (HotelFeatureType hotelFeatureType : hotel.getHotelFeatures()) {
 			this.hotelFeatures.add(hotelFeatureType.getDisplayName());

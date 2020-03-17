@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {RegistrationService} from "../../services/registration.service";
 import {validationHandler} from "../../utils/validationHandler";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-registration',
@@ -12,7 +13,8 @@ import {validationHandler} from "../../utils/validationHandler";
 export class RegistrationComponent implements OnInit {
   registerForm: FormGroup;
 
-  constructor(private registrationService: RegistrationService, private router: Router) {
+  constructor(private registrationService: RegistrationService, private router: Router,
+              private notificationService: NotificationService) {
     this.registerForm = new FormGroup({
       'email': new FormControl("", Validators.required),
       'password': new FormControl("", Validators.required),
@@ -25,6 +27,7 @@ export class RegistrationComponent implements OnInit {
   doRegistration() {
     this.registrationService.sendRegistrationDetails(this.registerForm.value).subscribe(
       () => {
+        this.notificationService.success('A message has been sent to this email!');
         this.router.navigate(['/login']);
       },
       errors => {

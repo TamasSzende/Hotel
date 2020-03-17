@@ -1,5 +1,6 @@
 package com.progmasters.hotel.controller;
 
+import com.progmasters.hotel.domain.RoomFeatureType;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -28,6 +31,17 @@ public class RoomController {
         List<RoomFeatureTypeOption> roomFeatureTypeOptionList = this.roomService.getRoomFeatureTypeOptionList();
         RoomFormData roomFormData = new RoomFormData(roomTypeOptionList, roomFeatureTypeOptionList);
         return new ResponseEntity<>(roomFormData, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/{id}")
+    public List<RoomListItem> getFreeRoomList(
+            @PathVariable("id") Long hotelId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate, @RequestParam List<String> roomFeatures) {
+        if (!roomFeatures.isEmpty()) {
+            List<RoomFeatureType> roomFeatureEnumList = roomFeatures.stream().map(RoomFeatureType::valueOf).collect(Collectors.toList());
+            return roomService.getFreeRoomListFilterByRoomFeature(hotelId, startDate, endDate, roomFeatureEnumList);
+        } else {
+            return roomService.getFreeRoomList(hotelId, startDate, endDate);
+        }
     }
 
     @GetMapping("/{id}")

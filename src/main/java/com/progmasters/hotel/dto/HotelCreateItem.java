@@ -17,7 +17,7 @@ public class HotelCreateItem {
 	private String description;
 	private List<String> hotelFeatures = new ArrayList<>();
 
-	HotelCreateItem() {
+    public HotelCreateItem() {
 	}
 
 	public HotelCreateItem(Hotel hotel) {
