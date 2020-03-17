@@ -51,20 +51,28 @@ public class RoomService {
     }
 
     public List<RoomListItem> getRoomList(Long hotelId) {
-        return roomRepository.findAllByHotel_IdOrderByPricePerNight(hotelId)
+        return roomRepository.findAllByHotelId(hotelId)
                 .stream()
                 .map(RoomListItem::new)
                 .collect(Collectors.toList());
     }
 
-    public List<RoomListItem> getFreeRoomList(Long hotelId, LocalDate startDate, LocalDate enDate) {
-        return roomRepository.findAllByHotel_IdOrderByPricePerNight(hotelId)
+    public List<RoomListItem> getFreeRoomList(Long hotelId, LocalDate startDate, LocalDate endDate) {
+        return roomRepository.findAllByHotelId(hotelId)
                 .stream()
-                .filter(room -> isRoomFree(room, startDate, enDate))
+                .filter(room -> isRoomFree(room, startDate, endDate))
                 .map(RoomListItem::new)
                 .collect(Collectors.toList());
     }
 
+    public List<RoomListItem> getFreeRoomListFilterByRoomFeature
+            (Long hotelId, LocalDate startDate, LocalDate endDate, List<RoomFeatureType> roomFeatures) {
+        return roomRepository.findAllByHotelIdByRoomFeatures(hotelId, roomFeatures, (long) roomFeatures.size())
+                .stream()
+                .filter(room -> isRoomFree(room, startDate, endDate))
+                .map(RoomListItem::new)
+                .collect(Collectors.toList());
+    }
 
     public RoomDetails getRoomDetails(Long roomId) {
         RoomDetails roomDetails;
@@ -133,6 +141,5 @@ public class RoomService {
                 this.roomReservationRepository.findAllByRoomAndEndDateAfterAndStartDateBefore(room, startDate, enDate);
         return roomReservations.isEmpty();
     }
-
 
 }

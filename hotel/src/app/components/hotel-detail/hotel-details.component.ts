@@ -12,6 +12,9 @@ import {BookingService} from "../../services/booking.service";
 import {BookingFormDialogComponent} from "./booking-form-dialog/booking-form-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
+import {RoomFormDataModel} from "../../models/roomFormData.model";
+import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
+import flatpickr from "flatpickr";
 
 
 @Component({
@@ -22,11 +25,15 @@ import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 export class HotelDetailsComponent implements OnInit {
 
   hotel: HotelDetailsModel;
+  priceOfBooking: number;
   hotelIdFromLogin: number;
   hotelIdFromRoute: string;
 
   bookingForm: FormGroup;
+  filterForm: FormGroup;
+  roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
+  flatpickrInstance;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
@@ -42,11 +49,20 @@ export class HotelDetailsComponent implements OnInit {
       'bookingDateRange': new FormControl(''),
       'roomIdList': new FormArray([]),
     });
+    this.filterForm = new FormGroup({
+      'roomFeatures': new FormArray([]),
+    })
 
   }
 
   ngOnInit(): void {
-
+    this.roomService.getRoomFormData().subscribe(
+      (roomFormData: RoomFormDataModel) => {
+        this.roomFeatureTypeOption = roomFormData.roomFeatures;
+        this.createRoomFeaturesCheckboxControl();
+      },
+      error => console.warn(error),
+    );
     this.hotelIdFromLogin = this.loginService.getHotelId();
     if (this.hotelIdFromLogin) {
       this.getHotelDetail(String(this.hotelIdFromLogin));
@@ -62,6 +78,7 @@ export class HotelDetailsComponent implements OnInit {
         error => console.warn(error),
       );
     }
+    this.flatpickrInstance = flatpickr('#bookingDateRange', {});
   }
 
   getHotelDetail = (hotelId: string) => {
@@ -73,22 +90,43 @@ export class HotelDetailsComponent implements OnInit {
     );
   };
 
-  getFreeRoomList = () => {
+  getFilteredRoomList = () => {
     const data = {
-      hotelId: this.hotel.id,
       startDate: this.bookingForm.value.bookingDateRange[0],
       endDate: this.bookingForm.value.bookingDateRange[1],
+      roomFeatures: this.createRoomFeaturesFilterArrayToSend(),
     };
-    this.roomService.getFreeRoomList(data).subscribe(
+    this.roomService.getFilteredRoomList(this.hotel.id, data).subscribe(
       (response: RoomListItemModel[]) => {
         this.hotel.rooms = response;
         this.clearRoomBookingFormArray();
         this.createRoomBookingFormArray();
+        this.priceOfBooking = null;
       },
       error => console.warn(error),
     );
-
   };
+
+  resetFilters() {
+    this.filterForm.reset();
+    //TODO resetelni a naptárat!!!
+    this.flatpickrInstance.clear();
+    this.getFilteredRoomList();
+  }
+
+  getPriceOfBooking() {
+    if (this.bookingForm.value.bookingDateRange) {
+      const numberOfNights =
+        Math.round((this.bookingForm.value.bookingDateRange[1].getTime() - this.bookingForm.value.bookingDateRange[0].getTime()) / 86400000);
+      let roomsPricePerNight = 0;
+      this.bookingForm.value.roomIdList.forEach((value, index) => {
+        if (value) {
+          roomsPricePerNight += this.hotel.rooms[index].pricePerNight;
+        }
+      });
+      this.priceOfBooking = numberOfNights * roomsPricePerNight;
+    }
+  }
 
   createRoomInHotel() {
     this.router.navigate(['/admin/hotel/create-room'])
@@ -195,4 +233,17 @@ export class HotelDetailsComponent implements OnInit {
     }
   }
 
+  private createRoomFeaturesCheckboxControl() {
+    this.roomFeatureTypeOption.forEach(() => {
+        const control = new FormControl(false);
+        (this.filterForm.controls.roomFeatures as FormArray).push(control);
+      }
+    );
+  }
+
+  private createRoomFeaturesFilterArrayToSend(): string[] {
+    return this.filterForm.value.roomFeatures
+      .map((roomFeatures, index) => roomFeatures ? this.roomFeatureTypeOption[index].name : null)
+      .filter(roomFeatures => roomFeatures !== null);
+  }
 }

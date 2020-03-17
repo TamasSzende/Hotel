@@ -24,11 +24,12 @@ export class RoomService {
     return this.http.get<Array<RoomListItemModel>>(BASE_URL);
   }
 
-  getFreeRoomList(data: { hotelId: number; startDate: Date; endDate: Date; }): Observable<Array<RoomListItemModel>> {
+  getFilteredRoomList(hotelId: number, data: { startDate: Date; endDate: Date; roomFeatures: string[] }): Observable<Array<RoomListItemModel>> {
     const params = new HttpParams()
       .set('startDate', data.startDate.toLocaleDateString())
-      .set('endDate', data.endDate.toLocaleDateString());
-    return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/free/' + data.hotelId, {params});
+      .set('endDate', data.endDate.toLocaleDateString())
+      .set('roomFeatures', data.roomFeatures.join(', '));
+    return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/filter/' + hotelId, {params});
   }
 
   getRoomFormData(): Observable<RoomFormDataModel> {

@@ -47,7 +47,7 @@ public class Hotel {
     @Column(name = "hotel_features")
     private List<HotelFeatureType> hotelFeatures = new ArrayList<>();
 
-    Hotel() {
+    public Hotel() {
     }
 
     public Hotel(String name, String postalCode, String city, String streetAddress, HotelType hotelType, List<Room> rooms, String hotelImageUrl, String description, List<HotelFeatureType> hotelFeatures) {

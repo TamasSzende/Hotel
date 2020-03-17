@@ -16,7 +16,7 @@
             Address: {{hotel?.postalCode}}  {{hotel?.city}}, {{hotel?.streetAddress}}
           </h5>
           <p class="card-text">
-            Hotel capacity: &nbsp; {{hotel?.hotelCapacity}}
+            Hotel capacity: {{hotel?.hotelCapacity}}
           </p>
           <p class="card-text">
             {{ hotel?.description}}
@@ -59,25 +59,51 @@
             Utazás időpontja:&nbsp;&nbsp;
           </label>
           <ng2-flatpickr
+            (change)="getFilteredRoomList()"
             [config]="flatpickrOptions"
             formControlName="bookingDateRange"
             id="bookingDateRange"
             name="bookingDateRange"
             placeholder="Válasz időpontot!"
           >
+            <a class="input-button" data-clear title="clear">
+              <i class="icon-close"></i>
+            </a>
           </ng2-flatpickr>
           &nbsp;&nbsp;
+          <div class="btn-group mr-4">
+            <button (click)="resetFilters()" class="btn btn-secondary">Reset</button>
+          </div>
 
-          <button (click)="getFreeRoomList()" class="btn btn-primary mr-4">Keresés</button>
           <button (click)="makeBooking()" class="btn btn-warning mr-4">Foglalás</button>
 
+          &nbsp;&nbsp;
+          <h5 *ngIf="priceOfBooking"> Ár: {{ priceOfBooking.toLocaleString('hu-HU') }} Ft </h5>
+
         </div>
+
+        <form [formGroup]="filterForm">
+          <div class="form-group">
+            <div *ngFor="let roomFeatures of roomFeatureTypeOption; let i = index" class="form-check form-check-inline"
+                 formArrayName="roomFeatures">
+              <input (change)="getFilteredRoomList()" [formControlName]="i" class="form-check-input" type="checkbox">
+              <label class="form-check-label">
+                {{ roomFeatures?.displayName }}
+              </label>
+            </div>
+          </div>
+        </form>
+
       </div>
     </div>
 
-    <h4>
+    <h4 *ngIf="hotel?.rooms.length !==0">
       Szabad szobák:
     </h4>
+    <h5 *ngIf="hotel?.rooms.length === 0">
+      Sajnos a megadott időszakban nincs a keresésnek megfelelő szabad szobánk!
+    </h5>
+
 
     <div *ngFor="let room of hotel?.rooms; let i = index" formArrayName="roomIdList">
       <div class="card mb-3">
@@ -115,7 +141,8 @@
 
                 <label>
                   Lefoglalom&nbsp;
-                  <input [formControlName]="i" style="width: 18px; height: 18px" type="checkbox">
+                  <input (change)="getPriceOfBooking()" [formControlName]="i" style="width: 18px; height: 18px"
+                         type="checkbox">
                 </label>
               </div>
 
