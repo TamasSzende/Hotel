@@ -55,7 +55,7 @@ public class HotelService {
 		Optional<Hotel> hotelOptional = hotelRepository.findById(hotelId);
 		if (hotelOptional.isPresent()) {
 			hotelDetailItem = new HotelDetailItem(hotelOptional.get());
-			List<RoomListItem> rooms = roomRepository.findAllByHotel_IdOrderByPricePerNight(hotelId)
+			List<RoomListItem> rooms = roomRepository.findAllByHotelId(hotelId)
 					.stream()
 					.map(RoomListItem::new)
 					.collect(Collectors.toList());

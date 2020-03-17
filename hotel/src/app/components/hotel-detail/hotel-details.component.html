@@ -9,15 +9,15 @@
       <div class="col-md-4">
         <div>
           <mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'">
-            <mdb-carousel-item *ngFor="let imgURL of hotel.hotelImageUrl">
+            <mdb-carousel-item *ngFor="let imgURL of hotel?.hotelImageUrl">
               <div class="view w-100">
                 <cl-image [public-id]="getPublicId(imgURL)">
-                <cl-transformation
-                  height="600"
-                  width="400"
-                  crop="fill">
-                </cl-transformation>
-                  <img class="d-block w-100" [src]="imgURL" alt="Hotel image">
+                  <cl-transformation
+                    height="600"
+                    width="400"
+                    crop="fill">
+                  </cl-transformation>
+                  <!--<img class="d-block w-100" [src]="imgURL" alt="Hotel image">-->
                 </cl-image>
                 <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
               </div>
@@ -126,7 +126,13 @@
       <div class="card mb-3">
         <div class="row no-gutters">
           <div class="col-md-4">
-            <img *ngIf="room.roomImageUrl" [src]="room.roomImageUrl" alt="roomImage" class="card-img">
+            <cl-image [public-id]="getPublicId(room.roomImageUrl)">
+              <cl-transformation
+                height="230"
+                width="360"
+                crop="fill">
+              </cl-transformation>
+            </cl-image>
           </div>
           <div class="col-md-8">
             <div class="card-body">

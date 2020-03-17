@@ -5,7 +5,14 @@
   <div *ngFor="let hotel of hotelList" class="card mb-3" >
     <div class="row no-gutters">
       <div class="col-md-4">
-        <img [src]="hotel.hotelImageUrl" *ngIf="hotel?.hotelImageUrl" alt="hotelImage" height="200" class="card-img">
+        <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)">
+          <cl-transformation
+            height="230"
+            width="360"
+            crop="fill">
+          </cl-transformation>
+          <!--<img class="d-block w-100" [src]="hotel?.hotelImageUrl" alt="Hotel image">-->
+        </cl-image>
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -29,7 +36,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
 

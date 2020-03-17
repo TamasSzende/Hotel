@@ -54,4 +54,8 @@ export class HotelListComponent implements OnInit {
     this.router.navigate(['/hotel/', id])
   }
 
+  getPublicId(imgURL: string) {
+    return imgURL.substring(61, imgURL.length - 4);
+  }
+
 }
