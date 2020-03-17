@@ -78,7 +78,7 @@ export class HotelDetailsComponent implements OnInit {
         error => console.warn(error),
       );
     }
-    this.flatpickrInstance = flatpickr('#bookingDateRange', {});
+
   }
 
   getHotelDetail = (hotelId: string) => {
@@ -86,6 +86,8 @@ export class HotelDetailsComponent implements OnInit {
       (response: HotelDetailsModel) => {
         this.hotel = response;
         this.createRoomBookingFormArray();
+        this.flatpickrInstance = flatpickr('#bookingDateRange', {});
+        console.log(this.flatpickrInstance)
       }
     );
   };

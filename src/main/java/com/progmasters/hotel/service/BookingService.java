@@ -46,7 +46,7 @@ public class BookingService {
         //Check the time: later than now, end is later then start (and not equal)
         Long numberOfNights = DAYS.between(bookingCreateItem.getStartDate(), bookingCreateItem.getEndDate());
         if (numberOfNights < 1) return null;
-//        if (bookingCreateItem.getStartDate().isBefore(LocalDate.now())) return null;
+        if (bookingCreateItem.getStartDate().isBefore(LocalDate.now())) return null;
 
         //Check the rooms are free and exist (and create RoomReservation List)
         List<RoomReservation> roomReservations = getRoomReservationsAndValidate(bookingCreateItem, booking);
@@ -61,6 +61,7 @@ public class BookingService {
         //TODO send an email!!!!
         return booking.getId();
     }
+
 
     public List<BookingListItem> getBookingListItemList() {
         return bookingRepository.findAll().stream().map(BookingListItem::new).collect(Collectors.toList());
