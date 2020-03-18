@@ -145,6 +145,7 @@ public class AccountService {
             newAdmin.setEmail(ADMINMAIL);
             newAdmin.setPassword(passwordEncoder.encode("Admin"));
             newAdmin.setRole(Role.ROLE_ADMIN);
+            newAdmin.setEnabled(true);
             newAdmin.setUsername(newAdmin.getEmail());
             accountRepository.save(newAdmin);
         } else if (adminAccount.getRole() != Role.ROLE_ADMIN) {
@@ -162,5 +163,11 @@ public class AccountService {
 
     public Account findByUsername(String username) {
         return this.accountRepository.findByUsername(username);
+    }
+
+    public boolean accountIsActive(String email) {
+        Account account = accountRepository.findByEmail(email);
+
+        return account.isEnabled();
     }
 }
