@@ -8,10 +8,10 @@ import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-login.form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
@@ -28,13 +28,18 @@ export class LoginFormComponent implements OnInit {
 
   doLogin() {
     const data = {...this.loginForm.value};
-    console.log(data);
     this.loginService.authenticate(data).subscribe(
       response => {
-        localStorage.setItem('email', JSON.stringify(response));
+        this.loginService.username.next(response.name);
+        console.log('name:' + response.name);
+        this.loginService.role.next(response.role);
+        console.log(response.role);
+        if (response.hotelId) {
+          this.loginService.hotelId.next(response.hotelId);
+          console.log(response.hotelId);
+        }
         this.notificationService.success('Logged in successfully!');
         this.router.navigateByUrl('/hotel');
-        this.loginService.loggedIn.next('');
       },
       error => {
         this.notificationService.unsuccessful('Wrong username or password given!');

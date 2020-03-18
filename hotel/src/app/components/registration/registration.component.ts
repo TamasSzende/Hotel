@@ -24,8 +24,8 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  doRegistration() {
-    this.registrationService.sendRegistrationDetails(this.registerForm.value).subscribe(
+  doRegistrationAsUser() {
+    this.registrationService.sendUserRegistration(this.registerForm.value).subscribe(
       () => {
         this.notificationService.success('A message has been sent to this email!');
         this.router.navigate(['/login']);
@@ -37,5 +37,17 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  doRegistrationAsHotelOwner() {
+    this.registrationService.sendHotelOwnerRegistration(this.registerForm.value).subscribe(
+      () => {
+        this.notificationService.success('A message has been sent to this email!');
+        this.router.navigate(['/login']);
+      },
+      errors => {
+        validationHandler(errors, this.registerForm);
+      }
+    );
   }
 }

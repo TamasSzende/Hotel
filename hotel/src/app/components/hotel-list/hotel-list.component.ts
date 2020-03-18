@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
 import {PopupService} from "../../services/popup.service";
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-hotel-list',
@@ -13,15 +14,17 @@ export class HotelListComponent implements OnInit {
 
   hotelList: HotelListItemModel[] = [];
 
-  constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService) {
+
+  constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
-    if (!localStorage.getItem('email')) {
-      this.router.navigate(['/login'])
-    }
 
-    this.listHotel();
+    if (this.loginService.getUsername()) {
+      this.listHotel();
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   listHotel = () => {

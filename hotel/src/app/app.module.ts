@@ -22,7 +22,7 @@ import {CloudinaryModule} from "@cloudinary/angular-5.x";
 import * as  Cloudinary from 'cloudinary-core';
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
-import {LoginFormComponent} from "./components/login-form/login-form.component";
+import {LoginComponent} from "./components/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 
 @NgModule({
@@ -37,7 +37,7 @@ import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,
-    LoginFormComponent,
+    LoginComponent,
   ],
   imports: [
     HttpClientModule,

@@ -54,11 +54,25 @@ public class AccountService {
 
     //----------REGISTRATION  -> SAVE A USER----------
 
-    public void saveRegistration(RegistrationDetails registrationDetails) throws Exception {
-        Account account = accountRepository.findByEmail(registrationDetails.getEmail());
-        if (account == null) {
+    public void saveUserRegistration(RegistrationDetails registrationDetails) throws Exception {
+        Account otherAccount = accountRepository.findByEmail(registrationDetails.getEmail());
+        if (otherAccount == null) {
             registrationDetails.setPassword(passwordEncoder.encode(registrationDetails.getPassword()));
-            accountRepository.save(new Account(registrationDetails));
+            Account account = new Account(registrationDetails);
+            account.setRole(Role.ROLE_USER);
+            accountRepository.save(account);
+        } else {
+            throw new Exception("Mail already taken!");
+        }
+    }
+
+    public void saveHotelOwnerRegistration(RegistrationDetails registrationDetails) throws Exception {
+        Account otherAccount = accountRepository.findByEmail(registrationDetails.getEmail());
+        if (otherAccount == null) {
+            registrationDetails.setPassword(passwordEncoder.encode(registrationDetails.getPassword()));
+            Account account = new Account(registrationDetails);
+            account.setRole(Role.ROLE_HOTELOWNER);
+            accountRepository.save(account);
         } else {
             throw new Exception("Mail already taken!");
         }
@@ -100,5 +114,9 @@ public class AccountService {
         } else if (adminAccount.getRole() != Role.ROLE_ADMIN) {
             adminAccount.setRole(Role.ROLE_ADMIN);
         }
+    }
+
+    public Account findByUsername(String username) {
+        return this.accountRepository.findByUsername(username);
     }
 }
