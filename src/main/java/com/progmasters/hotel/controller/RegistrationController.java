@@ -45,7 +45,7 @@ public class RegistrationController {
 
     @PostMapping("/user")
     public ResponseEntity<?> createNewUser(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
-        accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
+     //   accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
         logger.info("New mail added");
         accountService.saveUserRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -53,7 +53,7 @@ public class RegistrationController {
 
     @PostMapping("/hotelOwner")
     public ResponseEntity<?> createNewHotelOwner(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
-        accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
+        //  accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
         logger.info("New mail added");
         accountService.saveHotelOwnerRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
