@@ -24,6 +24,7 @@ import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
 import {LoginComponent} from "./components/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
+import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
     PopupComponent,
     BookingFormDialogComponent,
     LoginComponent,
+    ConfirmationComponent,
   ],
   imports: [
     HttpClientModule,

@@ -13,6 +13,7 @@ import {LoginService} from "../../services/login.service";
 export class HotelListComponent implements OnInit {
 
   hotelList: HotelListItemModel[] = [];
+  userRole: string;
 
 
   constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService, private loginService: LoginService) {
@@ -20,12 +21,22 @@ export class HotelListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (this.loginService.getUsername()) {
-      this.listHotel();
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.role.subscribe(
+      (response) => {
+        this.userRole = response;
+        console.log(this.userRole);
+        if (response !== null) {
+          setTimeout(() => {
+          }, 100100);
+          this.listHotel();
+          console.log('iam here')
+        } else {
+          this.router.navigate(['/login'])
+        }
+      });
+    this.listHotel(); //ez nem kéne ide!!!
   }
+
 
   listHotel = () => {
     this.hotelService.listHotel().subscribe(

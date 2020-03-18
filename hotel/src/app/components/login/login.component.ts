@@ -7,7 +7,7 @@ import {validationHandler} from "../../utils/validationHandler";
 import {NotificationService} from "../../services/notification.service";
 
 @Component({
-  selector: 'app-login.form',
+  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -31,12 +31,9 @@ export class LoginComponent implements OnInit {
     this.loginService.authenticate(data).subscribe(
       response => {
         this.loginService.username.next(response.name);
-        console.log('name:' + response.name);
         this.loginService.role.next(response.role);
-        console.log(response.role);
         if (response.hotelId) {
           this.loginService.hotelId.next(response.hotelId);
-          console.log(response.hotelId);
         }
         this.notificationService.success('Logged in successfully!');
         this.router.navigateByUrl('/hotel');

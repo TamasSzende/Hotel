@@ -173,7 +173,9 @@
     </div>
   </form>
 
-  <button (click)="createRoomInHotel()" type="button" class="btn btn-primary btn-lg btn-block">Add new room</button>
+  <button (click)="createRoomInHotel()" *ngIf="userRole === 'ROLE_HOTELOWNER'" class="btn btn-primary btn-lg btn-block"
+          type="button">Add new room
+  </button>
 
   <br>
   <br>

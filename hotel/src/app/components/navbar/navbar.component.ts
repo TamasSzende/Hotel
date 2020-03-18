@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-// import {LoginModel} from "../../models/login.model";
 import {LoginService} from "../../services/login.service";
 
 @Component({
@@ -10,27 +9,28 @@ import {LoginService} from "../../services/login.service";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  loggedIn: boolean = false;
-  // role: boolean;
-  // user: LoginModel;
+  loggedIn: boolean;
+
 
   constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
-    this.loginService.username.subscribe(() => {
-      this.loggedIn = true;
+    this.loginService.role.subscribe(
+      (response) => {
+        if (response !== null) {
+          this.loggedIn = true;
+        } else {
+          this.loggedIn = false;
+        }
     });
   }
 
   logout() {
-
+    this.loggedIn = false;
     this.loginService.logout();
     this.router.navigateByUrl('login');
 
   }
 
-  // checkRole(role: string):boolean{
-  //   return role==='ROLE_ADMIN';
-  // }
 }

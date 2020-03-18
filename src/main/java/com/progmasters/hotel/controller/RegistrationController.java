@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -44,16 +43,14 @@ public class RegistrationController {
     //----------SEND MAIL AND CREATE USER AT REGISTRATION----------
 
     @PostMapping("/user")
-    public ResponseEntity<?> createNewUser(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
-     //   accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
+    public ResponseEntity<Void> createNewUser(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
         logger.info("New mail added");
         accountService.saveUserRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/hotelOwner")
-    public ResponseEntity<?> createNewHotelOwner(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
-        //  accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
+    public ResponseEntity<Void> createNewHotelOwner(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
         logger.info("New mail added");
         accountService.saveHotelOwnerRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -68,23 +65,40 @@ public class RegistrationController {
     }
 
     //TODO  folyamatban
-    @GetMapping("/registrationConfirm")
-    public RedirectView confirmAccount(@RequestParam("token") String confirmationToken) {
-        ConfirmationToken token = accountService.findToken(confirmationToken);
-        if (token != null) {
-            Account account = accountService.findAccountByEmail(token.getAccount().getEmail());
+    @PutMapping
+    public ResponseEntity<Void> confirmAccount(@RequestBody String token) {
+        ConfirmationToken confirmationToken = accountService.findToken(token);
+        if (confirmationToken != null) {
+            Account account = accountService.findAccountByEmail(confirmationToken.getAccount().getEmail());
             account.setEnabled(true);
-            accountService.deleteToken(token);
-
-            //TODO save this new account
             accountService.saveConfirmedAccount(account);
-
-            return new RedirectView(this.frontendUrl);
+            accountService.deleteToken(confirmationToken);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-
-            //TODO create page-not-found webPage
-            return new RedirectView(this.backendUrl + " /not-found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+//    //TODO  folyamatban
+//    @GetMapping("/registrationConfirm")
+//    public RedirectView confirmAccount(@RequestParam("token") String confirmationToken) {
+//        ConfirmationToken token = accountService.findToken(confirmationToken);
+//        if (token != null) {
+//            Account account = accountService.findAccountByEmail(token.getAccount().getEmail());
+//            account.setEnabled(true);
+//            accountService.deleteToken(token);
+//
+//            //TODO save this new account
+//            accountService.saveConfirmedAccount(account);
+//
+//            return new RedirectView(this.frontendUrl);
+//        } else {
+//
+//            //TODO create page-not-found webPage
+//            return new RedirectView(this.backendUrl + " /not-found");
+//        }
+//    }
+
+
 
 }

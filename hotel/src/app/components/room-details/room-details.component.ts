@@ -17,7 +17,10 @@ export class RoomDetailsComponent implements OnInit {
   constructor(private roomService: RoomService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.hotelId = this.loginService.getHotelId();
+    this.loginService.hotelId.subscribe(
+      response =>
+        this.hotelId = response
+    );
     this.route.paramMap.subscribe(
       paramMap => {
         const roomId = paramMap.get('id');

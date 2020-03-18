@@ -39,9 +39,16 @@ export class HotelFormComponent implements OnInit {
 
 	ngOnInit() {
 
-    if (this.loginService.getRole() !== "ROLE_HOTELOWNER") {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.role.subscribe(
+      (response) => {
+        if (response !== "ROLE_HOTELOWNER") {
+          this.router.navigate(['/login']);
+        } else {
+          this.loginService.hotelId.subscribe(
+            response => this.hotelIdFromLogin = response
+          );
+        }
+      });
 
     this.hotelService.getHotelFormData().subscribe(
       (hotelFormData: HotelFormDataModel) => {
@@ -50,8 +57,6 @@ export class HotelFormComponent implements OnInit {
         this.createHotelFeaturesCheckboxControl();
       }
     );
-
-    this.hotelIdFromLogin = this.loginService.getHotelId();
 
     if (this.hotelIdFromLogin) {
       this.isUpdate = true;

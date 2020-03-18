@@ -67,6 +67,9 @@ public class AccountService {
             Account account = new Account(registrationDetails);
             account.setRole(Role.ROLE_USER);
             accountRepository.save(account);
+
+            sendConfirmationMail(account);
+
         } else {
             throw new Exception("Mail already taken!");
         }
@@ -79,24 +82,26 @@ public class AccountService {
             Account account = new Account(registrationDetails);
             account.setRole(Role.ROLE_HOTELOWNER);
             accountRepository.save(account);
-            accountRepository.save(new Account(registrationDetails));
-            Account account1 = accountRepository.findByEmail(registrationDetails.getEmail());
 
-            ConfirmationToken confirmationToken = new ConfirmationToken(account1);
-            confirmationTokenRepository.save(confirmationToken);
-
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(MESSAGE_FROM);
-            message.setTo(account1.getEmail());
-            message.setSubject("Complete Registration!");
-            message.setText("To confirm your account, please click here : "
-                    + "http://localhost:8080/confirm-account?token=" + confirmationToken.getConfirmationToken());
-            javaMailSender.send(message);
+            sendConfirmationMail(account);
 
         } else {
             throw new Exception("Mail already taken!");
         }
 
+    }
+
+    public void sendConfirmationMail(Account account) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(account);
+        confirmationTokenRepository.save(confirmationToken);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(MESSAGE_FROM);
+        message.setTo(account.getEmail());
+        message.setSubject("Complete Registration!");
+        message.setText("To confirm your account, please click here : "
+                + "http://localhost:4200/login/" + confirmationToken.getConfirmationToken());
+        javaMailSender.send(message);
     }
 
     public ConfirmationToken findToken(String confirmationToken) {
@@ -152,8 +157,7 @@ public class AccountService {
     }
 
     public void saveConfirmedAccount(Account account) {
-
-
+        this.accountRepository.save(account);
     }
 
     public Account findByUsername(String username) {

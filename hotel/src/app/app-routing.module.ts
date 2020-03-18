@@ -7,10 +7,10 @@ import {HotelFormComponent} from "./components/hotel-form/hotel-form.component";
 import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.component";
 import {RegistrationComponent} from "./components/registration/registration.component";
 import {LoginComponent} from "./components/login/login.component";
+import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
 
 
 const routes: Routes = [
-  {path: "", component: LoginComponent},
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},
   {path: "admin/hotel/update-room/:id", component: RoomFormComponent},
@@ -20,8 +20,9 @@ const routes: Routes = [
   {path: 'admin/hotel-update', component: HotelFormComponent},
   {path: 'admin/hotel', component: HotelDetailsComponent},
   {path: "registrations", component: RegistrationComponent},
-  {path: "login/:id", component: LoginComponent},
+  {path: 'login/:token', component: ConfirmationComponent},
   {path: "login", component: LoginComponent},
+  {path: "", component: LoginComponent},
 ];
 
 @NgModule({
