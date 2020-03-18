@@ -5,7 +5,7 @@ export interface HotelCreateItemModel {
 	city: string;
 	streetAddress: string;
 	hotelType: string;
-	hotelImageUrl: string;
+	hotelImageUrls: Array<string>;
 	description: string;
 	hotelFeatures: string[];
 }

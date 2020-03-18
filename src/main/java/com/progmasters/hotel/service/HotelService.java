@@ -1,5 +1,7 @@
 package com.progmasters.hotel.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.progmasters.hotel.domain.Hotel;
 import com.progmasters.hotel.domain.HotelFeatureType;
 import com.progmasters.hotel.domain.HotelType;
@@ -8,17 +10,34 @@ import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.function.ServerRequest;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class HotelService {
+
+	private static Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+			"cloud_name", "doaywchwk",
+			"api_key", "115312357113411",
+			"api_secret", "rvKG8MW45AZWCh66Xs4oaxt4Bpk"
+	));
 
 	private HotelRepository hotelRepository;
 	private RoomRepository roomRepository;
@@ -110,4 +129,39 @@ public class HotelService {
 		}
 	}
 
+	public String saveHotelImage(Path path, Long id) {
+		String imageURL = "";
+		try  {
+			imageURL = uploadImage(path.toFile());
+			if (hotelRepository.findById(id).isPresent()) {
+				hotelRepository.findById(id).get().getHotelImageUrls().add(imageURL);
+			}
+			Files.delete(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return imageURL;
+	}
+
+	private String uploadImage(File file){
+		String url = null;
+		try {
+			Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+			url = uploadResult.get("url").toString();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return url;
+	}
+
+	public void deleteHotelImage(String imageURL, Long id){
+		if (hotelRepository.findById(id).isPresent()) {
+			hotelRepository.findById(id).get().getHotelImageUrls().remove(imageURL);
+			try {
+				cloudinary.uploader().destroy(imageURL.substring(61,imageURL.length()-4),ObjectUtils.emptyMap());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

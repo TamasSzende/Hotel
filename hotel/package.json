@@ -28,6 +28,7 @@
     "cloudinary-core": "^2.8.1",
     "flatpickr": "^4.6.3",
     "jquery": "^3.4.1",
+    "ng2-file-upload": "^1.4.0",
     "ng2-flatpickr": "^9.0.0",
     "rxjs": "~6.4.0",
     "screenfull": "^3.3.0",

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {HotelListItemModel} from "../models/hotelListItem.model";
 import {HotelCreateItemModel} from "../models/hotelCreateItem.model";
@@ -44,4 +44,13 @@ export class HotelService {
 	return this.http.get<HotelDetailsModel>(BASE_URL + '/' + id);
 	}
 
+  uploadImage(formData: FormData, id: number): Observable<string> {
+    return this.http.post<string>(BASE_URL + '/uploadImage/' + id, formData);
+  }
+
+  deleteImage(image: string, hotelIdFromLogin: number) {
+	  const formData = new FormData();
+	  formData.append('imageURL',image);
+    return this.http.post(BASE_URL + "/deleteImage/"+ hotelIdFromLogin,formData);
+  }
 }

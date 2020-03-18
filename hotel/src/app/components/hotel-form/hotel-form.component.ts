@@ -22,8 +22,9 @@ export class HotelFormComponent implements OnInit {
 	hotelTypeOption: HotelTypeOptionModel[];
   private hotelIdFromLogin: number;
 	private isUpdate: boolean;
+	private imageURLs = [];
 
-	constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
+  constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
 		this.hotelForm = new FormGroup({
 				'name': new FormControl(''),
 				'postalCode': new FormControl(''),
@@ -33,6 +34,8 @@ export class HotelFormComponent implements OnInit {
 				'hotelImageUrl': new FormControl(''),
 				'description': new FormControl(''),
 				'hotelFeatures': new FormArray([]),
+        'file': new FormControl(null),
+        'fileSource': new FormControl('')
 			}
 		);
 	}
@@ -56,7 +59,6 @@ export class HotelFormComponent implements OnInit {
     if (this.hotelIdFromLogin) {
       this.isUpdate = true;
       this.getHotelCreateData(String(this.hotelIdFromLogin));
-
     } else {
       this.isUpdate = false;
     }
@@ -87,10 +89,10 @@ export class HotelFormComponent implements OnInit {
 					city: response.city,
 					streetAddress: response.streetAddress,
 					hotelType: response.hotelType,
-					hotelImageUrl: response.hotelImageUrl,
 					description: response.description,
 					hotelFeatures: this.createHotelFeaturesFormArray(response.hotelFeatures),
 				});
+				this.imageURLs = response.hotelImageUrls
 			},
 		);
   };
@@ -123,6 +125,27 @@ export class HotelFormComponent implements OnInit {
         return hotelFeaturesNames.includes(hotelFeatures.name);
       }
     );
+  };
+
+  onFileChange(event) {
+    const file: File = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file",file);
+    this.hotelService.uploadImage(formData, this.hotelIdFromLogin).subscribe(
+      (imageURL) => {
+        this.imageURLs.push(imageURL);
+        this.ngOnInit();
+      });
+    }
+
+  getPublicId(imgURL: string) {
+    return imgURL.substring(61, imgURL.length - 4);
   }
 
+  deleteImage(image: string) {
+    this.hotelService.deleteImage(image,this.hotelIdFromLogin).subscribe(
+      () => this.ngOnInit()
+      //TODO refresh only the image list
+    )
+  }
 }

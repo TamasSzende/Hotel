@@ -24,6 +24,7 @@ import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
 import {LoginFormComponent} from "./components/login-form/login-form.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
+import {FileUploadModule} from "ng2-file-upload";
 
 @NgModule({
   declarations: [
@@ -39,19 +40,20 @@ import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
     BookingFormDialogComponent,
     LoginFormComponent,
   ],
-  imports: [
-    HttpClientModule,
-    ReactiveFormsModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    MatIconModule,
-    MatDialogModule,
-    MDBBootstrapModule,
-    CloudinaryModule.forRoot(Cloudinary, { cloud_name: 'doaywchwk'}),
-    Ng2FlatpickrModule
-  ],
+    imports: [
+        HttpClientModule,
+        ReactiveFormsModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MaterialModule,
+        MatIconModule,
+        MatDialogModule,
+        MDBBootstrapModule,
+        CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
+        Ng2FlatpickrModule,
+        FileUploadModule
+    ],
   providers: [[
     {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
   ],],
