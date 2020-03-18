@@ -9,14 +9,14 @@
       <div class="col-md-4">
         <div>
           <mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'">
-            <mdb-carousel-item *ngFor="let imgURL of hotel.hotelImageUrl">
+            <mdb-carousel-item *ngFor="let imgURL of hotel?.hotelImageUrl">
               <div class="view w-100">
                 <cl-image [public-id]="getPublicId(imgURL)">
-                <cl-transformation
-                  height="600"
-                  width="400"
-                  crop="fill">
-                </cl-transformation>
+                  <cl-transformation
+                    height="600"
+                    width="400"
+                    crop="fill">
+                  </cl-transformation>
                   <img class="d-block w-100" [src]="imgURL" alt="Hotel image">
                 </cl-image>
                 <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>

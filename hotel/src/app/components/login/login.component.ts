@@ -8,10 +8,10 @@ import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-login.form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 

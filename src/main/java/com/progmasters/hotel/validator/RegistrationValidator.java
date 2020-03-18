@@ -31,7 +31,7 @@ public class RegistrationValidator implements Validator {
         }
 
         String email = registrationDetails.getEmail();
-        String regex = "[a-zA-Z1-9\\_\\-\\.]+@[a-zA-Z]+(\\.[a-zA-Z]+){1,4}";
+        String regex = "[a-zA-Z0-9\\_\\-\\.]+@[a-zA-Z]+(\\.[a-zA-Z]+){1,4}";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
 

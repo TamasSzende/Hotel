@@ -18,7 +18,8 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class
+SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JPAUserDetailsService userDetailsService;
 
