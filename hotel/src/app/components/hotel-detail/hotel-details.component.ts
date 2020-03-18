@@ -57,10 +57,9 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (!localStorage.getItem('email')) {
+    if (!this.loginService.getUsername()) {
       this.router.navigate(['/login'])
     }
-
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {
         this.roomFeatureTypeOption = roomFormData.roomFeatures;

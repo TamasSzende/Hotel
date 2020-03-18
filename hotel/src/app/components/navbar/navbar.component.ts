@@ -3,7 +3,6 @@ import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 // import {LoginModel} from "../../models/login.model";
 import {LoginService} from "../../services/login.service";
-import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-navbar',
@@ -19,19 +18,16 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.loggedIn.subscribe(() => {
+    this.loginService.username.subscribe(() => {
       this.loggedIn = true;
     });
   }
 
   logout() {
-    this.http.post(environment.BASE_URL + '/logout', {})
-      .subscribe(() => {
-        localStorage.removeItem('email');
-        this.router.navigateByUrl('login');
-        this.ngOnInit();
-        this.loggedIn = false;
-      });
+
+    this.loginService.logout();
+    this.router.navigateByUrl('login');
+
   }
 
   // checkRole(role: string):boolean{

@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 public class AuthenticatedLoginDetails {
 
     private String name;
-
     private String role;
+    private Long hotelId;
 
     public AuthenticatedLoginDetails() {
     }
@@ -18,6 +18,7 @@ public class AuthenticatedLoginDetails {
     public AuthenticatedLoginDetails(UserDetails user) {
         this.name = user.getUsername();
         this.role = findRole(user);
+        this.hotelId = 0L;
     }
 
     private String findRole(UserDetails user) {
@@ -38,5 +39,13 @@ public class AuthenticatedLoginDetails {
 
     public String getRole() {
         return role;
+    }
+
+    public Long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
     }
 }

@@ -31,7 +31,11 @@ public class AccountController {
     public ResponseEntity<AuthenticatedLoginDetails> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails user = (UserDetails) authentication.getPrincipal();
+        AuthenticatedLoginDetails authenticatedLoginDetails = new AuthenticatedLoginDetails(user);
+        String username = authenticatedLoginDetails.getName();
+        Long hotelId = this.accountService.findByUsername(username).getHotelId();
 
-        return new ResponseEntity<>(new AuthenticatedLoginDetails(user), HttpStatus.OK);
+        authenticatedLoginDetails.setHotelId(hotelId);
+        return new ResponseEntity<>(authenticatedLoginDetails, HttpStatus.OK);
     }
 }

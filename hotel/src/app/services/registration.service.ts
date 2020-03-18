@@ -11,7 +11,11 @@ export class RegistrationService {
   constructor(private http: HttpClient) {
   }
 
-  sendRegistrationDetails(data: RegistrationDetailsModel) {
-    return this.http.post(this.BASE_URL, data);
+  sendUserRegistration(data: RegistrationDetailsModel) {
+    return this.http.post(this.BASE_URL + '/user', data);
+  }
+
+  sendHotelOwnerRegistration(data: RegistrationDetailsModel) {
+    return this.http.post(this.BASE_URL + '/hotelOwner', data);
   }
 }

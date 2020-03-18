@@ -43,10 +43,19 @@ public class RegistrationController {
 
     //----------SEND MAIL AND CREATE USER AT REGISTRATION----------
 
-    @PostMapping
+    @PostMapping("/user")
     public ResponseEntity<?> createNewUser(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
-        accountService.saveRegistration(registrationDetails);
+        accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
         logger.info("New mail added");
+        accountService.saveUserRegistration(registrationDetails);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/hotelOwner")
+    public ResponseEntity<?> createNewHotelOwner(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
+        accountService.sendMessage(registrationDetails.getEmail()); //TODO rendbe rakni
+        logger.info("New mail added");
+        accountService.saveHotelOwnerRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
