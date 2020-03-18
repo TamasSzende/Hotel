@@ -58,9 +58,15 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (!this.loginService.getUsername()) {
-      this.router.navigate(['/login'])
-    }
+    this.loginService.role.subscribe(
+      (response) => {
+        if (response === null) {
+          this.router.navigate(['/login'])
+        } else {
+          this.userRole = response;
+        }
+      });
+
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {
         this.roomFeatureTypeOption = roomFormData.roomFeatures;
@@ -68,9 +74,13 @@ export class HotelDetailsComponent implements OnInit {
       },
       error => console.warn(error),
     );
-    this.hotelIdFromLogin = this.loginService.getHotelId();
-    if (this.hotelIdFromLogin) {
-      this.getHotelDetail(String(this.hotelIdFromLogin));
+    if (this.userRole === "ROLE_HOTELOWNER") {
+      this.loginService.hotelId.subscribe(
+        response => {
+          this.hotelIdFromLogin = response;
+          this.getHotelDetail(String(this.hotelIdFromLogin))
+        }
+      );
     } else {
       this.route.paramMap.subscribe(
         paramMap => {
