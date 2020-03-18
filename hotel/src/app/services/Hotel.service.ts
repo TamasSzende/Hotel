@@ -53,4 +53,8 @@ export class HotelService {
 	  formData.append('imageURL',image);
     return this.http.post(BASE_URL + "/deleteImage/"+ hotelIdFromLogin,formData);
   }
+
+  getHotelImages(hotelId: number): Observable<Array<string>> {
+      return this.http.get<Array<string>>(BASE_URL + "/images/" + hotelId);
+  }
 }

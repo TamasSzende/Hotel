@@ -164,4 +164,12 @@ public class HotelService {
 			}
 		}
 	}
+
+	public List<String> getHotelImages(Long id) {
+		List<String> hotelImageUrls = null;
+		if (hotelRepository.findById(id).isPresent()) {
+			hotelImageUrls = hotelRepository.findById(id).get().getHotelImageUrls();
+		}
+		return hotelImageUrls;
+	}
 }

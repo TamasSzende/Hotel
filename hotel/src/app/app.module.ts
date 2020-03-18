@@ -25,6 +25,7 @@ import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form
 import {LoginFormComponent} from "./components/login-form/login-form.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
+import { HotelImageManagerComponent } from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import {FileUploadModule} from "ng2-file-upload";
     PopupComponent,
     BookingFormDialogComponent,
     LoginFormComponent,
+    HotelImageManagerComponent,
   ],
     imports: [
         HttpClientModule,

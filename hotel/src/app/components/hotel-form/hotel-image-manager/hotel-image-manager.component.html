@@ -1,0 +1,21 @@
+
+<div>
+  <button type = button (click)="fileInput.click()">Add Image</button>
+  <input style="display: none" type="file" accept="image/*" (change)="onFileChange($event)" #fileInput>
+  <ul class="container" style = "display: flex">
+    <li *ngFor="let image of imageURLs" style = "display: block">
+      <div>
+        <cl-image [public-id]="getPublicId(image)">
+          <cl-transformation
+            height="100"
+            width="100"
+            crop="fit">
+          </cl-transformation>
+        </cl-image>
+      </div>
+      <div style="display: block">
+        <button (click)="deleteImage(image)" >Delete</button>
+      </div>
+    </li>
+  </ul>
+</div>

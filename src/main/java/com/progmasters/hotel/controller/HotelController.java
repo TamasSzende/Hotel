@@ -108,4 +108,10 @@ public class HotelController {
     	return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@GetMapping("/images/{id}")
+	public ResponseEntity<List<String>> getHotelImages(@PathVariable Long id){
+		List<String> imageURLs = hotelService.getHotelImages(id);
+		return new ResponseEntity<>(imageURLs,HttpStatus.OK);
+	}
+
 }

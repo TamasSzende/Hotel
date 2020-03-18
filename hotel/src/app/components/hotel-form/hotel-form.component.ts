@@ -22,7 +22,6 @@ export class HotelFormComponent implements OnInit {
 	hotelTypeOption: HotelTypeOptionModel[];
   private hotelIdFromLogin: number;
 	private isUpdate: boolean;
-	private imageURLs = [];
 
   constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
 		this.hotelForm = new FormGroup({
@@ -92,7 +91,6 @@ export class HotelFormComponent implements OnInit {
 					description: response.description,
 					hotelFeatures: this.createHotelFeaturesFormArray(response.hotelFeatures),
 				});
-				this.imageURLs = response.hotelImageUrls
 			},
 		);
   };
@@ -127,25 +125,4 @@ export class HotelFormComponent implements OnInit {
     );
   };
 
-  onFileChange(event) {
-    const file: File = event.target.files[0];
-    const formData = new FormData();
-    formData.append("file",file);
-    this.hotelService.uploadImage(formData, this.hotelIdFromLogin).subscribe(
-      (imageURL) => {
-        this.imageURLs.push(imageURL);
-        this.ngOnInit();
-      });
-    }
-
-  getPublicId(imgURL: string) {
-    return imgURL.substring(61, imgURL.length - 4);
-  }
-
-  deleteImage(image: string) {
-    this.hotelService.deleteImage(image,this.hotelIdFromLogin).subscribe(
-      () => this.ngOnInit()
-      //TODO refresh only the image list
-    )
-  }
 }
