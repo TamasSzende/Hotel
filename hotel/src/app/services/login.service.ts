@@ -1,21 +1,20 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
+  private BASE_URL = environment.BASE_URL;
+
   //TODO visszaállítani 'null'-ra a kezdő értéket!!!!
   // hotelId = new BehaviorSubject<number>(1);
   hotelId = new Subject<number>();
   username = new Subject<string>();
   role = new Subject<string>();
-
-
-  private BASE_URL = 'http://localhost:8080';
-
 
   constructor(private http: HttpClient) {
   }

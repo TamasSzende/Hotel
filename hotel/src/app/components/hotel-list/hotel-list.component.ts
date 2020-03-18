@@ -37,7 +37,6 @@ export class HotelListComponent implements OnInit {
     this.listHotel(); //ez nem kéne ide!!!
   }
 
-
   listHotel = () => {
     this.hotelService.listHotel().subscribe(
       (hotelList: HotelListItemModel[]) => {

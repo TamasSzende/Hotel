@@ -3,6 +3,7 @@ package com.progmasters.hotel.validator;
 import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.dto.RegistrationDetails;
 import com.progmasters.hotel.repository.AccountRepository;
+import com.progmasters.hotel.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,6 +16,9 @@ import java.util.regex.Pattern;
 public class RegistrationValidator implements Validator {
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public boolean supports(Class<?> clazz) {

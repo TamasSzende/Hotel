@@ -2,6 +2,7 @@ package com.progmasters.hotel.config;
 
 import com.progmasters.hotel.security.JPAUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,9 +19,10 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class
-SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${cors-policies}")
+    private String[] corsPolicies;
     private JPAUserDetailsService userDetailsService;
 
     @Autowired
@@ -43,10 +45,13 @@ SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/accounts").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
-                .antMatchers("/api/accounts/**").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
                 .antMatchers("/api/accounts/registrationConfirm").permitAll()
+                .antMatchers("/api/accounts/**").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
+                .antMatchers("/api/accounts").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
                 .antMatchers("/api").authenticated()
+                //TODO Ezzel a konfiggal jelenleg, csak az éri el az API bármely funkcióját, aki be van lépve
+                // Ezt biztos, hogy igy akarjátok? Mármint pl egy szoba listát el kéne hogy érjen bárki, nem?
+                // Ezt beszéljétek meg, irjátok át!
                 .antMatchers("/**").permitAll()
                 .and().logout().deleteCookies("JSESSIONID")
                 .and().httpBasic();
@@ -55,7 +60,7 @@ SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://127.0.0.1:4200", "http://[::1]:4200"));
+        configuration.setAllowedOrigins(Arrays.asList(corsPolicies));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With"));

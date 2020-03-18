@@ -9,7 +9,6 @@ import org.springframework.context.event.EventListener;
 
 @SpringBootApplication
 public class AngularHotelApplication {
-
     //----- GENERATE DEFAULT ADMIN ------
 
     private AccountService accountService;

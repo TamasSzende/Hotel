@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {HotelService} from "../../services/hotel.service";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
 import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {HotelCreateItemModel} from "../../models/hotelCreateItem.model";
 import {LoginService} from "../../services/login.service";
+import {HotelService} from "../../services/Hotel.service";
 
 // import {validationHandler} from "../../utils/validationHandler";
 
@@ -23,7 +23,7 @@ export class HotelFormComponent implements OnInit {
   private hotelIdFromLogin: number;
 	private isUpdate: boolean;
 
-	constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
+	constructor(private hotelService: HotelService , private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
 		this.hotelForm = new FormGroup({
 				'name': new FormControl(''),
 				'postalCode': new FormControl(''),
