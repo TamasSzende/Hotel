@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique = true)
@@ -29,6 +29,8 @@ public class Account {
     private Long hotelId;
     private LocalDateTime registrationDate;
 
+    private boolean isEnabled;
+
     public Account() {
     }
 
@@ -40,6 +42,14 @@ public class Account {
         this.lastname = registrationDetails.getLastname();
         this.address = registrationDetails.getAddress();
         this.registrationDate = LocalDateTime.now();
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 
     public Long getId() {
