@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 
@@ -8,11 +8,13 @@ import {environment} from "../../environments/environment";
 })
 export class LoginService {
 
+  private BASE_URL = environment.BASE_URL;
+
   //TODO visszaállítani 'null'-ra a kezdő értéket!!!!
   // hotelId = new BehaviorSubject<number>(1);
   hotelId = new BehaviorSubject<number>(null);
-  loggedIn = new Subject<any>();
-  private BASE_URL = environment.BASE_URL;
+  username = new BehaviorSubject<string>(null);
+  role = new BehaviorSubject<string>(null);
 
   constructor(private http: HttpClient) {
   }
@@ -21,15 +23,27 @@ export class LoginService {
     return this.hotelId.getValue();
   }
 
+  getUsername(): string {
+    return this.username.getValue();
+  }
+
+  getRole(): string {
+    return this.role.getValue();
+  }
+
   authenticate(credentials): Observable<any> {
     const headers = new HttpHeaders(credentials ? {
       authorization: 'Basic ' + btoa(credentials.email + ':' + credentials.password),
     } : {});
-
     return this.http.get(this.BASE_URL + '/api/accounts/me', {headers: headers});
   }
 
   logout() {
+    this.hotelId.next(null);
+    this.username.next(null);
+    this.role.next(null);
+
+    //TODO valahova backendre küldeni egy POST-ot
     return this.http.get(this.BASE_URL + '/logout', {withCredentials: true});
   }
 

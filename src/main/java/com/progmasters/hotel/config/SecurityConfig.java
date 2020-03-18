@@ -46,8 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/accounts/registrationConfirm").permitAll()
-                .antMatchers("/api/accounts/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/api/accounts").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/accounts/**").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
+                .antMatchers("/api/accounts").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
                 .antMatchers("/api").authenticated()
                 //TODO Ezzel a konfiggal jelenleg, csak az éri el az API bármely funkcióját, aki be van lépve
                 // Ezt biztos, hogy igy akarjátok? Mármint pl egy szoba listát el kéne hogy érjen bárki, nem?

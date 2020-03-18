@@ -3,13 +3,14 @@ package com.progmasters.hotel.domain;
 import com.progmasters.hotel.dto.RegistrationDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique = true)
@@ -25,6 +26,10 @@ public class Account {
     private String firstname;
     private String lastname;
     private String address;
+    private Long hotelId;
+    private LocalDateTime registrationDate;
+
+    private boolean isEnabled;
 
     public Account() {
     }
@@ -36,7 +41,15 @@ public class Account {
         this.firstname = registrationDetails.getFirstname();
         this.lastname = registrationDetails.getLastname();
         this.address = registrationDetails.getAddress();
-        this.role = Role.ROLE_USER;
+        this.registrationDate = LocalDateTime.now();
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 
     public Long getId() {
@@ -101,5 +114,21 @@ public class Account {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public Long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
     }
 }

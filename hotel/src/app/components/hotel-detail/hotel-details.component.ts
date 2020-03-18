@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
 import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
@@ -12,9 +11,7 @@ import {BookingService} from "../../services/booking.service";
 import {BookingFormDialogComponent} from "./booking-form-dialog/booking-form-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
-import {RoomFormDataModel} from "../../models/roomFormData.model";
-import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
-import flatpickr from "flatpickr";
+import {HotelService} from "../../services/Hotel.service";
 
 
 @Component({
@@ -25,15 +22,11 @@ import flatpickr from "flatpickr";
 export class HotelDetailsComponent implements OnInit {
 
   hotel: HotelDetailsModel;
-  priceOfBooking: number;
   hotelIdFromLogin: number;
   hotelIdFromRoute: string;
 
   bookingForm: FormGroup;
-  filterForm: FormGroup;
-  roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
-  flatpickrInstance;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
@@ -44,15 +37,12 @@ export class HotelDetailsComponent implements OnInit {
       minDate: "today",
       dateFormat: "Y-m-d",
     };
+
     this.bookingForm = new FormGroup({
       'numberOfGuests': new FormControl(null),
       'bookingDateRange': new FormControl(''),
       'roomIdList': new FormArray([]),
     });
-    this.filterForm = new FormGroup({
-      'roomFeatures': new FormArray([]),
-    })
-
   }
 
   ngOnInit(): void {
@@ -61,13 +51,6 @@ export class HotelDetailsComponent implements OnInit {
       this.router.navigate(['/login'])
     }
 
-    this.roomService.getRoomFormData().subscribe(
-      (roomFormData: RoomFormDataModel) => {
-        this.roomFeatureTypeOption = roomFormData.roomFeatures;
-        this.createRoomFeaturesCheckboxControl();
-      },
-      error => console.warn(error),
-    );
     this.hotelIdFromLogin = this.loginService.getHotelId();
     if (this.hotelIdFromLogin) {
       this.getHotelDetail(String(this.hotelIdFromLogin));
@@ -90,49 +73,9 @@ export class HotelDetailsComponent implements OnInit {
       (response: HotelDetailsModel) => {
         this.hotel = response;
         this.createRoomBookingFormArray();
-        this.flatpickrInstance = flatpickr('#bookingDateRange', {});
-        console.log(this.flatpickrInstance)
       }
     );
   };
-
-  getFilteredRoomList = () => {
-    const data = {
-      startDate: this.bookingForm.value.bookingDateRange[0],
-      endDate: this.bookingForm.value.bookingDateRange[1],
-      roomFeatures: this.createRoomFeaturesFilterArrayToSend(),
-    };
-    this.roomService.getFilteredRoomList(this.hotel.id, data).subscribe(
-      (response: RoomListItemModel[]) => {
-        this.hotel.rooms = response;
-        this.clearRoomBookingFormArray();
-        this.createRoomBookingFormArray();
-        this.priceOfBooking = null;
-      },
-      error => console.warn(error),
-    );
-  };
-
-  resetFilters() {
-    this.filterForm.reset();
-    //TODO resetelni a naptárat!!!
-    this.flatpickrInstance.clear();
-    this.getFilteredRoomList();
-  }
-
-  getPriceOfBooking() {
-    if (this.bookingForm.value.bookingDateRange) {
-      const numberOfNights =
-        Math.round((this.bookingForm.value.bookingDateRange[1].getTime() - this.bookingForm.value.bookingDateRange[0].getTime()) / 86400000);
-      let roomsPricePerNight = 0;
-      this.bookingForm.value.roomIdList.forEach((value, index) => {
-        if (value) {
-          roomsPricePerNight += this.hotel.rooms[index].pricePerNight;
-        }
-      });
-      this.priceOfBooking = numberOfNights * roomsPricePerNight;
-    }
-  }
 
   createRoomInHotel() {
     this.router.navigate(['/admin/hotel/create-room'])
@@ -172,10 +115,11 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   makeBooking() {
+    const input = {...this.bookingForm.value};
     let dialogRef = this.dialog.open(BookingFormDialogComponent, {
       height: '600px',
       width: '800px',
-      data: this.createBookingFormDialogData(),
+      data: this.createBookingFormDialogData(input),
     });
     dialogRef.afterClosed().subscribe(
       response => {
@@ -184,27 +128,6 @@ export class HotelDetailsComponent implements OnInit {
         }
       }
     )
-  }
-
-  createBookingFormDialogData() {
-    const input = {...this.bookingForm.value};
-    return {
-      hotel: this.createHotelDataToSend(),
-      numberOfGuests: input.numberOfGuests,
-      startDate: input.bookingDateRange[0],
-      endDate: input.bookingDateRange[1],
-      roomList: this.createReservedRoomArrayToSend(),
-    }
-  }
-
-  createHotelDataToSend() {
-    return {
-      name: this.hotel.name,
-      hotelType: this.hotel.hotelType,
-      postalCode: this.hotel.postalCode,
-      city: this.hotel.city,
-      streetAddress: this.hotel.streetAddress,
-    }
   }
 
   createReservedRoomArrayToSend(): RoomShortListItemModel[] {
@@ -225,6 +148,26 @@ export class HotelDetailsComponent implements OnInit {
     return result;
   }
 
+  createBookingFormDialogData(input) {
+    return {
+      hotel: this.createHotelDataToSend(),
+      numberOfGuests: input.numberOfGuests,
+      startDate: input.bookingDateRange[0],
+      endDate: input.bookingDateRange[1],
+      roomList: this.createReservedRoomArrayToSend(),
+    }
+  }
+
+  createHotelDataToSend() {
+    return {
+      name: this.hotel.name,
+      hotelType: this.hotel.hotelType,
+      postalCode: this.hotel.postalCode,
+      city: this.hotel.city,
+      streetAddress: this.hotel.streetAddress,
+    }
+  }
+
   private createRoomBookingFormArray() {
     this.hotel.rooms.forEach(() => {
         const control = new FormControl(false);
@@ -239,20 +182,4 @@ export class HotelDetailsComponent implements OnInit {
     }
   }
 
-  private createRoomFeaturesCheckboxControl() {
-    this.roomFeatureTypeOption.forEach(() => {
-        const control = new FormControl(false);
-        (this.filterForm.controls.roomFeatures as FormArray).push(control);
-      }
-    );
-  }
-
-  private createRoomFeaturesFilterArrayToSend(): string[] {
-    return this.filterForm.value.roomFeatures
-      .map((roomFeatures, index) => roomFeatures ? this.roomFeatureTypeOption[index].name : null)
-      .filter(roomFeatures => roomFeatures !== null);
-  }
-  getPublicId(imgURL: string) {
-    return imgURL.substring(61, imgURL.length - 4);
-  }
 }
