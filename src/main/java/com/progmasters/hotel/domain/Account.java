@@ -29,7 +29,7 @@ public class Account {
     private Long hotelId;
     private LocalDateTime registrationDate;
 
-    private boolean isEnabled;
+    private Boolean isEnabled = false;
 
     public Account() {
     }
@@ -44,11 +44,11 @@ public class Account {
         this.registrationDate = LocalDateTime.now();
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return isEnabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.isEnabled = enabled;
     }
 
