@@ -14,7 +14,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
-import flatpickr from "flatpickr";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 
 
@@ -35,7 +34,6 @@ export class HotelDetailsComponent implements OnInit {
   filterForm: FormGroup;
   roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
-  flatpickrInstance;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
@@ -54,7 +52,6 @@ export class HotelDetailsComponent implements OnInit {
     this.filterForm = new FormGroup({
       'roomFeatures': new FormArray([]),
     })
-
   }
 
   ngOnInit(): void {
@@ -98,8 +95,6 @@ export class HotelDetailsComponent implements OnInit {
       (response: HotelDetailsModel) => {
         this.hotel = response;
         this.createRoomBookingFormArray();
-        this.flatpickrInstance = flatpickr('#bookingDateRange', {});
-        console.log(this.flatpickrInstance)
       }
     );
   };
@@ -124,7 +119,7 @@ export class HotelDetailsComponent implements OnInit {
   resetFilters() {
     this.filterForm.reset();
     //TODO resetelni a naptárat!!!
-    this.flatpickrInstance.clear();
+    // this.flatpickrInstance.clear();
     this.getFilteredRoomList();
   }
 
