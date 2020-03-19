@@ -31,8 +31,6 @@ public class DataController {
     }
 
 
-
-
     @GetMapping
     public ResponseEntity<Void> fillDatabase(){
         File file = new File("src/main/resources/hotels2.json");

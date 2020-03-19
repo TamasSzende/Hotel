@@ -20,8 +20,8 @@ export class HotelFormComponent implements OnInit {
   hotelForm: FormGroup;
   hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
   hotelTypeOption: HotelTypeOptionModel[];
-  private hotelIdFromLogin: number;
-  private isUpdate: boolean;
+  hotelIdFromLogin: number;
+  isUpdate: boolean;
 
   constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
     this.hotelForm = new FormGroup({

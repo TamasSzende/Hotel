@@ -43,7 +43,7 @@ public class Hotel {
 
     @Column(name = "hotel_image_urls")
     @ElementCollection
-    private List<String> hotelImageUrls;
+    private List<String> hotelImageUrls = new ArrayList<>();
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
