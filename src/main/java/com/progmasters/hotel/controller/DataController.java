@@ -38,17 +38,21 @@ public class DataController {
         File file = new File("src/main/resources/hotels2.json");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            List<Hotel> hotelList = objectMapper.readValue(file, new TypeReference<List<Hotel>>(){});
+            List<Hotel> hotelList = objectMapper.readValue(file, new TypeReference<>() {
+            });
             for (Hotel hotel : hotelList) {
-             hotelRepository.save(hotel);
-                for (Room room : hotel.getRooms()) {
-                    room.setHotel(hotel);
-                    roomRepository.save(room);
+                if (hotelRepository.findByHotelName(hotel.getName()).isEmpty()) {
+                    hotelRepository.save(hotel);
+                    for (Room room : hotel.getRooms()) {
+                        room.setHotel(hotel);
+                        roomRepository.save(room);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
