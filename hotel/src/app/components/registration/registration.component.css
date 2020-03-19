@@ -11,17 +11,34 @@
   margin: 0px auto;
 }
 
-.login-popup-btn {
+.login-popup-btna {
   background: #258b47;
   border: none;
   border-radius: 25px;
   color: #fff;
   display: block;
   font-size: 18px;
-  height: 38px;
+  height: 60px;
   line-height: 28px;
-  margin: 20px auto 5px;
-  width: 150px;
+  margin: 10px auto 5px;
+  width: 200px;
+  -webkit-transition: all 700ms ease;
+  -moz-transition: all 700ms ease;
+  -ms-transition: all 700ms ease;
+  -o-transition: all 700ms ease;
+}
+
+.login-popup-btnb {
+  background: #228b8b;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  height: 60px;
+  line-height: 28px;
+  margin: 10px auto 5px;
+  width: 200px;
   -webkit-transition: all 700ms ease;
   -moz-transition: all 700ms ease;
   -ms-transition: all 700ms ease;

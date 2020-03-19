@@ -1,6 +1,6 @@
 <div class="login-popup-wrap new_login_popup">
   <div class="login-popup-heading text-center">
-    <h4><i aria-hidden="true" class="fa fa-lock"></i> Registration </h4>
+    <h3><i aria-hidden="true" class="fa fa-lock"></i> Registration </h3>
   </div>
   <form [formGroup]="registerForm" action="" id="loginMember" method="post" role="form">
     <div class="form-group">
@@ -82,16 +82,15 @@
         {{registerForm.get('address').errors['serverError']}}
       </small>
     </div>
-
-
-    <button (click)="doRegistrationAsUser()" [disabled]="registerForm.invalid" class="btn btn-default"
+    <button (click)="doRegistrationAsUser()" [disabled]="registerForm.invalid" class="btn btn-default login-popup-btna"
             name="submit" type="submit" value="1">
-      Regisztrálok, mint vendég
+      Sign up as Guest
     </button>
+
     <button (click)="doRegistrationAsHotelOwner()" [disabled]="registerForm.invalid"
-            class="btn btn-default login-popup-btn"
+            class="btn btn-default login-popup-btnb"
             name="submit" type="submit" value="1">
-      Regisztrálok, mint hotel tulajdonos
+      Sign up as Hotel owner
     </button>
   </form>
 
