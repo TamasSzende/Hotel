@@ -60,20 +60,13 @@ export class HotelDetailsComponent implements OnInit {
 
     this.loginService.role.subscribe(
       (response) => {
-        if (response === null) {
-          this.router.navigate(['/login'])
-        } else {
+        if (response !== null) {
           this.userRole = response;
+        } else {
+          this.router.navigate(['/login'])
         }
       });
 
-    this.roomService.getRoomFormData().subscribe(
-      (roomFormData: RoomFormDataModel) => {
-        this.roomFeatureTypeOption = roomFormData.roomFeatures;
-        this.createRoomFeaturesCheckboxControl();
-      },
-      error => console.warn(error),
-    );
     if (this.userRole === "ROLE_HOTELOWNER") {
       this.loginService.hotelId.subscribe(
         response => {
@@ -89,10 +82,14 @@ export class HotelDetailsComponent implements OnInit {
             this.hotelIdFromRoute = paramMapId;
             this.getHotelDetail(this.hotelIdFromRoute);
           }
-        },
-        error => console.warn(error),
-      );
+        });
     }
+
+    this.roomService.getRoomFormData().subscribe(
+      (roomFormData: RoomFormDataModel) => {
+        this.roomFeatureTypeOption = roomFormData.roomFeatures;
+        this.createRoomFeaturesCheckboxControl();
+      });
   }
 
   getHotelDetail = (hotelId: string) => {

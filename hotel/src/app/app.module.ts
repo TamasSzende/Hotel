@@ -58,7 +58,10 @@ import {ConfirmationComponent} from "./components/confirmation/confirmation.comp
     {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
   ],],
   bootstrap: [AppComponent],
-  entryComponents: [PopupComponent]
+  entryComponents: [
+    PopupComponent,
+    BookingFormDialogComponent,
+  ]
 })
 export class AppModule {
 }

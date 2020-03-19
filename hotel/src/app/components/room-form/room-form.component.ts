@@ -41,9 +41,13 @@ export class RoomFormComponent implements OnInit {
 
   ngOnInit() {
     this.loginService.hotelId.subscribe(
-      response =>
-        this.hotelId = response
-    );
+      response => {
+        if (response) {
+          this.hotelId = response;
+        } else {
+          this.router.navigate(['/login'])
+        }
+      });
 
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {

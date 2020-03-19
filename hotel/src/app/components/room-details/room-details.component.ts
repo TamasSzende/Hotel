@@ -18,13 +18,17 @@ export class RoomDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginService.hotelId.subscribe(
-      response =>
-        this.hotelId = response
-    );
+      response => {
+        if (response) {
+          this.hotelId = response;
+        } else {
+          this.router.navigate(['/login'])
+        }
+      });
+
     this.route.paramMap.subscribe(
       paramMap => {
         const roomId = paramMap.get('id');
-
         if (roomId) {
           this.getRoomDetail(roomId);
         }

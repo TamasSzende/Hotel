@@ -12,6 +12,7 @@ import {LoginService} from "../../services/login.service";
 })
 export class HotelListComponent implements OnInit {
 
+
   hotelList: HotelListItemModel[] = [];
   userRole: string;
 
@@ -21,21 +22,14 @@ export class HotelListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loginService.role.subscribe(
-      (response) => {
-        this.userRole = response;
-        console.log(this.userRole);
-        if (response !== null) {
-          setTimeout(() => {
-          }, 100100);
-          this.listHotel();
-          console.log('iam here')
-        } else {
-          this.router.navigate(['/login'])
-        }
-      });
-    this.listHotel(); //ez nem kéne ide!!!
+    this.userRole = this.loginService.getRole();
+    if (this.userRole) {
+      this.listHotel();
+    } else {
+      this.router.navigate(['/login'])
+    }
   }
+
 
   listHotel = () => {
     this.hotelService.listHotel().subscribe(

@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
           this.loginService.hotelId.next(response.hotelId);
         }
         this.notificationService.success('Logged in successfully!');
-        this.router.navigateByUrl('/hotel');
+        this.navigateAfterLogin(response);
       },
       error => {
         this.notificationService.unsuccessful('Wrong username or password given!');
@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
             },
           ],
         };
-
         validationHandler(error, this.loginForm);
       });
 
@@ -58,6 +57,18 @@ export class LoginComponent implements OnInit {
 
   doRegistration() {
     this.router.navigate(['/registrations']);
+  }
+
+  navigateAfterLogin(response) {
+    if (response.role === "ROLE_ADMIN" || response.role === "ROLE_USER") {
+      this.router.navigateByUrl('/hotel');
+    } else if (response.role === "ROLE_HOTELOWNER" && !response.hotelId) {
+      this.router.navigateByUrl('/admin/hotel-create');
+    } else if (response.role === "ROLE_HOTELOWNER" && response.hotelId) {
+      this.router.navigateByUrl('admin/hotel');
+    } else {
+      this.router.navigateByUrl('/login')
+    }
   }
 
 }

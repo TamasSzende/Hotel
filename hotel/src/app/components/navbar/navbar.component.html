@@ -1,25 +1,38 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-  <a id="nav-index" class="navbar-brand" routerLink="/">HOOTEL</a>
+  <a [routerLink]="this.baseRouterLink" class="navbar-brand" id="nav-index">
+    HOOTEL
+  </a>
   <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#navbar"
           aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
+
   <div id="navbar" class="navbar-collapse collapse">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 
+    <ul *ngIf="userRole === 'ROLE_USER'" class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item">
-        <a class="nav-link" id="hotel-form-link" routerLink="/admin/hotel-create" routerLinkActive="active">New Hotel</a>
+        <a class="nav-link" id="user-bookings" routerLink="/bookings" routerLinkActive="active">My Bookings</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" id="hotel-detail-link" routerLink="/admin/hotel" routerLinkActive="active">Hotel Detail</a>
+        <a class="nav-link" id="user-account" routerLink="/account" routerLinkActive="active">My Account</a>
+      </li>
+    </ul>
+
+    <ul *ngIf="userRole === 'ROLE_HOTELOWNER'" class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" id="hotel-bookings" routerLink="/admin/hotel/bookings" routerLinkActive="active">My
+          Bookings</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" id="hotel-list-link" routerLink="/hotel" routerLinkActive="active">Hotel list</a>
+        <a class="nav-link" id="hotel-account" routerLink="/admin/hotel/account" routerLinkActive="active">My
+          Account</a>
       </li>
+    </ul>
 
+    <ul class="navbar-nav">
       <li *ngIf="!loggedIn" class="nav-item">
         <a class="nav-link" routerLink="login" routerLinkActive="active">Login</a>
       </li>
@@ -27,7 +40,8 @@
       <li *ngIf="loggedIn" class="nav-item">
         <a (click)="logout()" class="nav-link" id="logout-link" style="cursor: pointer">Logout</a>
       </li>
-
     </ul>
+
   </div>
+
 </nav>

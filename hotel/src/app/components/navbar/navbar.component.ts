@@ -9,8 +9,10 @@ import {LoginService} from "../../services/login.service";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  loggedIn: boolean;
 
+  loggedIn: boolean;
+  userRole: string;
+  baseRouterLink: string = 'login';
 
   constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {
   }
@@ -20,6 +22,18 @@ export class NavbarComponent implements OnInit {
       (response) => {
         if (response !== null) {
           this.loggedIn = true;
+          this.userRole = response;
+          console.log('userRole: ' + this.userRole);
+          if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_USER') {
+            this.baseRouterLink = 'hotel';
+            console.log("baseRouteLink: " + this.baseRouterLink);
+          } else if (this.userRole === 'ROLE_HOTELOWNER') {
+            console.log("baseRouteLink: " + this.baseRouterLink);
+            this.baseRouterLink = 'admin/hotel';
+          } else {
+            console.log("baseRouteLink: " + this.baseRouterLink);
+            this.baseRouterLink = 'login';
+          }
         } else {
           this.loggedIn = false;
         }
