@@ -6,14 +6,11 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
   providedIn: 'root'
 })
 export class LoginService {
+  private BASE_URL = 'http://localhost:8080';
 
   hotelId = new BehaviorSubject<number>(null);
   username = new BehaviorSubject<string>(null);
   role = new BehaviorSubject<string>(null);
-
-
-  private BASE_URL = 'http://localhost:8080';
-
 
   constructor(private http: HttpClient) {
   }
