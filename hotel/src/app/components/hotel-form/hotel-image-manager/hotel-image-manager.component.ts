@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {HotelService} from "../../../services/Hotel.service";
+import {HotelService} from "../../../services/hotel.service";
 import {getPublicId} from "../../../utils/cloudinaryPublicIdHandler";
 
 @Component({

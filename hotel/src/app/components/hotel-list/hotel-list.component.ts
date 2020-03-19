@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {HotelService} from "../../services/Hotel.service";
+import {HotelService} from "../../services/hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
 import {PopupService} from "../../services/popup.service";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";

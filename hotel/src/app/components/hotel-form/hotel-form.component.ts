@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {HotelService} from "../../services/Hotel.service";
+import {HotelService} from "../../services/hotel.service";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
 import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
