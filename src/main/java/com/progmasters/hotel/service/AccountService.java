@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
-    private static final String ADMINMAIL = "flaron76@gmail.com";
+    private static final String ADMINMAIL = "hotel.team.five.a@gmail.com";
+    private static final String USERMAIL = "hotel.team.five.u@gmail.com";
+    private static final String HOTELOWNERMAIL = "hotel.team.five.h@gmail.com";
     private JavaMailSender javaMailSender;
     private BCryptPasswordEncoder passwordEncoder;
     private AccountRepository accountRepository;
@@ -145,10 +147,45 @@ public class AccountService {
             newAdmin.setEmail(ADMINMAIL);
             newAdmin.setPassword(passwordEncoder.encode("Admin"));
             newAdmin.setRole(Role.ROLE_ADMIN);
+            newAdmin.setEnabled(true);
             newAdmin.setUsername(newAdmin.getEmail());
             accountRepository.save(newAdmin);
         } else if (adminAccount.getRole() != Role.ROLE_ADMIN) {
             adminAccount.setRole(Role.ROLE_ADMIN);
+        }
+    }
+
+//----------CREATE DEFAULT USER----------
+
+    public void checkUser() {
+        Account userAccount = accountRepository.findByEmail(USERMAIL);
+        if (userAccount == null) {
+            Account newUser = new Account();
+            newUser.setEmail(USERMAIL);
+            newUser.setPassword(passwordEncoder.encode("User"));
+            newUser.setRole(Role.ROLE_USER);
+            newUser.setEnabled(true);
+            newUser.setUsername(newUser.getEmail());
+            accountRepository.save(newUser);
+        } else if (userAccount.getRole() != Role.ROLE_USER) {
+            userAccount.setRole(Role.ROLE_USER);
+        }
+    }
+
+//----------CREATE DEFAULT HOTELOWNER----------
+
+    public void checkHotelOwner() {
+        Account hotelOwnerAccount = accountRepository.findByEmail(HOTELOWNERMAIL);
+        if (hotelOwnerAccount == null) {
+            Account newHotelOwner = new Account();
+            newHotelOwner.setEmail(HOTELOWNERMAIL);
+            newHotelOwner.setPassword(passwordEncoder.encode("Hotelowner"));
+            newHotelOwner.setRole(Role.ROLE_HOTELOWNER);
+            newHotelOwner.setEnabled(true);
+            newHotelOwner.setUsername(newHotelOwner.getEmail());
+            accountRepository.save(newHotelOwner);
+        } else if (hotelOwnerAccount.getRole() != Role.ROLE_HOTELOWNER) {
+            hotelOwnerAccount.setRole(Role.ROLE_HOTELOWNER);
         }
     }
 
@@ -162,5 +199,11 @@ public class AccountService {
 
     public Account findByUsername(String username) {
         return this.accountRepository.findByUsername(username);
+    }
+
+    public boolean accountIsActive(String email) {
+        Account account = accountRepository.findByEmail(email);
+
+        return account.isEnabled();
     }
 }
