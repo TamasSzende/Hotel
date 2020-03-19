@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
-// import {LoginModel} from "../../models/login.model";
 import {LoginService} from "../../services/login.service";
-import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-navbar',
@@ -11,30 +9,43 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  loggedIn: boolean = false;
-  // role: boolean;
-  // user: LoginModel;
+
+  loggedIn: boolean;
+  userRole: string;
+  baseRouterLink: string = 'login';
 
   constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
-    this.loginService.loggedIn.subscribe(() => {
-      this.loggedIn = true;
-    });
-  }
-
-  logout() {
-    this.http.post(environment.BASE_URL + '/logout', {})
-      .subscribe(() => {
-        localStorage.removeItem('email');
-        this.router.navigateByUrl('login');
-        this.ngOnInit();
-        this.loggedIn = false;
+    this.loginService.role.subscribe(
+      (response) => {
+        if (response !== null) {
+          this.loggedIn = true;
+          this.userRole = response;
+          console.log('userRole: ' + this.userRole);
+          if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_USER') {
+            this.baseRouterLink = 'hotel';
+            console.log("baseRouteLink: " + this.baseRouterLink);
+          } else if (this.userRole === 'ROLE_HOTELOWNER') {
+            console.log("baseRouteLink: " + this.baseRouterLink);
+            this.baseRouterLink = 'admin/hotel';
+          } else {
+            console.log("baseRouteLink: " + this.baseRouterLink);
+            this.baseRouterLink = 'login';
+          }
+        } else {
+          this.loggedIn = false;
+        }
       });
   }
 
-  // checkRole(role: string):boolean{
-  //   return role==='ROLE_ADMIN';
-  // }
+  logout() {
+    this.loggedIn = false;
+    this.userRole = null;
+    this.loginService.logout();
+    this.router.navigateByUrl('login');
+
+  }
+
 }

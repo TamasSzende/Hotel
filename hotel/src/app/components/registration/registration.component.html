@@ -84,8 +84,14 @@
     </div>
 
 
-    <button (click)="doRegistration()" [disabled]="registerForm.invalid" class="btn btn-default login-popup-btn"
-            name="submit" type="submit" value="1">Submit
+    <button (click)="doRegistrationAsUser()" [disabled]="registerForm.invalid" class="btn btn-default"
+            name="submit" type="submit" value="1">
+      Regisztrálok, mint vendég
+    </button>
+    <button (click)="doRegistrationAsHotelOwner()" [disabled]="registerForm.invalid"
+            class="btn btn-default login-popup-btn"
+            name="submit" type="submit" value="1">
+      Regisztrálok, mint hotel tulajdonos
     </button>
   </form>
 

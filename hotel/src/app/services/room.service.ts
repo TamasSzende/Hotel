@@ -5,8 +5,9 @@ import {Observable} from "rxjs";
 import {RoomListItemModel} from "../models/roomListItem.model";
 import {RoomFormDataModel} from "../models/roomFormData.model";
 import {RoomDetailsModel} from "../models/roomDetails.model";
+import {environment} from "../../environments/environment";
 
-const BASE_URL = 'http://localhost:8080/api/rooms';
+const BASE_URL = environment.BASE_URL + '/api/rooms';
 
 @Injectable({
   providedIn: 'root'

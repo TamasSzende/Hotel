@@ -9,8 +9,7 @@ import org.springframework.context.event.EventListener;
 
 @SpringBootApplication
 public class AngularHotelApplication {
-
-    //----- GENERATE DEFAULT ADMIN ------
+    //----- GENERATE DEFAULT ADMIN, USER, HOTELOWNER ------
 
     private AccountService accountService;
 
@@ -22,6 +21,8 @@ public class AngularHotelApplication {
     @EventListener
     public void seed(ContextRefreshedEvent event) {
         accountService.checkAdmin();
+        accountService.checkUser();
+        accountService.checkHotelOwner();
     }
 
 

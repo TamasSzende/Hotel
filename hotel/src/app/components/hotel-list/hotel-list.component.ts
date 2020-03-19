@@ -4,6 +4,7 @@ import {HotelService} from "../../services/Hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
 import {PopupService} from "../../services/popup.service";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-hotel-list',
@@ -12,18 +13,24 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 })
 export class HotelListComponent implements OnInit {
 
-  hotelList: HotelListItemModel[] = [];
 
-  constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService) {
+  hotelList: HotelListItemModel[] = [];
+  userRole: string;
+
+
+  constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
-    if (!localStorage.getItem('email')) {
+
+    this.userRole = this.loginService.getRole();
+    if (this.userRole) {
+      this.listHotel();
+    } else {
       this.router.navigate(['/login'])
     }
-
-    this.listHotel();
   }
+
 
   listHotel = () => {
     this.hotelService.listHotel().subscribe(

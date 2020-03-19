@@ -11,38 +11,45 @@ import {LoginService} from "../../services/login.service";
 // import {validationHandler} from "../../utils/validationHandler";
 
 @Component({
-	selector: 'app-hotel-form',
-	templateUrl: './hotel-form.component.html',
-	styleUrls: ['./hotel-form.component.css']
+  selector: 'app-hotel-form',
+  templateUrl: './hotel-form.component.html',
+  styleUrls: ['./hotel-form.component.css']
 })
 export class HotelFormComponent implements OnInit {
 
-	hotelForm: FormGroup;
-	hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
-	hotelTypeOption: HotelTypeOptionModel[];
+  hotelForm: FormGroup;
+  hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
+  hotelTypeOption: HotelTypeOptionModel[];
   private hotelIdFromLogin: number;
-	private isUpdate: boolean;
+  private isUpdate: boolean;
 
   constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
-		this.hotelForm = new FormGroup({
-				'name': new FormControl(''),
-				'postalCode': new FormControl(''),
-				'city': new FormControl(''),
-				'streetAddress': new FormControl(''),
-				'hotelType': new FormControl(''),
-				'description': new FormControl(''),
-				'hotelFeatures': new FormArray([]),
+    this.hotelForm = new FormGroup({
+        'name': new FormControl(''),
+        'postalCode': new FormControl(''),
+        'city': new FormControl(''),
+        'streetAddress': new FormControl(''),
+        'hotelType': new FormControl(''),
+        'description': new FormControl(''),
+        'hotelFeatures': new FormArray([]),
         'file': new FormControl(null),
         'fileSource': new FormControl('')
-			}
-		);
-	}
+      }
+    );
+  }
 
 	ngOnInit() {
 
-    if (!localStorage.getItem('email')) {
-      this.router.navigate(['/login'])
-    }
+    this.loginService.role.subscribe(
+      (response) => {
+        if (response !== "ROLE_HOTELOWNER") {
+          this.router.navigate(['/login']);
+        } else {
+          this.loginService.hotelId.subscribe(
+            response => this.hotelIdFromLogin = response
+          );
+        }
+      });
 
     this.hotelService.getHotelFormData().subscribe(
       (hotelFormData: HotelFormDataModel) => {
@@ -51,8 +58,6 @@ export class HotelFormComponent implements OnInit {
         this.createHotelFeaturesCheckboxControl();
       }
     );
-
-    this.hotelIdFromLogin = this.loginService.getHotelId();
 
     if (this.hotelIdFromLogin) {
       this.isUpdate = true;

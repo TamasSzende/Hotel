@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    username: root
+    password: tESEli
+
+cors-policies: http://52.215.188.12, http://hotels-demo.progmasters.hu

@@ -22,10 +22,11 @@ import {CloudinaryModule} from "@cloudinary/angular-5.x";
 import * as  Cloudinary from 'cloudinary-core';
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
-import {LoginFormComponent} from "./components/login-form/login-form.component";
+import {LoginComponent} from "./components/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
-import { HotelImageManagerComponent } from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
+import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
+import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
 
 @NgModule({
   declarations: [
@@ -39,28 +40,33 @@ import { HotelImageManagerComponent } from './components/hotel-form/hotel-image-
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,
-    LoginFormComponent,
+    LoginComponent,
     HotelImageManagerComponent,
+    LoginComponent,
+    ConfirmationComponent,
   ],
     imports: [
-        HttpClientModule,
-        ReactiveFormsModule,
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MaterialModule,
-        MatIconModule,
-        MatDialogModule,
-        MDBBootstrapModule,
-        CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
-        Ng2FlatpickrModule,
-        FileUploadModule
+      HttpClientModule,
+      ReactiveFormsModule,
+      BrowserModule,
+      AppRoutingModule,
+      BrowserAnimationsModule,
+      MaterialModule,
+      MatIconModule,
+      MatDialogModule,
+      MDBBootstrapModule,
+      CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
+      Ng2FlatpickrModule,
+      FileUploadModule
     ],
   providers: [[
     {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
   ],],
   bootstrap: [AppComponent],
-  entryComponents: [PopupComponent]
+  entryComponents: [
+    PopupComponent,
+    BookingFormDialogComponent,
+  ]
 })
 export class AppModule {
 }

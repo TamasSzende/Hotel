@@ -29,6 +29,7 @@ export class HotelDetailsComponent implements OnInit {
   priceOfBooking: number;
   hotelIdFromLogin: number;
   hotelIdFromRoute: string;
+  userRole: string;
 
   bookingForm: FormGroup;
   filterForm: FormGroup;
@@ -58,20 +59,22 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (!localStorage.getItem('email')) {
-      this.router.navigate(['/login'])
-    }
+    this.loginService.role.subscribe(
+      (response) => {
+        if (response !== null) {
+          this.userRole = response;
+        } else {
+          this.router.navigate(['/login'])
+        }
+      });
 
-    this.roomService.getRoomFormData().subscribe(
-      (roomFormData: RoomFormDataModel) => {
-        this.roomFeatureTypeOption = roomFormData.roomFeatures;
-        this.createRoomFeaturesCheckboxControl();
-      },
-      error => console.warn(error),
-    );
-    this.hotelIdFromLogin = this.loginService.getHotelId();
-    if (this.hotelIdFromLogin) {
-      this.getHotelDetail(String(this.hotelIdFromLogin));
+    if (this.userRole === "ROLE_HOTELOWNER") {
+      this.loginService.hotelId.subscribe(
+        response => {
+          this.hotelIdFromLogin = response;
+          this.getHotelDetail(String(this.hotelIdFromLogin))
+        }
+      );
     } else {
       this.route.paramMap.subscribe(
         paramMap => {
@@ -80,10 +83,14 @@ export class HotelDetailsComponent implements OnInit {
             this.hotelIdFromRoute = paramMapId;
             this.getHotelDetail(this.hotelIdFromRoute);
           }
-        },
-        error => console.warn(error),
-      );
+        });
     }
+
+    this.roomService.getRoomFormData().subscribe(
+      (roomFormData: RoomFormDataModel) => {
+        this.roomFeatureTypeOption = roomFormData.roomFeatures;
+        this.createRoomFeaturesCheckboxControl();
+      });
   }
 
   getHotelDetail = (hotelId: string) => {

@@ -3,8 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BookingCreateItemModel} from "../models/bookingCreateItem.model";
 import {BookingDetailsModel} from "../models/bookingDetails.model";
+import {environment} from "../../environments/environment";
 
-const BASE_URL = 'http://localhost:8080/api/booking';
+const BASE_URL = environment.BASE_URL + '/api/booking';
 
 @Injectable({
   providedIn: 'root'

@@ -7,11 +7,11 @@ import {validationHandler} from "../../utils/validationHandler";
 import {NotificationService} from "../../services/notification.service";
 
 @Component({
-  selector: 'app-login.form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
@@ -28,13 +28,15 @@ export class LoginFormComponent implements OnInit {
 
   doLogin() {
     const data = {...this.loginForm.value};
-    console.log(data);
     this.loginService.authenticate(data).subscribe(
       response => {
-        localStorage.setItem('email', JSON.stringify(response));
+        this.loginService.username.next(response.name);
+        this.loginService.role.next(response.role);
+        if (response.hotelId) {
+          this.loginService.hotelId.next(response.hotelId);
+        }
         this.notificationService.success('Logged in successfully!');
-        this.router.navigateByUrl('/hotel');
-        this.loginService.loggedIn.next('');
+        this.navigateAfterLogin(response);
       },
       error => {
         this.notificationService.unsuccessful('Wrong username or password given!');
@@ -47,7 +49,6 @@ export class LoginFormComponent implements OnInit {
             },
           ],
         };
-
         validationHandler(error, this.loginForm);
       });
 
@@ -56,6 +57,18 @@ export class LoginFormComponent implements OnInit {
 
   doRegistration() {
     this.router.navigate(['/registrations']);
+  }
+
+  navigateAfterLogin(response) {
+    if (response.role === "ROLE_ADMIN" || response.role === "ROLE_USER") {
+      this.router.navigateByUrl('/hotel');
+    } else if (response.role === "ROLE_HOTELOWNER" && !response.hotelId) {
+      this.router.navigateByUrl('/admin/hotel-create');
+    } else if (response.role === "ROLE_HOTELOWNER" && response.hotelId) {
+      this.router.navigateByUrl('admin/hotel');
+    } else {
+      this.router.navigateByUrl('/login')
+    }
   }
 
 }

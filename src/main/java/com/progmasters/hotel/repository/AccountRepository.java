@@ -9,9 +9,12 @@ import java.util.List;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
+    Account findByEmailIgnoreCase(String email);
+
     Account findByEmail(String email);
 
     Account findByUsername(String username);
 
     List<Account> findAllByEmail(String email);
+
 }

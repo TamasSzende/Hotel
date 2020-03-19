@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {RoomService} from "../../services/room.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {validationHandler} from "../../utils/validationHandler";
@@ -40,7 +40,14 @@ export class RoomFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.hotelId = this.loginService.getHotelId();
+    this.loginService.hotelId.subscribe(
+      response => {
+        if (response) {
+          this.hotelId = response;
+        } else {
+          this.router.navigate(['/login'])
+        }
+      });
 
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {
@@ -96,7 +103,7 @@ export class RoomFormComponent implements OnInit {
         }
       },
     );
-  }
+  };
 
   private updateRoom(data: RoomCreateItemModel) {
     this.roomService.updateRoom(data, this.roomId).subscribe(
