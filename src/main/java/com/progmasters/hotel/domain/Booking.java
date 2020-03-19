@@ -16,8 +16,9 @@ public class Booking {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "guest_name")
-    private String guestName;
+    @ManyToOne
+    @JoinColumn(name = "guest")
+    private Account guest;
 
     @Column(name = "remark", columnDefinition = "TEXT")
     private String remark;
@@ -38,7 +39,6 @@ public class Booking {
     }
 
     public Booking(BookingCreateItem bookingCreateItem) {
-        this.guestName = bookingCreateItem.getGuestName();
         this.remark = bookingCreateItem.getRemark();
         this.numberOfGuests = bookingCreateItem.getNumberOfGuests();
         this.dateOfBooking = LocalDateTime.now();
@@ -48,8 +48,8 @@ public class Booking {
         return id;
     }
 
-    public String getGuestName() {
-        return guestName;
+    public Account getGuest() {
+        return guest;
     }
 
     public String getRemark() {
@@ -80,8 +80,8 @@ public class Booking {
         this.id = id;
     }
 
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
+    public void setGuest(Account guest) {
+        this.guest = guest;
     }
 
     public void setRemark(String remark) {

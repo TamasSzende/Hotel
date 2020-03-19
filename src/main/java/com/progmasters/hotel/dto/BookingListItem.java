@@ -29,7 +29,7 @@ public class BookingListItem {
 
     public BookingListItem(Booking booking) {
         this.id = booking.getId();
-        this.guestName = booking.getGuestName();
+        this.guestName = booking.getGuest().getFirstname() + " " + booking.getGuest().getLastname();
         this.startDate = booking.getRoomReservations().get(0).getStartDate();
         this.endDate = booking.getRoomReservations().get(0).getEndDate();
         for (RoomReservation roomReservation : booking.getRoomReservations()) {

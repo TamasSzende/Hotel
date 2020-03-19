@@ -171,14 +171,14 @@
                 <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
                   <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
                 </div>
-                <div class="btn-group mr-4" *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'">
+                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
                   <button (click)="updateRoom(room.id)" class="btn btn-secondary btn-sm">&nbsp;&nbsp;edit&nbsp;&nbsp;
                   </button>
                   <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">delete</button>
                 </div>
 
                 <label>
-                  Lefoglalom
+                  Lefoglalom&nbsp;
                   <input (change)="getPriceOfBooking()" [formControlName]="i" style="width: 18px; height: 18px"
                          type="checkbox">
                 </label>

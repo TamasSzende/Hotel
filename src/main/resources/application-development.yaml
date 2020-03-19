@@ -1,6 +1,6 @@
 spring:
   datasource:
     username: root
-    password: tESEli
+    password: test1234
 
 cors-policies: http://52.215.188.12, http://hotels-demo.progmasters.hu

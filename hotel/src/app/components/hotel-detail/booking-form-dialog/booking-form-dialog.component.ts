@@ -4,6 +4,8 @@ import {BookingCreateItemModel} from "../../../models/bookingCreateItem.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BookingService} from "../../../services/booking.service";
 import {BookingDetailsModel} from "../../../models/bookingDetails.model";
+import {LoginService} from "../../../services/login.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-booking-form-dialog',
@@ -18,12 +20,14 @@ export class BookingFormDialogComponent implements OnInit {
   priceOfBooking: number;
   bookingDetails: BookingDetailsModel;
   bookingStatus: string = 'booking';
+  username: string;
 
   constructor(public dialogRef: MatDialogRef<BookingFormDialogComponent>,
               private bookingService: BookingService,
+              private loginService: LoginService,
+              private router: Router,
               @Inject(MAT_DIALOG_DATA) public data) {
     this.bookingForm = new FormGroup({
-        'guestName': new FormControl(''),
         'remark': new FormControl(''),
         'aSZF': new FormControl(false),
       }
@@ -31,6 +35,16 @@ export class BookingFormDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.loginService.username.subscribe(
+      (response) => {
+        if (response !== null) {
+          this.username = response;
+        } else {
+          this.router.navigate(['/login'])
+        }
+      });
+
     this.numberOfNights = Math.round((this.data.endDate.getTime() - this.data.startDate.getTime()) / 86400000);
     this.priceOfBooking = 0;
     this.data.roomList.forEach((room) => {
@@ -65,7 +79,7 @@ export class BookingFormDialogComponent implements OnInit {
 
   createBookingData = (input): BookingCreateItemModel => {
     return {
-      guestName: input.guestName,
+      guestAccountName: this.username,
       remark: input.remark,
       numberOfGuests: this.data.numberOfGuests,
       startDate: this.data.startDate,

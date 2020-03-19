@@ -1,10 +1,11 @@
 import {RoomShortListItemModel} from "./roomShortListItem.model";
 import {HotelShortItemModel} from "./hotelShortItem.model";
+import {AccountDetailsModel} from "./accountDetails.model";
 
 export interface BookingDetailsModel {
   id: number;
   hotel: HotelShortItemModel;
-  guestName: string;
+  guest: AccountDetailsModel;
   remark: string;
   startDate: Date;
   endDate: Date;

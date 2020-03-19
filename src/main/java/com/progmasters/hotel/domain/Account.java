@@ -4,6 +4,7 @@ import com.progmasters.hotel.dto.RegistrationDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Account {
@@ -28,6 +29,9 @@ public class Account {
     private String address;
     private Long hotelId;
     private LocalDateTime registrationDate;
+
+    @OneToMany(mappedBy = "guest")
+    private List<Booking> bookingList;
 
     private Boolean isEnabled = false;
 
@@ -130,5 +134,13 @@ public class Account {
 
     public void setHotelId(Long hotelId) {
         this.hotelId = hotelId;
+    }
+
+    public List<Booking> getBookingList() {
+        return bookingList;
+    }
+
+    public void setBookingList(List<Booking> bookingList) {
+        this.bookingList = bookingList;
     }
 }
