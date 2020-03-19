@@ -1,5 +1,5 @@
 export interface BookingCreateItemModel {
-  guestName: string;
+  guestAccountName: string;
   remark: string;
   numberOfGuests: number;
   startDate: Date;

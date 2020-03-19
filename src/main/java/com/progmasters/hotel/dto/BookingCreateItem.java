@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BookingCreateItem {
 
-    private String guestName;
+    private String guestAccountName;
     private String remark;
     private Integer numberOfGuests;
     private LocalDate startDate;
@@ -15,12 +15,12 @@ public class BookingCreateItem {
     public BookingCreateItem() {
     }
 
-    public String getGuestName() {
-        return guestName;
+    public String getGuestAccountName() {
+        return guestAccountName;
     }
 
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
+    public void setGuestAccountName(String guestAccountName) {
+        this.guestAccountName = guestAccountName;
     }
 
     public String getRemark() {

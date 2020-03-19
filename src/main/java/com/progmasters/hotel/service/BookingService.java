@@ -1,11 +1,13 @@
 package com.progmasters.hotel.service;
 
+import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.domain.Booking;
 import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.domain.RoomReservation;
 import com.progmasters.hotel.dto.BookingCreateItem;
 import com.progmasters.hotel.dto.BookingDetails;
 import com.progmasters.hotel.dto.BookingListItem;
+import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.BookingRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import com.progmasters.hotel.repository.RoomReservationRepository;
@@ -28,12 +30,14 @@ public class BookingService {
     private BookingRepository bookingRepository;
     private RoomReservationRepository roomReservationRepository;
     private RoomRepository roomRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository) {
+    public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository, AccountRepository accountRepository) {
         this.bookingRepository = bookingRepository;
         this.roomReservationRepository = roomReservationRepository;
         this.roomRepository = roomRepository;
+        this.accountRepository = accountRepository;
     }
 
     public Long saveBooking(BookingCreateItem bookingCreateItem) {
@@ -54,6 +58,10 @@ public class BookingService {
 
         double priceOfBooking = getPriceOfBooking(numberOfNights, bookingCreateItem);
         booking.setPriceOfBooking(priceOfBooking);
+
+        //TODO check account is exist and user role
+        Account guestAccount = this.accountRepository.findByUsername(bookingCreateItem.getGuestAccountName());
+        booking.setGuest(guestAccount);
 
         roomReservations.forEach(this.roomReservationRepository::save);
         this.bookingRepository.save(booking);
