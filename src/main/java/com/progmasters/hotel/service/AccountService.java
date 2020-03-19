@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 public class AccountService {
@@ -149,6 +151,10 @@ public class AccountService {
             newAdmin.setRole(Role.ROLE_ADMIN);
             newAdmin.setEnabled(true);
             newAdmin.setUsername(newAdmin.getEmail());
+            newAdmin.setAddress("Budapest, Baross utca");
+            newAdmin.setFirstname("Sylvester");
+            newAdmin.setLastname("Stallone");
+            newAdmin.setRegistrationDate(LocalDateTime.now());
             accountRepository.save(newAdmin);
         } else if (adminAccount.getRole() != Role.ROLE_ADMIN) {
             adminAccount.setRole(Role.ROLE_ADMIN);
@@ -166,6 +172,10 @@ public class AccountService {
             newUser.setRole(Role.ROLE_USER);
             newUser.setEnabled(true);
             newUser.setUsername(newUser.getEmail());
+            newUser.setAddress("Cemetery street");
+            newUser.setFirstname("Bruce");
+            newUser.setLastname("Lee");
+            newUser.setRegistrationDate(LocalDateTime.now());
             accountRepository.save(newUser);
         } else if (userAccount.getRole() != Role.ROLE_USER) {
             userAccount.setRole(Role.ROLE_USER);
@@ -183,6 +193,11 @@ public class AccountService {
             newHotelOwner.setRole(Role.ROLE_HOTELOWNER);
             newHotelOwner.setEnabled(true);
             newHotelOwner.setUsername(newHotelOwner.getEmail());
+            newHotelOwner.setAddress("God street");
+            newHotelOwner.setFirstname("Chuck");
+            newHotelOwner.setLastname("Norris");
+            newHotelOwner.setRegistrationDate(LocalDateTime.now());
+            newHotelOwner.setHotelId(1L);
             accountRepository.save(newHotelOwner);
         } else if (hotelOwnerAccount.getRole() != Role.ROLE_HOTELOWNER) {
             hotelOwnerAccount.setRole(Role.ROLE_HOTELOWNER);
