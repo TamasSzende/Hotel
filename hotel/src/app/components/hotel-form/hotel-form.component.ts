@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {HotelService} from "../../services/hotel.service";
+import {HotelService} from "../../services/Hotel.service";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
 import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
@@ -30,7 +30,6 @@ export class HotelFormComponent implements OnInit {
 				'city': new FormControl(''),
 				'streetAddress': new FormControl(''),
 				'hotelType': new FormControl(''),
-				'hotelImageUrl': new FormControl(''),
 				'description': new FormControl(''),
 				'hotelFeatures': new FormArray([]),
         'file': new FormControl(null),

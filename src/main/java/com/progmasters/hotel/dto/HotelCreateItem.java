@@ -13,8 +13,8 @@ public class HotelCreateItem {
 	private String city;
 	private String streetAddress;
 	private String hotelType;
-	private List<String> hotelImageUrls;
-	private String description;
+
+    private String description;
 	private List<String> hotelFeatures = new ArrayList<>();
 
     public HotelCreateItem() {
@@ -26,7 +26,6 @@ public class HotelCreateItem {
 		this.city = hotel.getCity();
 		this.streetAddress = hotel.getStreetAddress();
 		this.hotelType = hotel.getHotelType().name();
-		this.hotelImageUrls = hotel.getHotelImageUrls();
 		this.description = hotel.getDescription();
 		this.hotelFeatures = hotel.getHotelFeatures().stream().map(Enum::name).collect(Collectors.toList());
 	}
@@ -55,16 +54,8 @@ public class HotelCreateItem {
 		return description;
 	}
 
-	public List<String> getHotelImageUrls() {
-		return hotelImageUrls;
-	}
-
 	public List<String> getHotelFeatures() {
 		return hotelFeatures;
-	}
-
-	public void setHotelImageUrls(List<String> hotelImageUrls) {
-		this.hotelImageUrls = hotelImageUrls;
 	}
 
 	public void setName(String name) {

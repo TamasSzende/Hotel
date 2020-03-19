@@ -77,7 +77,6 @@ public class Hotel {
         this.city = hotelCreateItem.getCity();
         this.streetAddress = hotelCreateItem.getStreetAddress();
         this.hotelType = HotelType.valueOf(hotelCreateItem.getHotelType());
-        this.hotelImageUrls = hotelCreateItem.getHotelImageUrls();
         this.description = hotelCreateItem.getDescription();
         this.hotelFeatures = hotelCreateItem.getHotelFeatures().stream().map(HotelFeatureType::valueOf).collect(Collectors.toList());
         //TODO get longitude and latitude from some geocoding api

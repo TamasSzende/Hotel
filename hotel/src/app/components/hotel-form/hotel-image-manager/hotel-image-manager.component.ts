@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {HotelService} from "../../../services/Hotel.service";
+import {getPublicId} from "../../../utils/cloudinaryPublicIdHandler";
 
 @Component({
   selector: 'app-hotel-image-manager',
@@ -10,7 +11,8 @@ export class HotelImageManagerComponent implements OnInit {
   @Input() hotelIdFromLogin: number;
   imageURLs: Array<string>;
 
-  constructor(private hotelService: HotelService) { }
+  constructor(private hotelService: HotelService) {
+  }
 
   ngOnInit() {
     this.hotelService.getHotelImages(this.hotelIdFromLogin).subscribe(
@@ -19,21 +21,23 @@ export class HotelImageManagerComponent implements OnInit {
   }
 
   onFileChange(event) {
-    const file: File = event.target.files[0];
-    const formData = new FormData();
-    formData.append("file",file);
-    this.hotelService.uploadImage(formData, this.hotelIdFromLogin).subscribe(
-      () => {
-        this.ngOnInit();
-      });
+    if (event.target.value.length > 0) {
+      const file: File = event.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      this.hotelService.uploadImage(formData, this.hotelIdFromLogin).subscribe(
+        () => {
+          this.ngOnInit();
+        });
+    }
   }
 
   getPublicId(imgURL: string) {
-    return imgURL.substring(61, imgURL.length - 4);
+    return getPublicId(imgURL);
   }
 
   deleteImage(image: string) {
-    this.hotelService.deleteImage(image,this.hotelIdFromLogin).subscribe(
+    this.hotelService.deleteImage(image, this.hotelIdFromLogin).subscribe(
       () => this.ngOnInit()
     )
   }

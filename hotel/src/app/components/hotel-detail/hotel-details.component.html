@@ -17,7 +17,18 @@
                     width="400"
                     crop="fill">
                   </cl-transformation>
-                  <!--<img class="d-block w-100" [src]="imgURL" alt="Hotel image">-->
+                </cl-image>
+                <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
+              </div>
+            </mdb-carousel-item>
+            <mdb-carousel-item *ngIf="!hotel?.hotelImageUrl[0]">
+              <div class="view w-100">
+                <cl-image [public-id]="getPublicId(null)">
+                  <cl-transformation
+                    height="600"
+                    width="400"
+                    crop="fill">
+                  </cl-transformation>
                 </cl-image>
                 <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
               </div>

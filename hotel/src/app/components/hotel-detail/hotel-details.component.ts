@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {HotelService} from "../../services/hotel.service";
+import {HotelService} from "../../services/Hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
 import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
@@ -15,6 +15,7 @@ import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
 import flatpickr from "flatpickr";
+import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 
 
 @Component({
@@ -253,6 +254,6 @@ export class HotelDetailsComponent implements OnInit {
       .filter(roomFeatures => roomFeatures !== null);
   }
   getPublicId(imgURL: string) {
-    return imgURL.substring(61, imgURL.length - 4);
+    return getPublicId(imgURL);
   }
 }

@@ -104,8 +104,9 @@ public class HotelService {
 	public boolean updateHotel(HotelCreateItem hotelCreateItem, Long id) {
 		Optional<Hotel> hotelOptional = hotelRepository.findById(id);
 		if (hotelOptional.isPresent()) {
+			List<String> hotelImageUrls = hotelOptional.get().getHotelImageUrls();
 			Hotel hotel = new Hotel(hotelCreateItem);
-
+			hotel.setHotelImageUrls(hotelImageUrls);
 			hotel.setId(id);
 			this.hotelRepository.save(hotel);
 			return true;
@@ -121,6 +122,9 @@ public class HotelService {
 			List<Room> deletedRooms = hotel.getRooms();
 			for (Room deletedRoom : deletedRooms) {
 				this.roomRepository.delete(deletedRoom);
+			}
+			for (String hotelImageUrl : hotel.getHotelImageUrls()) {
+				deleteImageFromCloud(hotelImageUrl);
 			}
 			hotelRepository.delete(hotel);
 			return true;
@@ -154,14 +158,18 @@ public class HotelService {
 		return url;
 	}
 
-	public void deleteHotelImage(String imageURL, Long id){
+	public void deleteHotelImage(String imageURL, Long id) {
 		if (hotelRepository.findById(id).isPresent()) {
 			hotelRepository.findById(id).get().getHotelImageUrls().remove(imageURL);
-			try {
-				cloudinary.uploader().destroy(imageURL.substring(61,imageURL.length()-4),ObjectUtils.emptyMap());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			deleteImageFromCloud(imageURL);
+		}
+	}
+
+	private void deleteImageFromCloud(String imageURL) {
+		try {
+			cloudinary.uploader().destroy(imageURL.substring(61, imageURL.length() - 4), ObjectUtils.emptyMap());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
