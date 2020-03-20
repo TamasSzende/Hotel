@@ -2,5 +2,7 @@ spring:
   datasource:
     username: root
     password: test1234
+  mail:
+    url: http://hotels-demo.progmasters.hu
 
 cors-policies: http://52.215.188.12, http://hotels-demo.progmasters.hu

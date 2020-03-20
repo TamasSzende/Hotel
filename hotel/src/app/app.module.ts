@@ -28,6 +28,10 @@ import {FileUploadModule} from "ng2-file-upload";
 import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
 import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
 
+export const cloudinary = {
+  Cloudinary: Cloudinary
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +59,7 @@ import {ConfirmationComponent} from "./components/confirmation/confirmation.comp
       MatIconModule,
       MatDialogModule,
       MDBBootstrapModule,
-      CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
+      CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
       FileUploadModule
     ],

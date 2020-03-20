@@ -4,7 +4,9 @@ import {HotelService} from "../../services/hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
 import {PopupService} from "../../services/popup.service";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
+
 import {LoginService} from "../../services/login.service";
+import {Cloudinary} from "cloudinary-core";
 
 @Component({
   selector: 'app-hotel-list',
@@ -16,7 +18,6 @@ export class HotelListComponent implements OnInit {
 
   hotelList: HotelListItemModel[] = [];
   userRole: string;
-
 
   constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService, private loginService: LoginService) {
   }

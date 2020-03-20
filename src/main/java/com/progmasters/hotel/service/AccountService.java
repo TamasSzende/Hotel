@@ -34,6 +34,9 @@ public class AccountService {
     @Value("${spring.mail.username}")
     private String MESSAGE_FROM;
 
+    @Value("${spring.mail.url}")
+    private String mailSenderAddress;
+
     @Autowired
     public AccountService(JavaMailSender javaMailSender, AccountRepository accountRepository, ConfirmationTokenRepository confirmationTokenRepository) {
         this.javaMailSender = javaMailSender;
@@ -104,7 +107,7 @@ public class AccountService {
         message.setTo(account.getEmail());
         message.setSubject("Complete Registration!");
         message.setText("To confirm your account, please click here : "
-                + "http://localhost:4200/login/" + confirmationToken.getConfirmationToken());
+                + this.mailSenderAddress + "/login/" + confirmationToken.getConfirmationToken());
         javaMailSender.send(message);
     }
 
