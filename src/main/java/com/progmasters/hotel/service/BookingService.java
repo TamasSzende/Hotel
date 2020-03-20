@@ -70,11 +70,6 @@ public class BookingService {
         return booking.getId();
     }
 
-
-    public List<BookingListItem> getBookingListItemList() {
-        return bookingRepository.findAll().stream().map(BookingListItem::new).collect(Collectors.toList());
-    }
-
     public BookingDetails getBookingDetails(Long bookingId) {
         BookingDetails bookingDetails;
         Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
@@ -84,6 +79,46 @@ public class BookingService {
             throw new IllegalArgumentException("There is no Booking for this id:" + bookingId);
         }
         return bookingDetails;
+    }
+
+    public List<BookingListItem> getBookingListItemList() {
+        return bookingRepository.findAll().stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getBookingListByRoom(Long roomId) {
+        return bookingRepository.findAllByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getCurrentBookingListByRoom(Long roomId) {
+        return bookingRepository.findCurrentByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getFutureBookingListByRoom(Long roomId) {
+        return bookingRepository.findFutureByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getPastBookingListByRoom(Long roomId) {
+        return bookingRepository.findPastByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getBookingListByUser(Long userId) {
+        return bookingRepository.findAllByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getCurrentBookingListByUser(Long userId) {
+        return bookingRepository.findCurrentByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getFutureBookingListByUser(Long userId) {
+        return bookingRepository.findFutureByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getPastBookingListByUser(Long userId) {
+        return bookingRepository.findPastByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItem> getBookingListByHotel(Long hotelId) {
+        return bookingRepository.findAllByHotelId(hotelId).stream().map(BookingListItem::new).collect(Collectors.toList());
     }
 
     private List<RoomReservation> getRoomReservationsAndValidate(BookingCreateItem bookingCreateItem, Booking booking) {

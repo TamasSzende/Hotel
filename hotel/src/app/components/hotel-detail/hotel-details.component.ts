@@ -46,7 +46,7 @@ export class HotelDetailsComponent implements OnInit {
     };
     this.bookingForm = new FormGroup({
       'numberOfGuests': new FormControl(null),
-      'bookingDateRange': new FormControl(''),
+      'bookingDateRange': new FormControl([]),
       'roomIdList': new FormArray([]),
     });
     this.filterForm = new FormGroup({
