@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private BASE_URL = 'http://localhost:8080';
+  private BASE_URL = environment.BASE_URL;
 
   hotelId = new BehaviorSubject<number>(null);
   username = new BehaviorSubject<string>(null);

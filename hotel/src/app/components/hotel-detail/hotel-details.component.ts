@@ -118,6 +118,7 @@ export class HotelDetailsComponent implements OnInit {
 
   resetFilters() {
     this.filterForm.reset();
+    this.bookingForm.value.controls.bookingDateRange = "";
     //TODO resetelni a naptárat!!!
     // this.flatpickrInstance.clear();
     this.getFilteredRoomList();

@@ -7,7 +7,7 @@
     <div class="row no-gutters">
 
       <div class="col-md-4">
-        <img [src]="room.roomImageUrl" *ngIf="room?.roomImageUrl" alt="roomImage" class="card-img">
+        <img [src]="room?.roomImageUrl" *ngIf="room?.roomImageUrl" alt="roomImage" class="card-img">
       </div>
 
       <div class="col-md-8">
@@ -21,7 +21,7 @@
             {{ room.description}}
           </p>
           <ul class="card-text">
-            <li *ngFor="let roomFeature of room.roomFeatures" class="text-muted">
+            <li *ngFor="let roomFeature of room?.roomFeatures" class="text-muted">
               {{ roomFeature }}
             </li>
           </ul>

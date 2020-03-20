@@ -67,7 +67,7 @@ public class BookingService {
         this.bookingRepository.save(booking);
 
         //TODO send an email!!!!
-        return booking.getId();
+       return booking.getId();
     }
 
     public BookingDetails getBookingDetails(Long bookingId) {

@@ -25,6 +25,7 @@ public class HotelListItem {
         this.city = hotel.getCity();
         this.streetAddress = hotel.getStreetAddress();
         this.hotelType = hotel.getHotelType().getDisplayName();
+
         if (!hotel.getHotelImageUrls().isEmpty()) {
             this.hotelImageUrl = hotel.getHotelImageUrls().get(0);
         }

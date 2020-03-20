@@ -25,6 +25,7 @@ spring:
     username: hotel.team.five@gmail.com
     password: "!Test1234"
     protocol: smtp
+    url: http://localhost:4200
 
     properties:
       mail:
