@@ -144,13 +144,14 @@
       <div class="card mb-3">
         <div class="row no-gutters">
           <div class="col-md-4">
-            <cl-image [public-id]="getPublicId(room.roomImageUrl)">
-              <cl-transformation
-                height="230"
-                width="360"
-                crop="fill">
-              </cl-transformation>
-            </cl-image>
+            <!--cl-image [public-id]="getPublicId(null)"-->
+            <img [src]="hotel?.hotelImageUrl[0]" style="height: 600px; width: 400px; crop: auto;">
+            <cl-transformation
+              height="600"
+              width="400"
+              crop="fill">
+            </cl-transformation>
+            <!--/cl-image-->
           </div>
           <div class="col-md-8">
             <div class="card-body">

@@ -116,6 +116,9 @@ export class HotelDetailsComponent implements OnInit {
     );
   };
 
+
+
+
   resetFilters() {
     this.filterForm.reset();
     this.bookingForm.value.controls.bookingDateRange = "";
@@ -137,6 +140,8 @@ export class HotelDetailsComponent implements OnInit {
       this.priceOfBooking = numberOfNights * roomsPricePerNight;
     }
   }
+
+
 
   createRoomInHotel() {
     this.router.navigate(['/admin/hotel/create-room'])
