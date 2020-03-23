@@ -28,7 +28,38 @@
   -o-transition: all 700ms ease;
 }
 
+.login-popup-btnr {
+  background: #258b47;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  display: block;
+  font-size: 18px;
+  height: 38px;
+  line-height: 28px;
+  margin: 20px auto 5px;
+  width: 150px;
+  -webkit-transition: all 700ms ease;
+  -moz-transition: all 700ms ease;
+  -ms-transition: all 700ms ease;
+  -o-transition: all 700ms ease;
+}
+
 a {
   color: #258b47;
   font-size: 18px;
+}
+
+#required {
+  text-align: right;
+  color: #B82012;
+  font-size: 12px;
+}
+
+#redstar {
+  color: #B82012;
+}
+
+#redstars {
+  color: #B82012;
 }
