@@ -1,8 +1,9 @@
 import {RoomShortListItemModel} from "./roomShortListItem.model";
+import {AccountListItemModel} from "./accountListItem.model";
 
-export interface BookingListItemModel {
+export interface BookingListItemForHotelModel {
   id: number;
-  guestName: string;
+  guest: AccountListItemModel;
   startDate: Date;
   endDate: Date;
   reservedRooms: RoomShortListItemModel[];

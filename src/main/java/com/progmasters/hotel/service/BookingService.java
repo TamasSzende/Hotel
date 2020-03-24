@@ -6,13 +6,15 @@ import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.domain.RoomReservation;
 import com.progmasters.hotel.dto.BookingCreateItem;
 import com.progmasters.hotel.dto.BookingDetails;
-import com.progmasters.hotel.dto.BookingListItem;
+import com.progmasters.hotel.dto.BookingListItemForHotel;
+import com.progmasters.hotel.dto.BookingListItemForUser;
 import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.BookingRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import com.progmasters.hotel.repository.RoomReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
-@Transactional
+@Transactional(isolation = Isolation.READ_COMMITTED)
 public class BookingService {
 
     private BookingRepository bookingRepository;
@@ -61,6 +63,7 @@ public class BookingService {
 
         //TODO check account is exist and user role
         Account guestAccount = this.accountRepository.findByUsername(bookingCreateItem.getGuestAccountName());
+        if (guestAccount == null) return null;
         booking.setGuest(guestAccount);
 
         roomReservations.forEach(this.roomReservationRepository::save);
@@ -68,6 +71,22 @@ public class BookingService {
 
         //TODO send an email!!!!
        return booking.getId();
+    }
+
+    public boolean deleteBooking(Long bookingId) {
+        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
+        if (bookingOptional.isPresent()) {
+            Booking booking = bookingOptional.get();
+            List<RoomReservation> deletedRoomReservations = booking.getRoomReservations();
+            for (RoomReservation deletedRoomReservation : deletedRoomReservations) {
+                this.roomReservationRepository.delete(deletedRoomReservation);
+            }
+            bookingRepository.delete(booking);
+            return true;
+            //TODO send an email!!!!
+        } else {
+            return false;
+        }
     }
 
     public BookingDetails getBookingDetails(Long bookingId) {
@@ -81,44 +100,52 @@ public class BookingService {
         return bookingDetails;
     }
 
-    public List<BookingListItem> getBookingListItemList() {
-        return bookingRepository.findAll().stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getBookingListByRoom(Long roomId) {
+        return bookingRepository.findAllByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getBookingListByRoom(Long roomId) {
-        return bookingRepository.findAllByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getCurrentBookingListByRoom(Long roomId) {
+        return bookingRepository.findCurrentByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getCurrentBookingListByRoom(Long roomId) {
-        return bookingRepository.findCurrentByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getFutureBookingListByRoom(Long roomId) {
+        return bookingRepository.findFutureByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getFutureBookingListByRoom(Long roomId) {
-        return bookingRepository.findFutureByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getPastBookingListByRoom(Long roomId) {
+        return bookingRepository.findPastByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getPastBookingListByRoom(Long roomId) {
-        return bookingRepository.findPastByRoomId(roomId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getBookingListByHotel(Long hotelId) {
+        return bookingRepository.findAllByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getBookingListByUser(Long userId) {
-        return bookingRepository.findAllByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getCurrentBookingListByHotel(Long hotelId) {
+        return bookingRepository.findCurrentByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getCurrentBookingListByUser(Long userId) {
-        return bookingRepository.findCurrentByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getFutureBookingListByHotel(Long hotelId) {
+        return bookingRepository.findFutureByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getFutureBookingListByUser(Long userId) {
-        return bookingRepository.findFutureByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForHotel> getPastBookingListByHotel(Long hotelId) {
+        return bookingRepository.findPastByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getPastBookingListByUser(Long userId) {
-        return bookingRepository.findPastByUserId(userId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForUser> getBookingListByUser(Long userId) {
+        return bookingRepository.findAllByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItem> getBookingListByHotel(Long hotelId) {
-        return bookingRepository.findAllByHotelId(hotelId).stream().map(BookingListItem::new).collect(Collectors.toList());
+    public List<BookingListItemForUser> getCurrentBookingListByUser(Long userId) {
+        return bookingRepository.findCurrentByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItemForUser> getFutureBookingListByUser(Long userId) {
+        return bookingRepository.findFutureByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+    }
+
+    public List<BookingListItemForUser> getPastBookingListByUser(Long userId) {
+        return bookingRepository.findPastByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     private List<RoomReservation> getRoomReservationsAndValidate(BookingCreateItem bookingCreateItem, Booking booking) {
@@ -172,6 +199,5 @@ public class BookingService {
         }
         return priceOfBooking;
     }
-
 
 }

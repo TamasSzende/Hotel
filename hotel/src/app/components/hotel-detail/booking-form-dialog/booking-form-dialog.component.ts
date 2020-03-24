@@ -88,12 +88,4 @@ export class BookingFormDialogComponent implements OnInit {
     }
   };
 
-  backToHotelList() {
-    this.closeDialog();
-    //TODO megírni az átírányítást
-    //TODO megírni a sikertelen foglalást!!
-
-    // this.router.navigate(['/hotel'])
-
-  }
 }

@@ -27,10 +27,13 @@ import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
 import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
 import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
+import {ActualRoomBookingComponent} from "./components/room-details/actual-room-booking/actual-room-booking.component";
+import {PastRoomBookingComponent} from "./components/room-details/past-room-booking/past-room-booking.component";
+import {BookingDetailDialogComponent} from "./components/booking-detail-dialog/booking-detail-dialog.component";
 
-export const cloudinary = {
-  Cloudinary: Cloudinary
-};
+// export const cloudinary = {
+//   Cloudinary: Cloudinary
+// };
 
 @NgModule({
   declarations: [
@@ -38,12 +41,15 @@ export const cloudinary = {
     NavbarComponent,
     RoomFormComponent,
     RoomDetailsComponent,
+    ActualRoomBookingComponent,
+    PastRoomBookingComponent,
     HotelFormComponent,
     HotelListComponent,
     HotelDetailsComponent,
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,
+    BookingDetailDialogComponent,
     LoginComponent,
     HotelImageManagerComponent,
     LoginComponent,
@@ -59,7 +65,7 @@ export const cloudinary = {
       MatIconModule,
       MatDialogModule,
       MDBBootstrapModule,
-      CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
+      CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
       FileUploadModule
     ],
@@ -70,6 +76,7 @@ export const cloudinary = {
   entryComponents: [
     PopupComponent,
     BookingFormDialogComponent,
+    BookingDetailDialogComponent,
   ]
 })
 export class AppModule {

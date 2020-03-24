@@ -125,7 +125,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let room of this.bookingDetails.reservedRooms">
+        <tr *ngFor="let room of this.bookingDetails?.reservedRooms">
           <td>
             <h6 style="display: inline;">{{ room.roomName }} - {{ room.roomType }}</h6>
             (Férőhelyek: {{ room.numberOfBeds }})
@@ -145,7 +145,7 @@
     </div>
 
     <div class="modal-footer">
-      <button (click)="backToHotelList()" [mat-dialog-close]="true" cdkFocusInitial class="btn btn-primary mr-4"
+      <button (click)="closeDialog()" [mat-dialog-close]="true" cdkFocusInitial class="btn btn-primary mr-4"
               type="button">
         OK
       </button>
