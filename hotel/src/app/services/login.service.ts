@@ -10,11 +10,16 @@ import {AccountDetailsForMyProfileModel} from "../models/AccountDetailsForMyProf
 export class LoginService {
   private BASE_URL = environment.BASE_URL;
 
+  userId = new BehaviorSubject<number>(null);
   hotelId = new BehaviorSubject<number>(null);
   username = new BehaviorSubject<string>(null);
   role = new BehaviorSubject<string>(null);
 
   constructor(private http: HttpClient) {
+  }
+
+  getUserId(): number {
+    return this.userId.getValue();
   }
 
   getHotelId(): number {
@@ -37,7 +42,10 @@ export class LoginService {
   }
 
   logout() {
+
+    //TODO valahova backendre küldeni egy POST-ot
     return this.http.post(this.BASE_URL + '/api/accounts/logout', {}).subscribe(() => {
+      this.userId.next(null);
       this.hotelId.next(null);
       this.username.next(null);
       this.role.next(null);

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookingListItem {
+public class BookingListItemForUser {
 
     private Long id;
     private String guestName;
@@ -17,6 +17,7 @@ public class BookingListItem {
     private LocalDate startDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+    private HotelShortItem hotel;
     private List<RoomShortListItem> reservedRooms = new ArrayList<>();
     private Integer numberOfGuests;
     @JsonFormat(pattern = "yyyy-MM-dd' 'HH:mm")
@@ -24,14 +25,15 @@ public class BookingListItem {
     private Double priceOfBooking;
 
 
-    BookingListItem() {
+    BookingListItemForUser() {
     }
 
-    public BookingListItem(Booking booking) {
+    public BookingListItemForUser(Booking booking) {
         this.id = booking.getId();
         this.guestName = booking.getGuest().getFirstname() + " " + booking.getGuest().getLastname();
         this.startDate = booking.getRoomReservations().get(0).getStartDate();
         this.endDate = booking.getRoomReservations().get(0).getEndDate();
+        this.hotel = new HotelShortItem(booking.getRoomReservations().get(0).getRoom().getHotel());
         for (RoomReservation roomReservation : booking.getRoomReservations()) {
             this.reservedRooms.add(new RoomShortListItem(roomReservation.getRoom()));
         }
@@ -44,8 +46,16 @@ public class BookingListItem {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getGuestName() {
         return guestName;
+    }
+
+    public void setGuestName(String guestName) {
+        this.guestName = guestName;
     }
 
     public LocalDate getStartDate() {
@@ -60,28 +70,16 @@ public class BookingListItem {
         return endDate;
     }
 
-    public Integer getNumberOfGuests() {
-        return numberOfGuests;
-    }
-
-    public LocalDateTime getDateOfBooking() {
-        return dateOfBooking;
-    }
-
-    public Double getPriceOfBooking() {
-        return priceOfBooking;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
-    }
-
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public HotelShortItem getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(HotelShortItem hotel) {
+        this.hotel = hotel;
     }
 
     public List<RoomShortListItem> getReservedRooms() {
@@ -92,12 +90,24 @@ public class BookingListItem {
         this.reservedRooms = reservedRooms;
     }
 
+    public Integer getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
     public void setNumberOfGuests(Integer numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
     }
 
+    public LocalDateTime getDateOfBooking() {
+        return dateOfBooking;
+    }
+
     public void setDateOfBooking(LocalDateTime dateOfBooking) {
         this.dateOfBooking = dateOfBooking;
+    }
+
+    public Double getPriceOfBooking() {
+        return priceOfBooking;
     }
 
     public void setPriceOfBooking(Double priceOfBooking) {

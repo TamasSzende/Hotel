@@ -38,9 +38,12 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             AuthenticatedLoginDetails authenticatedLoginDetails = new AuthenticatedLoginDetails(user);
+
             String username = authenticatedLoginDetails.getName();
+            Long userId = this.accountService.findByUsername(username).getId();
             Long hotelId = this.accountService.findByUsername(username).getHotelId();
 
+            authenticatedLoginDetails.setId(userId);
             authenticatedLoginDetails.setHotelId(hotelId);
             return new ResponseEntity<>(authenticatedLoginDetails, HttpStatus.OK);
         }

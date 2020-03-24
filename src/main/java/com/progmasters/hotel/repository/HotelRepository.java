@@ -10,4 +10,5 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     @Query("SELECT h from Hotel h WHERE h.name = :name")
     Optional<Object> findByHotelName(String name);
+
 }

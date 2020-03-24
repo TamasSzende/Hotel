@@ -18,6 +18,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MaterialModule} from "./material.module";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
+import {Cloudinary} from 'cloudinary-core/cloudinary-core-shrinkwrap';
 import {CloudinaryModule} from "@cloudinary/angular-5.x";
 import * as  Cloudinary from 'cloudinary-core';
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
@@ -28,10 +29,21 @@ import {FileUploadModule} from "ng2-file-upload";
 import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
 import {ConfirmationComponent} from "./components/account/confirmation/confirmation.component";
 import {AccountDetailsComponent} from './components/account/account-details/account-details.component';
+import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
+import {ActualRoomBookingsComponent} from "./components/room-details/actual-room-bookings/actual-room-bookings.component";
+import {PastRoomBookingsComponent} from "./components/room-details/past-room-bookings/past-room-bookings.component";
+import {BookingDetailDialogComponent} from "./components/booking-detail-dialog/booking-detail-dialog.component";
+import {HotelBookingsComponent} from "./components/hotel-bookings/hotel-bookings.component";
+import {UserBookingsComponent} from "./components/user-bookings/user-bookings.component";
+import {ActualUserBookingsComponent} from "./components/user-bookings/actual-user-bookings/actual-user-bookings.component";
+import {PastUserBookingsComponent} from "./components/user-bookings/past-user-bookings/past-user-bookings.component";
+import {ActualHotelBookingsComponent} from "./components/hotel-bookings/actual-hotel-bookings/actual-hotel-bookings.component";
+import {FutureHotelBookingsComponent} from "./components/hotel-bookings/future-hotel-bookings/future-hotel-bookings.component";
+import {PastHotelBookingsComponent} from "./components/hotel-bookings/past-hotel-bookings/past-hotel-bookings.component";
 
-// export const cloudinary = {
-//   Cloudinary: Cloudinary
-// };
+export const cloudinary = {
+  Cloudinary: Cloudinary
+};
 
 @NgModule({
   declarations: [
@@ -39,15 +51,25 @@ import {AccountDetailsComponent} from './components/account/account-details/acco
     NavbarComponent,
     RoomFormComponent,
     RoomDetailsComponent,
+    ActualRoomBookingsComponent,
+    PastRoomBookingsComponent,
     HotelFormComponent,
     HotelListComponent,
     HotelDetailsComponent,
+    HotelBookingsComponent,
+    ActualHotelBookingsComponent,
+    FutureHotelBookingsComponent,
+    PastHotelBookingsComponent,
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,
+    BookingDetailDialogComponent,
     LoginComponent,
     HotelImageManagerComponent,
     LoginComponent,
+    UserBookingsComponent,
+    ActualUserBookingsComponent,
+    PastUserBookingsComponent,
     ConfirmationComponent,
     AccountDetailsComponent,
   ],
@@ -61,7 +83,7 @@ import {AccountDetailsComponent} from './components/account/account-details/acco
       MatIconModule,
       MatDialogModule,
       MDBBootstrapModule,
-      CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
+      CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
       FileUploadModule
     ],
@@ -72,6 +94,7 @@ import {AccountDetailsComponent} from './components/account/account-details/acco
   entryComponents: [
     PopupComponent,
     BookingFormDialogComponent,
+    BookingDetailDialogComponent,
   ]
 })
 export class AppModule {
