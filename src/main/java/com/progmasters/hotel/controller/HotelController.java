@@ -52,12 +52,20 @@ public class HotelController {
 	@PostMapping
 	public ResponseEntity<Long> saveHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem) {
 		Long hotelId = hotelService.saveHotel(hotelCreateItem);
-        return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
-    }
+		return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
+	}
 
 	@GetMapping
-	public ResponseEntity<List<HotelListItem>> getHotelList() {
-		return new ResponseEntity<>(hotelService.getHotelListItemList(), HttpStatus.OK);
+	public ResponseEntity<List<HotelListItem>> getHotelList(@RequestParam(required = false) Integer offset) {
+		if (offset == null) {
+			offset = 1;
+		}
+		return new ResponseEntity<>(hotelService.getPageOfHotelListItems(offset, 10), HttpStatus.OK);
+	}
+
+	@GetMapping("/numOfHotels")
+	public ResponseEntity<Long> getNumOfHotels() {
+		return new ResponseEntity<>(hotelService.getNumOfHotels(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")

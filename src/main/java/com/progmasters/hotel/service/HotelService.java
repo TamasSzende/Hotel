@@ -10,19 +10,15 @@ import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.function.ServerRequest;
+
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -179,5 +175,16 @@ public class HotelService {
 			hotelImageUrls = hotelRepository.findById(id).get().getHotelImageUrls();
 		}
 		return hotelImageUrls;
+	}
+
+	public List<HotelListItem> getPageOfHotelListItems(Integer pageNumber, Integer numOfElementsPerPage) {
+		List<HotelListItem> hotelListItems = getHotelListItemList();
+		int startIndex = (pageNumber - 1) * numOfElementsPerPage;
+		int endIndex = Math.min(startIndex + numOfElementsPerPage, hotelListItems.size() - 1);
+		return hotelListItems.subList(startIndex, endIndex);
+	}
+
+	public Long getNumOfHotels() {
+		return (long) Math.ceil((double) getHotelListItemList().size() / 10);
 	}
 }

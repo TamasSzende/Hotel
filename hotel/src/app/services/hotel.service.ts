@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {HotelListItemModel} from "../models/hotelListItem.model";
 import {HotelCreateItemModel} from "../models/hotelCreateItem.model";
@@ -17,8 +17,14 @@ export class HotelService {
   constructor(private http: HttpClient) {
   }
 
-  listHotel(): Observable<Array<HotelListItemModel>> {
-    return this.http.get<Array<HotelListItemModel>>(BASE_URL);
+  listHotel(pageNumber: number): Observable<Array<HotelListItemModel>> {
+    let params = new HttpParams();
+    if (pageNumber) {
+      params = params.set('offset', String(pageNumber));
+    } else {
+      params = params.set('offset', '1');
+    }
+    return this.http.get<Array<HotelListItemModel>>(BASE_URL, {params});
   }
 
   deleteHotel(id: number): Observable<Array<HotelListItemModel>> {
@@ -58,5 +64,9 @@ export class HotelService {
 
   getHotelImages(hotelId: number): Observable<Array<string>> {
     return this.http.get<Array<string>>(BASE_URL + "/images/" + hotelId);
+  }
+
+  getNumOfHotels(): Observable<number> {
+    return this.http.get<number>(BASE_URL + '/numOfHotels');
   }
 }
