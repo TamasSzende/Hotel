@@ -11,7 +11,7 @@ import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.com
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RoomDetailsComponent} from './components/room-details/room-details.component';
-import {RegistrationComponent} from './components/registration/registration.component';
+import {RegistrationComponent} from './components/account/registration/registration.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PopupComponent} from './popup/popup.component';
 import {MatIconModule} from "@angular/material/icon";
@@ -22,15 +22,16 @@ import {CloudinaryModule} from "@cloudinary/angular-5.x";
 import * as  Cloudinary from 'cloudinary-core';
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
-import {LoginComponent} from "./components/login/login.component";
+import {LoginComponent} from "./components/account/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
 import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
-import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
+import {ConfirmationComponent} from "./components/account/confirmation/confirmation.component";
+import {AccountDetailsComponent} from './components/account/account-details/account-details.component';
 
-export const cloudinary = {
-  Cloudinary: Cloudinary
-};
+// export const cloudinary = {
+//   Cloudinary: Cloudinary
+// };
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ export const cloudinary = {
     HotelImageManagerComponent,
     LoginComponent,
     ConfirmationComponent,
+    AccountDetailsComponent,
   ],
     imports: [
       HttpClientModule,
@@ -59,7 +61,7 @@ export const cloudinary = {
       MatIconModule,
       MatDialogModule,
       MDBBootstrapModule,
-      CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
+      CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
       FileUploadModule
     ],

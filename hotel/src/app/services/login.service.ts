@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {AccountDetailsForMyProfileModel} from "../models/AccountDetailsForMyProfile.model";
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,11 @@ export class LoginService {
 
   activateUser(token: string) {
     return this.http.put<any>(this.BASE_URL + '/api/registrations', token);
+  }
+
+  //-------Profilomhoz-------
+
+  getAccountDetails = (email: string): Observable<AccountDetailsForMyProfileModel> => {
+    return this.http.get<AccountDetailsForMyProfileModel>(this.BASE_URL + '/api/accounts/' + email);
   }
 }

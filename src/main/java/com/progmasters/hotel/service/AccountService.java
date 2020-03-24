@@ -3,6 +3,7 @@ package com.progmasters.hotel.service;
 import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.domain.ConfirmationToken;
 import com.progmasters.hotel.domain.Role;
+import com.progmasters.hotel.dto.AccountDetails;
 import com.progmasters.hotel.dto.RegistrationDetails;
 import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.ConfirmationTokenRepository;
@@ -223,5 +224,10 @@ public class AccountService {
         Account account = accountRepository.findByEmail(email);
 
         return account.isEnabled();
+    }
+
+
+    public AccountDetails getUserAccountByEmail(String email) {
+        return new AccountDetails(findAccountByEmail(email));
     }
 }

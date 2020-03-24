@@ -1,5 +1,6 @@
 package com.progmasters.hotel.controller;
 
+import com.progmasters.hotel.dto.AccountDetails;
 import com.progmasters.hotel.security.AuthenticatedLoginDetails;
 import com.progmasters.hotel.service.AccountService;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +44,10 @@ public class AccountController {
             authenticatedLoginDetails.setHotelId(hotelId);
             return new ResponseEntity<>(authenticatedLoginDetails, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<AccountDetails> getUserAccount(@PathVariable String email) {
+        return new ResponseEntity<>(accountService.getUserAccountByEmail(email), HttpStatus.OK);
     }
 }
