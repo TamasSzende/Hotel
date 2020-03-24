@@ -36,11 +36,11 @@ export class LoginComponent implements OnInit {
         if (response.hotelId) {
           this.loginService.hotelId.next(response.hotelId);
         }
-        this.notificationService.success('Logged in successfully!');
+        this.notificationService.success('Sikeresen belépett!');
         this.navigateAfterLogin(response);
       },
       error => {
-        this.notificationService.unsuccessful('Wrong username or password given!');
+        this.notificationService.unsuccessful('Rossz email cím vagy jelszó!');
         this.loginForm.reset();
         error.error = {
           fieldErrors: [

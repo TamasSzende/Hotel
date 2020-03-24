@@ -46,6 +46,12 @@
 }
 
 a {
-  color: #258b47;
+  color: #B82012;
   font-size: 18px;
+}
+
+#required {
+  text-align: right;
+  color: #B82012;
+  font-size: 12px;
 }

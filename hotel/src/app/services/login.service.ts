@@ -41,13 +41,14 @@ export class LoginService {
   }
 
   logout() {
-    this.userId.next(null);
-    this.hotelId.next(null);
-    this.username.next(null);
-    this.role.next(null);
 
     //TODO valahova backendre küldeni egy POST-ot
-    return this.http.get(this.BASE_URL + '/api/logout', {withCredentials: true});
+    return this.http.post(this.BASE_URL + '/api/accounts/logout', {}).subscribe(() => {
+      this.userId.next(null);
+      this.hotelId.next(null);
+      this.username.next(null);
+      this.role.next(null);
+    });
   }
 
   activateUser(token: string) {

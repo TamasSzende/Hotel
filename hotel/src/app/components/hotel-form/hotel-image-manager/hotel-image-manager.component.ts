@@ -18,6 +18,7 @@ export class HotelImageManagerComponent implements OnInit {
     this.hotelService.getHotelImages(this.hotelIdFromLogin).subscribe(
       (response) => this.imageURLs = response
     );
+
   }
 
   onFileChange(event) {
@@ -27,7 +28,12 @@ export class HotelImageManagerComponent implements OnInit {
       formData.append("file", file);
       this.hotelService.uploadImage(formData, this.hotelIdFromLogin).subscribe(
         () => {
-          this.ngOnInit();
+        },
+        error => console.log(error),
+        () => {
+          this.hotelService.getHotelImages(this.hotelIdFromLogin).subscribe(
+            (response) => this.imageURLs = response
+          );
         });
     }
   }

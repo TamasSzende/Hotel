@@ -11,28 +11,25 @@
           <mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'">
             <mdb-carousel-item *ngFor="let imgURL of hotel?.hotelImageUrl">
               <div class="view w-100">
-                <!--cl-image [public-id]="getPublicId(imgURL)"-->
-                  <img [src]="hotel?.hotelImageUrl[0]" style="height: 600px; width: 400px; crop: auto;">
-
+                <cl-image [public-id]="getPublicId(imgURL)">
                   <cl-transformation
                     height="600"
                     width="400"
                     crop="fill">
                   </cl-transformation>
-                <!--/cl-image-->
+                </cl-image>
                 <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
               </div>
             </mdb-carousel-item>
             <mdb-carousel-item *ngIf="!hotel?.hotelImageUrl[0]">
               <div class="view w-100">
-                <!--cl-image [public-id]="getPublicId(null)"-->
-                  <img [src]="hotel?.hotelImageUrl[0]" style="height: 600px; width: 400px; crop: auto;">
+                <cl-image [public-id]="getPublicId(null)" width="100%">
                   <cl-transformation
                     height="600"
                     width="400"
                     crop="fill">
                   </cl-transformation>
-                <!--/cl-image-->
+                </cl-image>
                 <div class="mask rgba-black-light waves-light" mdbWavesEffect></div>
               </div>
             </mdb-carousel-item>
@@ -144,7 +141,7 @@
       <div class="card mb-3">
         <div class="row no-gutters">
           <div class="col-md-4">
-            <cl-image [public-id]="getPublicId(room.roomImageUrl)">
+            <cl-image [public-id]="getPublicId(room.roomImageUrl)" width="100%">
               <cl-transformation
                 height="230"
                 width="360"
@@ -171,7 +168,7 @@
               </p>
               <div class="btn-toolbar" class="text-right" role="toolbar">
 
-                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
+                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN' " class="btn-group mr-4">
                   <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
                 </div>
                 <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">

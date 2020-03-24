@@ -52,12 +52,20 @@ public class HotelController {
 	@PostMapping
 	public ResponseEntity<Long> saveHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem) {
 		Long hotelId = hotelService.saveHotel(hotelCreateItem);
-        return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
-    }
+		return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
+	}
 
 	@GetMapping
-	public ResponseEntity<List<HotelListItem>> getHotelList() {
-		return new ResponseEntity<>(hotelService.getHotelListItemList(), HttpStatus.OK);
+	public ResponseEntity<List<HotelListItem>> getHotelList(@RequestParam(required = false) Integer offset) {
+		if (offset == null) {
+			offset = 1;
+		}
+		return new ResponseEntity<>(hotelService.getPageOfHotelListItems(offset, 10), HttpStatus.OK);
+	}
+
+	@GetMapping("/numOfHotels")
+	public ResponseEntity<Long> getNumOfHotels() {
+		return new ResponseEntity<>(hotelService.getNumOfHotels(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -89,17 +97,9 @@ public class HotelController {
 	}
 
 	@PostMapping("/uploadImage/{id}")
-	public ResponseEntity<String> uploadHotelImage(@RequestParam MultipartFile file, @PathVariable Long id){
-    	String imageURL = "";
-		try {
-			InputStream inputStream = file.getInputStream();
-			Path path = Paths.get("src/main/resources/tempFiles/uploadedImage.jpg");
-			Files.copy(inputStream, path);
-			imageURL = "\"" + hotelService.saveHotelImage(path,id) + "\"";
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<>(imageURL,HttpStatus.OK);
+	public ResponseEntity<Void> uploadHotelImage(@RequestParam MultipartFile file, @PathVariable Long id) {
+		hotelService.saveHotelImage(file, id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("/deleteImage/{id}")

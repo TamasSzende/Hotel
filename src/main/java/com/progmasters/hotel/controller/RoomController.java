@@ -4,6 +4,7 @@ import com.progmasters.hotel.domain.RoomFeatureType;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,10 @@ public class RoomController {
 
     @GetMapping("/filter/{id}")
     public List<RoomListItem> getFreeRoomList(
-            @PathVariable("id") Long hotelId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate, @RequestParam List<String> roomFeatures) {
+            @PathVariable("id") Long hotelId,
+            @RequestParam("startDate") @DateTimeFormat(pattern = "M/dd/yyyy") LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "M/dd/yyyy") LocalDate endDate,
+            @RequestParam List<String> roomFeatures) {
         if (!roomFeatures.isEmpty()) {
             List<RoomFeatureType> roomFeatureEnumList = roomFeatures.stream().map(RoomFeatureType::valueOf).collect(Collectors.toList());
             return roomService.getFreeRoomListFilterByRoomFeature(hotelId, startDate, endDate, roomFeatureEnumList);

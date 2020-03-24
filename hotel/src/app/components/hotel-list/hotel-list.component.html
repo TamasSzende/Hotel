@@ -5,16 +5,13 @@
   <div *ngFor="let hotel of hotelList" class="card mb-3" >
     <div class="row no-gutters">
       <div class="col-md-4">
-        <!--cl-image [clSrc]="hotel?.hotelImageUrl"-->
-          <!-- [public-id]="getPublicId(hotel?.hotelImageUrl)"-->
-          <img [src]="hotel?.hotelImageUrl" style="height: 230px; width: 360px;">
+        <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%">
           <cl-transformation
             height="230"
             width="360"
             crop="fill">
           </cl-transformation>
-        <!--/cl-image-->
-
+        </cl-image>
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -42,4 +39,29 @@
     </div>
 
   </div>
+
+  <nav aria-label="...">
+    <ul class="pagination">
+
+      <li class="page-item" [ngClass]="{'disabled': listPageNumber == 1}">
+        <a class="page-link" (click)="onPageNumClick(listPageNumber-1)" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+
+      <li *ngFor="let pageNumber of pageNumbers" class="page-item" [ngClass]="{'active': pageNumber == listPageNumber}">
+        <a class="page-link" (click)="onPageNumClick(pageNumber)">{{pageNumber}}<span
+          *ngIf="pageNumber == listPageNumber" class="sr-only">(current)</span></a>
+      </li>
+
+      <li class="page-item" [ngClass]="{'disabled': listPageNumber == pageNumbers?.length}">
+        <a class="page-link" (click)="onPageNumClick(listPageNumber+1)" aria-label="Previous">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
 </div>

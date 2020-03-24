@@ -27,7 +27,7 @@ export class RegistrationComponent implements OnInit {
   doRegistrationAsUser() {
     this.registrationService.sendUserRegistration(this.registerForm.value).subscribe(
       () => {
-        this.notificationService.success('A message has been sent to this email!');
+        this.notificationService.success('Aktiváló kódot küldtünk a megadott email címre!');
         this.router.navigate(['/login']);
       },
       errors => {
@@ -42,7 +42,7 @@ export class RegistrationComponent implements OnInit {
   doRegistrationAsHotelOwner() {
     this.registrationService.sendHotelOwnerRegistration(this.registerForm.value).subscribe(
       () => {
-        this.notificationService.success('A message has been sent to this email!');
+        this.notificationService.success('Aktiváló kódot küldtünk a megadott email címre!');
         this.router.navigate(['/login']);
       },
       errors => {
