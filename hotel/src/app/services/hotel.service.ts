@@ -17,9 +17,9 @@ export class HotelService {
   constructor(private http: HttpClient) {
   }
 
-  listHotel(pageNumber: number): Observable<Array<HotelListItemModel>> {
+  listHotel(pageNumber?: number): Observable<Array<HotelListItemModel>> {
     let params = new HttpParams();
-    if (pageNumber) {
+    if (pageNumber != null) {
       params = params.set('offset', String(pageNumber));
     } else {
       params = params.set('offset', '1');

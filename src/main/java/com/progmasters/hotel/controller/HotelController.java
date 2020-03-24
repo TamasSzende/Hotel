@@ -97,17 +97,9 @@ public class HotelController {
 	}
 
 	@PostMapping("/uploadImage/{id}")
-	public ResponseEntity<String> uploadHotelImage(@RequestParam MultipartFile file, @PathVariable Long id){
-    	String imageURL = "";
-		try {
-			InputStream inputStream = file.getInputStream();
-			Path path = Paths.get("src/main/resources/tempFiles/uploadedImage.jpg");
-			Files.copy(inputStream, path);
-			imageURL = "\"" + hotelService.saveHotelImage(path,id) + "\"";
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<>(imageURL,HttpStatus.OK);
+	public ResponseEntity<Void> uploadHotelImage(@RequestParam MultipartFile file, @PathVariable Long id) {
+		hotelService.saveHotelImage(file, id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PostMapping("/deleteImage/{id}")

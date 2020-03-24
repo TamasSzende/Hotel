@@ -12,6 +12,7 @@ import com.progmasters.hotel.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
@@ -129,24 +130,20 @@ public class HotelService {
 		}
 	}
 
-	public String saveHotelImage(Path path, Long id) {
-		String imageURL = "";
-		try  {
-			imageURL = uploadImage(path.toFile());
-			if (hotelRepository.findById(id).isPresent()) {
-				hotelRepository.findById(id).get().getHotelImageUrls().add(imageURL);
-			}
-			Files.delete(path);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public String saveHotelImage(MultipartFile file, Long id) {
+
+		String imageURL = uploadImage(file);
+		if (hotelRepository.findById(id).isPresent() && imageURL != null) {
+			hotelRepository.findById(id).get().getHotelImageUrls().add(imageURL);
 		}
+
 		return imageURL;
 	}
 
-	private String uploadImage(File file){
+	private String uploadImage(MultipartFile file) {
 		String url = null;
 		try {
-			Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+			Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
 			url = uploadResult.get("url").toString();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -180,7 +177,7 @@ public class HotelService {
 	public List<HotelListItem> getPageOfHotelListItems(Integer pageNumber, Integer numOfElementsPerPage) {
 		List<HotelListItem> hotelListItems = getHotelListItemList();
 		int startIndex = (pageNumber - 1) * numOfElementsPerPage;
-		int endIndex = Math.min(startIndex + numOfElementsPerPage, hotelListItems.size() - 1);
+		int endIndex = Math.min(startIndex + numOfElementsPerPage, hotelListItems.size());
 		return hotelListItems.subList(startIndex, endIndex);
 	}
 
