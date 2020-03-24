@@ -9,11 +9,16 @@ import {environment} from "../../environments/environment";
 export class LoginService {
   private BASE_URL = environment.BASE_URL;
 
+  userId = new BehaviorSubject<number>(null);
   hotelId = new BehaviorSubject<number>(null);
   username = new BehaviorSubject<string>(null);
   role = new BehaviorSubject<string>(null);
 
   constructor(private http: HttpClient) {
+  }
+
+  getUserId(): number {
+    return this.userId.getValue();
   }
 
   getHotelId(): number {
@@ -36,6 +41,7 @@ export class LoginService {
   }
 
   logout() {
+    this.userId.next(null);
     this.hotelId.next(null);
     this.username.next(null);
     this.role.next(null);

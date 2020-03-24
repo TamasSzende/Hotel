@@ -1,21 +1,19 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BookingService} from "../../../services/booking.service";
 import {BookingListItemForHotelModel} from "../../../models/bookingListItemForHotel.model";
+import {BookingService} from "../../../services/booking.service";
 import {PopupService} from "../../../services/popup.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-detail-dialog.component";
 
-
 @Component({
-  selector: 'actual-room-booking',
-  templateUrl: './actual-room-booking.component.html',
-  styleUrls: ['./actual-room-booking.component.css']
+  selector: 'past-room-bookings',
+  templateUrl: './past-room-bookings.component.html',
+  styleUrls: ['./past-room-bookings.component.css']
 })
-export class ActualRoomBookingComponent implements OnInit {
+export class PastRoomBookingsComponent implements OnInit {
 
   @Input() roomId: number;
-  currentBookingList: BookingListItemForHotelModel[];
-  futureBookingList: BookingListItemForHotelModel[];
+  pastBookingList: BookingListItemForHotelModel[];
 
   constructor(private bookingService: BookingService,
               private popupService: PopupService,
@@ -24,24 +22,14 @@ export class ActualRoomBookingComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.roomId) {
-      this.getCurrentBookingList(this.roomId);
-      this.getFutureBookingList(this.roomId);
+      this.getPastBookingList(this.roomId);
     }
   }
 
-  getCurrentBookingList(roomId: number) {
-    this.bookingService.getCurrentBookingListByRoom(roomId).subscribe(
+  getPastBookingList(roomId: number) {
+    this.bookingService.getPastBookingListByRoom(roomId).subscribe(
       (response: BookingListItemForHotelModel[]) => {
-        this.currentBookingList = response;
-      },
-      error => console.warn(error)
-    );
-  }
-
-  getFutureBookingList(roomId: number) {
-    this.bookingService.getFutureBookingListByRoom(roomId).subscribe(
-      (response: BookingListItemForHotelModel[]) => {
-        this.futureBookingList = response;
+        this.pastBookingList = response;
       },
       error => console.warn(error)
     );
@@ -75,6 +63,5 @@ export class ActualRoomBookingComponent implements OnInit {
       }
     })
   }
-
 
 }

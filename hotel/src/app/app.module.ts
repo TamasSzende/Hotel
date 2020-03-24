@@ -27,9 +27,13 @@ import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
 import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
 import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
-import {ActualRoomBookingComponent} from "./components/room-details/actual-room-booking/actual-room-booking.component";
-import {PastRoomBookingComponent} from "./components/room-details/past-room-booking/past-room-booking.component";
+import {ActualRoomBookingsComponent} from "./components/room-details/actual-room-bookings/actual-room-bookings.component";
+import {PastRoomBookingsComponent} from "./components/room-details/past-room-bookings/past-room-bookings.component";
 import {BookingDetailDialogComponent} from "./components/booking-detail-dialog/booking-detail-dialog.component";
+import {HotelBookingsComponent} from "./components/hotel-bookings/hotel-bookings.component";
+import {UserBookingsComponent} from "./components/user-bookings/user-bookings.component";
+import {ActualUserBookingsComponent} from "./components/user-bookings/actual-user-bookings/actual-user-bookings.component";
+import {PastUserBookingsComponent} from "./components/user-bookings/past-user-bookings/past-user-bookings.component";
 
 // export const cloudinary = {
 //   Cloudinary: Cloudinary
@@ -41,11 +45,12 @@ import {BookingDetailDialogComponent} from "./components/booking-detail-dialog/b
     NavbarComponent,
     RoomFormComponent,
     RoomDetailsComponent,
-    ActualRoomBookingComponent,
-    PastRoomBookingComponent,
+    ActualRoomBookingsComponent,
+    PastRoomBookingsComponent,
     HotelFormComponent,
     HotelListComponent,
     HotelDetailsComponent,
+    HotelBookingsComponent,
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,
@@ -53,6 +58,9 @@ import {BookingDetailDialogComponent} from "./components/booking-detail-dialog/b
     LoginComponent,
     HotelImageManagerComponent,
     LoginComponent,
+    UserBookingsComponent,
+    ActualUserBookingsComponent,
+    PastUserBookingsComponent,
     ConfirmationComponent,
   ],
     imports: [

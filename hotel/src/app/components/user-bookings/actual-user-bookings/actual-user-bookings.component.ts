@@ -1,19 +1,21 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BookingListItemForHotelModel} from "../../../models/bookingListItemForHotel.model";
 import {BookingService} from "../../../services/booking.service";
 import {PopupService} from "../../../services/popup.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-detail-dialog.component";
+import {BookingListItemForUserModel} from "../../../models/bookingListItemForUser.model";
+
 
 @Component({
-  selector: 'past-room-booking',
-  templateUrl: './past-room-booking.component.html',
-  styleUrls: ['./past-room-booking.component.css']
+  selector: 'actual-user-bookings',
+  templateUrl: './actual-user-bookings.component.html',
+  styleUrls: ['./actual-user-bookings.component.css']
 })
-export class PastRoomBookingComponent implements OnInit {
+export class ActualUserBookingsComponent implements OnInit {
 
-  @Input() roomId: number;
-  pastBookingList: BookingListItemForHotelModel[];
+  @Input() userId: number;
+  currentBookingList: BookingListItemForUserModel[];
+  futureBookingList: BookingListItemForUserModel[];
 
   constructor(private bookingService: BookingService,
               private popupService: PopupService,
@@ -21,15 +23,25 @@ export class PastRoomBookingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.roomId) {
-      this.getPastBookingList(this.roomId);
+    if (this.userId) {
+      this.getCurrentBookingList(this.userId);
+      this.getFutureBookingList(this.userId);
     }
   }
 
-  getPastBookingList(roomId: number) {
-    this.bookingService.getPastBookingListByRoom(roomId).subscribe(
-      (response: BookingListItemForHotelModel[]) => {
-        this.pastBookingList = response;
+  getCurrentBookingList(userId: number) {
+    this.bookingService.getCurrentBookingListByUser(userId).subscribe(
+      (response: BookingListItemForUserModel[]) => {
+        this.currentBookingList = response;
+      },
+      error => console.warn(error)
+    );
+  }
+
+  getFutureBookingList(userId: number) {
+    this.bookingService.getFutureBookingListByUser(userId).subscribe(
+      (response: BookingListItemForUserModel[]) => {
+        this.futureBookingList = response;
       },
       error => console.warn(error)
     );
@@ -63,5 +75,6 @@ export class PastRoomBookingComponent implements OnInit {
       }
     })
   }
+
 
 }

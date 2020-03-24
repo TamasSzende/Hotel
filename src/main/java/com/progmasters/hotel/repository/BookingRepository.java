@@ -47,20 +47,20 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "ORDER BY reservations.startDate DESC")
     List<Booking> findPastByHotelId(@Param("hotel_id") Long hotelId);
 
-    @Query("SELECT b FROM Booking b WHERE b.guest.id = :user_id")
+    @Query("SELECT DISTINCT b FROM Booking b WHERE b.guest.id = :user_id")
     List<Booking> findAllByUserId(@Param("user_id") Long userId);
 
-    @Query("SELECT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
+    @Query("SELECT DISTINCT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
             "AND r.startDate <= current_date AND r.endDate >= current_date " +
             "ORDER BY r.startDate")
     List<Booking> findCurrentByUserId(@Param("user_id") Long userId);
 
-    @Query("SELECT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
+    @Query("SELECT DISTINCT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
             "AND r.startDate > current_date " +
             "ORDER BY r.startDate")
     List<Booking> findFutureByUserId(@Param("user_id") Long userId);
 
-    @Query("SELECT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
+    @Query("SELECT DISTINCT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
             "AND r.endDate < current_date " +
             "ORDER BY r.startDate DESC")
     List<Booking> findPastByUserId(@Param("user_id") Long userId);
