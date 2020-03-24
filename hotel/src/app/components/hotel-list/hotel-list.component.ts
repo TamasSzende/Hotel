@@ -7,6 +7,7 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 
 import {LoginService} from "../../services/login.service";
 import {Cloudinary} from "cloudinary-core";
+import {scrollToTheTop} from "../../utils/smoothScroller";
 
 @Component({
   selector: 'app-hotel-list',
@@ -90,6 +91,7 @@ export class HotelListComponent implements OnInit {
   onPageNumClick(pageNum: number) {
     this.listPageNumber = pageNum;
     this.listHotel();
+    scrollToTheTop(40);
   }
 
 }
