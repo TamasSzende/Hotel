@@ -7,8 +7,8 @@
     <div class="col-md-8">
       <div (click)="bookingDetails(pastBooking.id)" class="card-body" style="cursor: pointer">
 
-        Foglalás -kezdete: <strong style="color: #B82012">{{pastBooking.startDate | date:'y. MMM d. EEEE'}}</strong>
-        -vége: <strong style="color: #B82012">{{pastBooking.endDate | date:'y. MMM d. EEEE'}}</strong><br>
+        Foglalás -kezdete: <strong>{{pastBooking.startDate | date:'y. MMM d. EEEE'}}</strong>
+        -vége: <strong>{{pastBooking.endDate | date:'y. MMM d. EEEE'}}</strong><br>
 
         Szállás neve: <strong>{{pastBooking.hotel.name}}</strong>&nbsp;-
         <strong>{{pastBooking.hotel.hotelType}}</strong> <br>

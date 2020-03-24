@@ -38,9 +38,9 @@ import {ActualHotelBookingsComponent} from "./components/hotel-bookings/actual-h
 import {FutureHotelBookingsComponent} from "./components/hotel-bookings/future-hotel-bookings/future-hotel-bookings.component";
 import {PastHotelBookingsComponent} from "./components/hotel-bookings/past-hotel-bookings/past-hotel-bookings.component";
 
-// export const cloudinary = {
-//   Cloudinary: Cloudinary
-// };
+export const cloudinary = {
+  Cloudinary: Cloudinary
+};
 
 @NgModule({
   declarations: [
@@ -79,7 +79,7 @@ import {PastHotelBookingsComponent} from "./components/hotel-bookings/past-hotel
       MatIconModule,
       MatDialogModule,
       MDBBootstrapModule,
-      CloudinaryModule.forRoot(Cloudinary, {cloud_name: 'doaywchwk'}),
+      CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
       FileUploadModule
     ],
