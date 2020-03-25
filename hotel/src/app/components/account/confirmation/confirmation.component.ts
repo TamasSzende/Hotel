@@ -13,19 +13,8 @@ export class ConfirmationComponent implements OnInit {
   isActivated: boolean = false;
 
   constructor(private loginService: LoginService, private route: ActivatedRoute) {
-
   }
 
-  // ngOnInit(): void {
-  //   this.route.queryParams.subscribe(
-  //     params => {
-  //       console.log(params);
-  //       console.log(params.token);
-  //
-  //     },
-  //     error => console.warn(error),
-  //   );
-  //  }
   ngOnInit(): void {
     this.route.paramMap.subscribe(
       paramMap => {

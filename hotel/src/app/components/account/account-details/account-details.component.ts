@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AccountDetailsForMyProfileModel} from "../../../models/AccountDetailsForMyProfile.model";
+import {AccountDetailsForMyProfileModel} from "../../../models/accountDetailsForMyProfile.model";
 import {LoginService} from "../../../services/login.service";
 
 @Component({
@@ -21,9 +21,5 @@ export class AccountDetailsComponent implements OnInit {
         this.account = userAccount;
       }
     )
-  }
-
-  doEdit() {
-
   }
 }

@@ -46,26 +46,6 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-
-    //----------SEND MAIL AT REGISTRATION----------
-
-//    public void sendMessage(String email) {
-//        SimpleMailMessage message = null;
-//        try {
-//            message = new SimpleMailMessage();
-//            message.setFrom(MESSAGE_FROM);
-//            message.setTo(email);
-//            System.out.println(email);
-//            message.setSubject("Sikeres regisztrálás");
-//            message.setText("Kedves " + email + "! \n \n Köszönjük, hogy regisztráltál az oldalunkra!"
-//                    +"Aktiváld pls: \n"+"http://localhost:4200/login\n");
-//            javaMailSender.send(message);
-//
-//        } catch (Exception e) {
-//            logger.error("Hiba e-mail küldéskor az alábbi címre: " + email + " " + e);
-//        }
-//    }
-
     //----------REGISTRATION  -> SAVE A USER----------
 
     public void saveUserRegistration(RegistrationDetails registrationDetails) throws Exception {
@@ -96,7 +76,6 @@ public class AccountService {
         } else {
             throw new Exception("Mail already taken!");
         }
-
     }
 
     public void sendConfirmationMail(Account account) {
@@ -120,23 +99,22 @@ public class AccountService {
         confirmationTokenRepository.delete(confirmationToken);
     }
 
-
     //----------CHECK THE MAIL----------
-    //ha a mail már benn van,akkor "FALSE"-t ad vissza
+
     public boolean checkIfEmailIsTaken(String id, String email) {
         boolean result = false;
-        if (!id.equalsIgnoreCase("undefined")) {  //ha létezik az email ID
+        if (!id.equalsIgnoreCase("undefined")) {
             Long longId;
             try {
-                longId = Long.valueOf(id);  //stringből long lesz
+                longId = Long.valueOf(id);
             } catch (NumberFormatException nfe) {
                 logger.info("Invalid id provided for name check");
                 return false;
-            }   //megnézi, h az ID-hoz tartozik-e valami
-            Account accountToCheck = accountRepository.findById(longId).orElse(null);  //orElse-> ha nem létezik, null-t ad vissza
+            }
+            Account accountToCheck = accountRepository.findById(longId).orElse(null);
 
-            if (accountToCheck != null && !accountToCheck.getEmail().equalsIgnoreCase(email)) {//ha van ott valami és a beirt email nem azonos a tárolttal
-                result = !accountRepository.findAllByEmail(email).isEmpty(); //isEmpty-> true, ha üres
+            if (accountToCheck != null && !accountToCheck.getEmail().equalsIgnoreCase(email)) {
+                result = !accountRepository.findAllByEmail(email).isEmpty();
             }
         } else {
             result = !accountRepository.findAllByEmail(email).isEmpty();
@@ -165,7 +143,7 @@ public class AccountService {
         }
     }
 
-//----------CREATE DEFAULT USER----------
+    //----------CREATE DEFAULT USER----------
 
     public void checkUser() {
         Account userAccount = accountRepository.findByEmail(USERMAIL);
@@ -186,7 +164,7 @@ public class AccountService {
         }
     }
 
-//----------CREATE DEFAULT HOTELOWNER----------
+    //----------CREATE DEFAULT HOTELOWNER----------
 
     public void checkHotelOwner() {
         Account hotelOwnerAccount = accountRepository.findByEmail(HOTELOWNERMAIL);
@@ -226,8 +204,19 @@ public class AccountService {
         return account.isEnabled();
     }
 
-
     public AccountDetails getUserAccountByEmail(String email) {
         return new AccountDetails(findAccountByEmail(email));
+    }
+
+    public AccountDetails updateUserAccount(AccountDetails accountDetails, String username) {
+        Account account = accountRepository.findByUsername(username);
+        updateUserAccountWithDetails(accountDetails, account);
+        return new AccountDetails(account);
+    }
+
+    public void updateUserAccountWithDetails(AccountDetails accountDetails, Account account) {
+        account.setFirstname(accountDetails.getFirstname());
+        account.setLastname(accountDetails.getLastname());
+        account.setAddress(accountDetails.getAddress());
     }
 }

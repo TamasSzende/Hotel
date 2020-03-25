@@ -11,12 +11,14 @@ import {ConfirmationComponent} from "./components/account/confirmation/confirmat
 import {AccountDetailsComponent} from "./components/account/account-details/account-details.component";
 import {HotelBookingsComponent} from "./components/hotel-bookings/hotel-bookings.component";
 import {UserBookingsComponent} from "./components/user-bookings/user-bookings.component";
+import {AccountEditComponent} from "./components/account/account-edit/account-edit.component";
 
 
 const routes: Routes = [
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},
   {path: "account", component: AccountDetailsComponent},
+  {path: "account-edit", component: AccountEditComponent},
   {path: 'bookings', component: UserBookingsComponent},
   {path: "admin/hotel/update-room/:id", component: RoomFormComponent},
   {path: "admin/hotel/create-room", component: RoomFormComponent},
