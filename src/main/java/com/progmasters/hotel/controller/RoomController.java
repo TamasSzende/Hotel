@@ -33,6 +33,8 @@ public class RoomController {
         return new ResponseEntity<>(roomFormData, HttpStatus.OK);
     }
 
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+
     @GetMapping("/filter/{id}")
     public List<RoomListItem> getFilteredFreeRoomList(
             @PathVariable("id") Long hotelId,

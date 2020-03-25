@@ -5,7 +5,7 @@
   <form [formGroup]="hotelForm">
     <div class="form-group">
       <label for="name" class="form-control-label">
-        Name:
+        Name:<a> *</a>
       </label>
       <input
         type="text"
@@ -14,12 +14,21 @@
         name="name"
         placeholder="Name"
         class="form-control"
+        [ngClass]="{'is-invalid': hotelForm.get('name').invalid && hotelForm.get('name').touched || hotelForm.get('name').errors?.serverError}"
       />
+      <small
+        *ngIf="hotelForm.get('name').invalid && hotelForm.get('name').touched && !hotelForm.get('name').errors?.serverError"
+        class="text-danger">
+        Kérlek add meg a hotel nevét!
+      </small>
+      <small *ngIf="hotelForm.get('name').errors?.serverError" class="text-danger">
+        {{hotelForm.get('name').errors['serverError']}}
+      </small>
     </div>
 
     <div class="form-group">
       <label for="postalCode" class="form-control-label">
-        Postal code:
+        Postal code:<a> *</a>
       </label>
       <input
         type="text"
@@ -33,7 +42,7 @@
 
     <div class="form-group">
       <label for="city" class="form-control-label">
-        City:
+        City:<a> *</a>
       </label>
       <input
         type="text"
@@ -47,7 +56,7 @@
 
     <div class="form-group">
       <label for="streetAddress" class="form-control-label">
-        Street address:
+        Street address:<a> *</a>
       </label>
       <input
         type="text"
@@ -61,7 +70,7 @@
 
     <div class="form-group">
       <label for="hotelType" class="form-control-label">
-        Hotel type:
+        Hotel type:<a> *</a>
       </label>
       <select
         id="hotelType"
@@ -79,7 +88,7 @@
 
     <div class="form-group">
       <label for="description" class="form-control-label">
-        Description:
+        Description:<a> *</a>
       </label>
       <textarea
         rows="10"

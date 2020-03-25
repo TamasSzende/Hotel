@@ -21,7 +21,15 @@ public class HotelCreateItemValidator implements Validator {
     }
 
 	@Override
-    public void validate(Object obj, Errors e) {
+    public void validate(Object object, Errors errors) {
+        HotelCreateItem hotelCreateItem = (HotelCreateItem) object;
+
+        String hotelName = hotelCreateItem.getName();
+        if (hotelName == null || hotelName.isBlank()) {
+            errors.rejectValue("name", "hotel.name.isempty");
+        }
+
+
 
 
 		//TODO write the validations!!!

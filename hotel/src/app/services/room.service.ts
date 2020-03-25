@@ -27,8 +27,10 @@ export class RoomService {
 
   getFilteredRoomList(hotelId: number, data: { startDate: Date; endDate: Date; roomFeatures: string[] }): Observable<Array<RoomListItemModel>> {
     const params = new HttpParams()
-      .set('startDate', data.startDate.toLocaleDateString())
-      .set('endDate', data.endDate.toLocaleDateString())
+      .set('startDate', this.dateToJsonDateString(data.startDate))
+      .set('endDate', this.dateToJsonDateString(data.endDate))
+      // .set('startDate', data.startDate.toLocaleDateString())
+      // .set('endDate', data.endDate.toLocaleDateString())
       .set('roomFeatures', data.roomFeatures.join(', '));
     return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/filter/' + hotelId, {params});
   }
@@ -52,5 +54,19 @@ export class RoomService {
 
   getRoomFormForUpdate(id: string): Observable<RoomCreateItemModel> {
     return this.http.get<RoomCreateItemModel>(BASE_URL + '/formData/' + id);
+  }
+
+  dateToJsonDateString(date: Date) {
+    let result: string = date.getFullYear() + '. ';
+    let month = date.getMonth() + 1;
+    if (month.toString().length === 1) {
+      result += '0';
+    }
+    result += month + '. ';
+    if (date.getDate().toString().length === 1) {
+      result += '0';
+    }
+    result += date.getDate() + '.';
+    return result;
   }
 }
