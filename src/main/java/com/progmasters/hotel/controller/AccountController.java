@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -52,5 +49,14 @@ public class AccountController {
     @GetMapping("/{email}")
     public ResponseEntity<AccountDetails> getUserAccount(@PathVariable String email) {
         return new ResponseEntity<>(accountService.getUserAccountByEmail(email), HttpStatus.OK);
+    }
+
+    //---------------update the user account-------------
+
+    @PutMapping("/{username}")
+    public ResponseEntity<AccountDetails> updateUserAccount(@RequestBody AccountDetails accountDetails, @PathVariable String username) {
+        AccountDetails updateUserAccount = accountService.updateUserAccount(accountDetails, username);
+        logger.info("account saved");
+        return new ResponseEntity<>(updateUserAccount, HttpStatus.OK);
     }
 }
