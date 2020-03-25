@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {RoomService} from "../../services/room.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {validationHandler} from "../../utils/validationHandler";
@@ -31,9 +31,11 @@ export class RoomFormComponent implements OnInit {
         'roomType': new FormControl(''),
         'numberOfBeds': new FormControl(null),
         'roomArea': new FormControl(null),
-        'pricePerNight': new FormControl(null),
+      'pricePerNight': new FormControl(null, [Validators.required, Validators.min(0)]),
         'roomImageUrl': new FormControl(''),
-        'description': new FormControl(''),
+      'description': new FormControl('',
+        [Validators.required,
+          Validators.maxLength(200)]),
         'roomFeatures': new FormArray([]),
       }
     );

@@ -25,11 +25,14 @@ export class HotelFormComponent implements OnInit {
   constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
     this.hotelForm = new FormGroup({
       'name': new FormControl('', Validators.required),
-        'postalCode': new FormControl(''),
-        'city': new FormControl(''),
-        'streetAddress': new FormControl(''),
-        'hotelType': new FormControl(''),
-        'description': new FormControl(''),
+      'postalCode': new FormControl('', Validators.required),
+      'city': new FormControl('', Validators.required),
+      'streetAddress': new FormControl('', Validators.required),
+      'hotelType': new FormControl('', Validators.required),
+      'description': new FormControl('',
+        [Validators.required,
+          Validators.minLength(500),
+          Validators.maxLength(2000)]),
         'hotelFeatures': new FormArray([]),
         'file': new FormControl(null),
         'fileSource': new FormControl('')
@@ -37,7 +40,7 @@ export class HotelFormComponent implements OnInit {
     );
   }
 
-	ngOnInit() {
+  ngOnInit() {
 
     this.loginService.role.subscribe(
       (response) => {
@@ -64,7 +67,7 @@ export class HotelFormComponent implements OnInit {
     } else {
       this.isUpdate = false;
     }
-	}
+  }
 
   onSubmit() {
     const data = {...this.hotelForm.value};
@@ -72,30 +75,29 @@ export class HotelFormComponent implements OnInit {
     this.isUpdate ? this.updateHotel(data) : this.createHotel(data);
   }
 
-	createHotel = (data: HotelCreateItemModel) => {
-		this.hotelService.createHotel(data).subscribe(
-			(hotelId) => {
-        console.log('hotelId:' + hotelId);
+  createHotel = (data: HotelCreateItemModel) => {
+    this.hotelService.createHotel(data).subscribe(
+      (hotelId) => {
         this.loginService.hotelId.next(hotelId);
         this.router.navigate(['/admin/hotel']);
       }, error => validationHandler(error, this.hotelForm),
-		);
-	};
+    );
+  };
 
-	getHotelCreateData = (id: string) => {
-		this.hotelService.hotelForUpdate(id).subscribe(
-			(response: HotelCreateItemModel) => {
-				this.hotelForm.patchValue({
-					name: response.name,
-					postalCode: response.postalCode,
-					city: response.city,
-					streetAddress: response.streetAddress,
-					hotelType: response.hotelType,
-					description: response.description,
-					hotelFeatures: this.createHotelFeaturesFormArray(response.hotelFeatures),
-				});
-			},
-		);
+  getHotelCreateData = (id: string) => {
+    this.hotelService.hotelForUpdate(id).subscribe(
+      (response: HotelCreateItemModel) => {
+        this.hotelForm.patchValue({
+          name: response.name,
+          postalCode: response.postalCode,
+          city: response.city,
+          streetAddress: response.streetAddress,
+          hotelType: response.hotelType,
+          description: response.description,
+          hotelFeatures: this.createHotelFeaturesFormArray(response.hotelFeatures),
+        });
+      },
+    );
   };
 
   private updateHotel(data: HotelCreateItemModel) {

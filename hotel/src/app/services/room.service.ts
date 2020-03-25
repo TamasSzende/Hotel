@@ -29,8 +29,6 @@ export class RoomService {
     const params = new HttpParams()
       .set('startDate', this.dateToJsonDateString(data.startDate))
       .set('endDate', this.dateToJsonDateString(data.endDate))
-      // .set('startDate', data.startDate.toLocaleDateString())
-      // .set('endDate', data.endDate.toLocaleDateString())
       .set('roomFeatures', data.roomFeatures.join(', '));
     return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/filter/' + hotelId, {params});
   }
