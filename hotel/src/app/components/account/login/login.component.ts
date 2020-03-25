@@ -72,4 +72,12 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  fillDatas() {
+    this.loginService.filldatas().subscribe(
+      message => console.log(message),
+      err => console.log(err)
+    );
+
+  }
+
 }
