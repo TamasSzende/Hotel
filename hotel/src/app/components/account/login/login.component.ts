@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {LoginService} from "../../services/login.service";
-import {RegistrationService} from "../../services/registration.service";
-import {validationHandler} from "../../utils/validationHandler";
-import {NotificationService} from "../../services/notification.service";
+import {LoginService} from "../../../services/login.service";
+import {RegistrationService} from "../../../services/registration.service";
+import {validationHandler} from "../../../utils/validationHandler";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-login',
@@ -70,6 +70,14 @@ export class LoginComponent implements OnInit {
     } else {
       this.router.navigateByUrl('/login')
     }
+  }
+
+  fillDatas() {
+    this.loginService.filldatas().subscribe(
+      message => console.log(message),
+      err => console.log(err)
+    );
+
   }
 
 }

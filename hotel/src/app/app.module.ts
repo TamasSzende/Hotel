@@ -11,7 +11,7 @@ import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.com
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RoomDetailsComponent} from './components/room-details/room-details.component';
-import {RegistrationComponent} from './components/registration/registration.component';
+import {RegistrationComponent} from './components/account/registration/registration.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PopupComponent} from './popup/popup.component';
 import {MatIconModule} from "@angular/material/icon";
@@ -22,11 +22,12 @@ import {Cloudinary} from 'cloudinary-core/cloudinary-core-shrinkwrap';
 import {CloudinaryModule} from "@cloudinary/angular-5.x";
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
-import {LoginComponent} from "./components/login/login.component";
+import {LoginComponent} from "./components/account/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
 import {HotelImageManagerComponent} from './components/hotel-form/hotel-image-manager/hotel-image-manager.component';
-import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
+import {ConfirmationComponent} from "./components/account/confirmation/confirmation.component";
+import {AccountDetailsComponent} from './components/account/account-details/account-details.component';
 import {ActualRoomBookingsComponent} from "./components/room-details/actual-room-bookings/actual-room-bookings.component";
 import {PastRoomBookingsComponent} from "./components/room-details/past-room-bookings/past-room-bookings.component";
 import {BookingDetailDialogComponent} from "./components/booking-detail-dialog/booking-detail-dialog.component";
@@ -68,6 +69,7 @@ export const cloudinary = {
     ActualUserBookingsComponent,
     PastUserBookingsComponent,
     ConfirmationComponent,
+    AccountDetailsComponent,
   ],
     imports: [
       HttpClientModule,

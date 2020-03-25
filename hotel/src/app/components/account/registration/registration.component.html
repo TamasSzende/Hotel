@@ -5,7 +5,7 @@
   <form [formGroup]="registerForm" action="" id="loginMember" method="post" role="form">
     <div class="form-group">
       <label class="form-control-label" for="email">
-        Email cím <a> *</a>
+        <strong>Email cím <a> *</a></strong>
 
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('email').invalid && registerForm.get('email').touched
@@ -25,7 +25,7 @@
 
     <div class="form-group">
       <label class="form-control-label" for="password">
-        Jelszó <a> *</a>
+        <strong>Jelszó <a> *</a> </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('password').invalid && registerForm.get('password').touched
                     || registerForm.get('password').errors?.serverError}" class="form-control"
@@ -44,7 +44,7 @@
 
     <div class="form-group">
       <label class="form-control-label" for="firstname">
-        Vezetéknév <a> *</a>
+        <strong>Vezetéknév <a> *</a> </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('firstname').invalid && registerForm.get('firstname').touched
                     || registerForm.get('firstname').errors?.serverError}" class="form-control"
@@ -63,7 +63,7 @@
 
     <div class="form-group">
       <label class="form-control-label" for="lastname">
-        Utónév <a> *</a>
+        <strong> Utónév <a> *</a> </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('lastname').invalid && registerForm.get('lastname').touched
                     || registerForm.get('lastname').errors?.serverError}" class="form-control"
@@ -82,7 +82,7 @@
 
     <div class="form-group">
       <label class="form-control-label" for="address">
-        Cím <a> *</a>
+        <strong>Cím <a> *</a> </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('address').invalid && registerForm.get('address').touched
                     || registerForm.get('address').errors?.serverError}" class="form-control" formControlName="address"

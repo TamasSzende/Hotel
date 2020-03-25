@@ -168,7 +168,7 @@
               </p>
               <div class="btn-toolbar" class="text-right" role="toolbar">
 
-                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN' " class="btn-group mr-4">
+                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
                   <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
                 </div>
                 <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">

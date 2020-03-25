@@ -5,9 +5,10 @@ import {RoomDetailsComponent} from "./components/room-details/room-details.compo
 import {HotelListComponent} from "./components/hotel-list/hotel-list.component";
 import {HotelFormComponent} from "./components/hotel-form/hotel-form.component";
 import {HotelDetailsComponent} from "./components/hotel-detail/hotel-details.component";
-import {RegistrationComponent} from "./components/registration/registration.component";
-import {LoginComponent} from "./components/login/login.component";
-import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
+import {RegistrationComponent} from "./components/account/registration/registration.component";
+import {LoginComponent} from "./components/account/login/login.component";
+import {ConfirmationComponent} from "./components/account/confirmation/confirmation.component";
+import {AccountDetailsComponent} from "./components/account/account-details/account-details.component";
 import {HotelBookingsComponent} from "./components/hotel-bookings/hotel-bookings.component";
 import {UserBookingsComponent} from "./components/user-bookings/user-bookings.component";
 
@@ -15,6 +16,7 @@ import {UserBookingsComponent} from "./components/user-bookings/user-bookings.co
 const routes: Routes = [
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},
+  {path: "account", component: AccountDetailsComponent},
   {path: 'bookings', component: UserBookingsComponent},
   {path: "admin/hotel/update-room/:id", component: RoomFormComponent},
   {path: "admin/hotel/create-room", component: RoomFormComponent},

@@ -5,7 +5,7 @@
   <form [formGroup]="loginForm" action="" id="loginMember" method="post" role="form">
     <div class="form-group">
       <label class="form-control-label" for="email">
-        Email cím <a id="redstar"> *</a>
+        <strong>Email cím <a id="redstar"> *</a></strong>
       </label>
       <input [ngClass]="{'is-invalid': loginForm.get('email').touched && loginForm.get('email').invalid
                     || loginForm.get('email').errors?.serverError}" class="form-control" formControlName="email"
@@ -24,7 +24,7 @@
 
     <div class="form-group">
       <label class="form-control-label" for="password">
-        Jelszó <a id="redstars"> *</a>
+        <strong>Jelszó <a id="redstars"> *</a></strong>
       </label>
       <input [ngClass]="{'is-invalid': loginForm.get('password').invalid && loginForm.get('password').touched
                     || loginForm.get('password').errors?.serverError}" class="form-control" formControlName="password"
@@ -53,7 +53,10 @@
     <a class="pwd-forget" href="javascript:void(0)" id="open_forgotPassword">Elfelejtette jelszavát?</a>
   </div>
 
-  <div class="text-center">Még nem regisztrált?
+  <div class="text-center"><Strong>Még nem regisztrált?</Strong>
     <div (click)="doRegistration()" class="btn btn-link"><Strong>Regisztráció</Strong></div>
   </div>
+  <!--p>
+    <button class="btn btn-info" (click)="fillDatas()">Fill Datas </button>
+  </p-->
 </div>
