@@ -42,8 +42,6 @@ export class LoginService {
   }
 
   logout() {
-
-    //TODO valahova backendre küldeni egy POST-ot
     return this.http.post(this.BASE_URL + '/api/accounts/logout', {}).subscribe(() => {
       this.userId.next(null);
       this.hotelId.next(null);
