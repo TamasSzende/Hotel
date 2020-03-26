@@ -1,4 +1,4 @@
-<div class = container>
+<div class=container>
 
   <br>
 
@@ -41,10 +41,10 @@
         <div class="card-body">
           <h3 class="card-title">{{hotel?.name}} - {{hotel?.hotelType}}</h3>
           <h5 class="card-subtitle mb-2">
-            Address: {{hotel?.postalCode}}  {{hotel?.city}}, {{hotel?.streetAddress}}
+            Cím: {{hotel?.postalCode}}  {{hotel?.city}}, {{hotel?.streetAddress}}
           </h5>
           <p class="card-text">
-            Hotel capacity: {{hotel?.hotelCapacity}}
+            Szállás összférőhely: {{hotel?.hotelCapacity}}
           </p>
           <p class="card-text">
             {{ hotel?.description}}
@@ -57,12 +57,14 @@
           <div class="btn-toolbar" class="text-right" role="toolbar">
             <div class="btn-group mr-4">
               <button (click)="updateHotel()" *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN' "
-                      class="btn btn-success ">edit Hotel data
+                      class="btn btn-success ">
+                Hotel szerkesztése
               </button>
             </div>
             <div class="btn-group mr-4">
               <button (click)="backToHotelList()" *ngIf="userRole === 'ROLE_USER' || userRole === 'ROLE_ADMIN' "
-                      class="btn btn-primary ">back to Hotel list
+                      class="btn btn-primary ">
+                Vissza a hotel listához
               </button>
             </div>
           </div>
@@ -72,11 +74,19 @@
     </div>
   </div>
 
+  <div *ngIf="userRole === 'ROLE_HOTELOWNER'">
+    <button (click)="createRoomInHotel()" class="btn btn-primary btn-lg btn-block"
+            type="button">
+      Új szoba hozzáadása
+    </button>
+    <br>
+  </div>
 
   <form [formGroup]="bookingForm">
-    <div class="card bg-light mb-3">
+    <div *ngIf="userRole === 'ROLE_USER'" class="card bg-light mb-3">
       <div class="card-body">
         <div class="form-inline">
+
           <label for="numberOfGuests" lass="form-control-label">
             Vendégek száma:&nbsp;&nbsp;
           </label>
@@ -86,6 +96,11 @@
             name="numberOfGuests"
             type="number"
           />
+          <small
+            *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
+            class="text-danger">
+            Kérlek add meg a vendégek számát!
+          </small>
           &nbsp;&nbsp;
           <label>
             Utazás időpontja:&nbsp;&nbsp;
@@ -98,16 +113,25 @@
             name="bookingDateRange"
             placeholder="Válasz időpontot!"
           >
-            <a class="input-button" data-clear title="clear">
-              <i class="icon-close"></i>
-            </a>
+            <small
+              *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
+              class="text-danger">
+              Kérlek válasz időpontot!
+            </small>
           </ng2-flatpickr>
           &nbsp;&nbsp;
-          <div class="btn-group mr-4">
-            <button (click)="resetFilters()" class="btn btn-secondary">Reset</button>
-          </div>
 
-          <button (click)="makeBooking()" class="btn btn-warning mr-4">Foglalás</button>
+
+          <button (click)="makeBooking()" [disabled]="bookingForm.invalid" class="btn btn-warning mr-4">Foglalás
+          </button>
+          <small
+            *ngIf="bookingForm.get('roomIdList').invalid && bookingForm.get('roomIdList').touched && !bookingForm.get('roomIdList').errors?.serverError"
+            class="text-danger">
+            Kérlek válasz szobát!
+          </small>
+          <div class="btn-group mr-4">
+            <button (click)="resetFilters()" class="btn btn-secondary">Szűrés törlése</button>
+          </div>
 
           &nbsp;&nbsp;
           <h5 *ngIf="priceOfBooking"> Ár: {{ priceOfBooking.toLocaleString('hu-HU') }} Ft </h5>
@@ -129,13 +153,14 @@
       </div>
     </div>
 
-    <h4 *ngIf="hotel?.rooms.length !==0">
-      Szabad szobák:
-    </h4>
-    <h5 *ngIf="hotel?.rooms.length === 0">
-      Sajnos a megadott időszakban nincs a keresésnek megfelelő szabad szobánk!
-    </h5>
-
+    <div *ngIf="userRole === 'ROLE_USER'">
+      <h4 *ngIf="hotel?.rooms.length !==0">
+        Szabad szobák:
+      </h4>
+      <h5 *ngIf="hotel?.rooms.length === 0">
+        Sajnos a megadott időszakban nincs a keresésnek megfelelő szabad szobánk!
+      </h5>
+    </div>
 
     <div *ngFor="let room of hotel?.rooms; let i = index" formArrayName="roomIdList">
       <div class="card mb-3">
@@ -153,7 +178,7 @@
             <div class="card-body">
               <h5 class="card-title">{{ room.roomName }} - {{ room.roomType }}</h5>
               <h6 class="card-subtitle mb-2">
-                Number of beds: {{ room.numberOfBeds }} - Room area: {{ room.roomArea }} m2 - Price per Night
+                Ágyak (férőhelyek) száma: {{ room.numberOfBeds }} - Szobaterület: {{ room.roomArea }} m2 - Ár/éj
                 : {{ room.pricePerNight.toLocaleString('hu-HU') }} Ft
               </h6>
 
@@ -169,17 +194,20 @@
               <div class="btn-toolbar" class="text-right" role="toolbar">
 
                 <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
-                  <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
+                  <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">
+                    Szoba adatai/foglalások
+                  </button>
                 </div>
                 <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
-                  <button (click)="updateRoom(room.id)" class="btn btn-secondary btn-sm">&nbsp;&nbsp;edit&nbsp;&nbsp;
+                  <button (click)="updateRoom(room.id)" class="btn btn-secondary btn-sm">Szoba szerkesztése
                   </button>
-                  <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">delete</button>
+                  <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">törlése</button>
                 </div>
 
-                <label>
+                <label *ngIf="userRole === 'ROLE_USER'">
                   Lefoglalom&nbsp;
-                  <input (change)="getPriceOfBooking()" [formControlName]="i" style="width: 18px; height: 18px"
+                  <input (change)="getPriceOfBookingAndMaxCapacity()" [formControlName]="i"
+                         style="width: 18px; height: 18px"
                          type="checkbox">
                 </label>
               </div>
@@ -194,9 +222,6 @@
     </div>
   </form>
 
-  <button (click)="createRoomInHotel()" *ngIf="userRole === 'ROLE_HOTELOWNER'" class="btn btn-primary btn-lg btn-block"
-          type="button">Add new room
-  </button>
 
   <br>
   <br>

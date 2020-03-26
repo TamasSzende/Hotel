@@ -1,20 +1,26 @@
 <div class="container">
-  <h2>Room form</h2>
+  <h2>Szoba adatlap</h2>
   <hr/>
   <form (ngSubmit)="onSubmit()" [formGroup]="roomForm">
 
     <div class="form-group">
       <label for="roomName" class="form-control-label">
-        Room name:
+        Szoba neve:<a> *</a>
       </label>
       <input
         type="text"
         id="roomName"
         formControlName="roomName"
         name="roomName"
-        placeholder="Room name"
+        [ngClass]="{'is-invalid': roomForm.get('roomName').invalid && roomForm.get('roomName').touched || roomForm.get('roomName').errors?.serverError}"
         class="form-control"
+        placeholder="Szoba neve"
       />
+      <small
+        *ngIf="roomForm.get('roomName').invalid && roomForm.get('roomName').touched && !roomForm.get('roomName').errors?.serverError"
+        class="text-danger">
+        Kérlek add meg a szoba nevét!
+      </small>
       <small *ngIf="roomForm.get('roomName').errors?.serverError" class="text-danger">
         {{roomForm.get('roomName').errors['serverError']}}
       </small>
@@ -22,23 +28,32 @@
 
     <div class="form-group">
       <label for="roomType" class="form-control-label">
-        Room type:
+        Szobatípus:<a> *</a>
       </label>
       <select
         id="roomType"
         formControlName="roomType"
         name="roomType"
         class="form-control"
+        [ngClass]="{'is-invalid': roomForm.get('roomType').invalid && roomForm.get('roomType').touched || roomForm.get('roomType').errors?.serverError}"
       >
-        <option value="" disabled>&#45;&#45; Please choose a room type &#45;&#45;</option>
+        <option disabled value="">&#45;&#45; Kérlek válassz egy szobatípust! &#45;&#45;</option>
         <option *ngFor="let roomType of roomTypeOption, let i = index"
                 value="{{roomType?.name}}"> {{roomType?.displayName}} </option>
       </select>
+      <small
+        *ngIf="roomForm.get('roomType').invalid && roomForm.get('roomType').touched && !roomForm.get('roomType').errors?.serverError"
+        class="text-danger">
+        Kérlek add meg a szoba típusát!
+      </small>
+      <small *ngIf="roomForm.get('roomType').errors?.serverError" class="text-danger">
+        {{roomForm.get('roomType').errors['serverError']}}
+      </small>
     </div>
 
     <div class="form-group">
       <label for="numberOfBeds" class="form-control-label">
-        Number of beds:
+        Ágyak (férőhelyek) száma:<a> *</a>
       </label>
       <input
         type="number"
@@ -46,8 +61,14 @@
         formControlName="numberOfBeds"
         name="numberOfBeds"
         class="form-control"
-        placeholder="Enter the number of people that can sleep in the room"
+        [ngClass]="{'is-invalid': roomForm.get('numberOfBeds').invalid && roomForm.get('numberOfBeds').touched || roomForm.get('numberOfBeds').errors?.serverError}"
+        placeholder="Ágyak (férőhelyek) száma"
       />
+      <small
+        *ngIf="roomForm.get('numberOfBeds').invalid && roomForm.get('numberOfBeds').touched && !roomForm.get('numberOfBeds').errors?.serverError"
+        class="text-danger">
+        Kérlek add meg a férőhelyek (ágyak) számát!
+      </small>
       <small *ngIf="roomForm.get('numberOfBeds').errors?.serverError" class="text-danger">
         {{roomForm.get('numberOfBeds').errors['serverError']}}
       </small>
@@ -55,7 +76,7 @@
 
     <div class="form-group">
       <label for="roomArea" class="form-control-label">
-        Room area:
+        Szoba terület (m<a>2</a>):<a> *</a>
       </label>
       <input
         type="number"
@@ -63,12 +84,21 @@
         formControlName="roomArea"
         name="roomArea"
         class="form-control"
+        [ngClass]="{'is-invalid': roomForm.get('roomArea').invalid && roomForm.get('roomArea').touched || roomForm.get('roomArea').errors?.serverError}"
       />
+      <small
+        *ngIf="roomForm.get('roomArea').invalid && roomForm.get('roomArea').touched && !roomForm.get('roomArea').errors?.serverError"
+        class="text-danger">
+        Kérlek add meg a szoba területet!
+      </small>
+      <small *ngIf="roomForm.get('roomArea').errors?.serverError" class="text-danger">
+        {{roomForm.get('roomArea').errors['serverError']}}
+      </small>
     </div>
 
     <div class="form-group">
       <label for="pricePerNight" class="form-control-label">
-        Price per night:
+        Szoba ára (Ft/éj):<a> *</a>
       </label>
       <input
         type="number"
@@ -76,8 +106,14 @@
         formControlName="pricePerNight"
         name="pricePerNight"
         class="form-control"
-        placeholder="Enter the price per night"
+        [ngClass]="{'is-invalid': roomForm.get('pricePerNight').invalid && roomForm.get('pricePerNight').touched || roomForm.get('pricePerNight').errors?.serverError}"
+        placeholder="Szoba ára"
       />
+      <small
+        *ngIf="roomForm.get('pricePerNight').invalid && roomForm.get('pricePerNight').touched && !roomForm.get('pricePerNight').errors?.serverError"
+        class="text-danger">
+        Kérlek add meg a szoba árát!
+      </small>
       <small *ngIf="roomForm.get('pricePerNight').errors?.serverError" class="text-danger">
         {{roomForm.get('pricePerNight').errors['serverError']}}
       </small>
@@ -85,7 +121,7 @@
 
     <div class="form-group">
       <label for="description" class="form-control-label">
-        Description:
+        Rövid leírás:<a> *</a>
       </label>
       <textarea
         rows="5"
@@ -93,9 +129,16 @@
         id="description"
         formControlName="description"
         name="description"
-        placeholder="Description"
+        [ngClass]="{'is-invalid': roomForm.get('description').invalid && roomForm.get('description').touched || roomForm.get('description').errors?.serverError}"
         class="form-control"
+        placeholder="Rövid leírás (max. 200 karakter)"
+
       ></textarea>
+      <small
+        *ngIf="roomForm.get('description').invalid && roomForm.get('description').touched && !roomForm.get('description').errors?.serverError"
+        class="text-danger">
+        Kérlek adj meg egy rövid leírást (max.200 karakter legyen)!
+      </small>
       <small *ngIf="roomForm.get('description').errors?.serverError" class="text-danger">
         {{roomForm.get('description').errors['serverError']}}
       </small>
@@ -103,14 +146,14 @@
 
     <div class="form-group">
       <label for="roomImageUrl" class="form-control-label">
-        Room image url:
+        Szoba kép url címe:
       </label>
       <input
         type="text"
         id="roomImageUrl"
         formControlName="roomImageUrl"
         name="roomImageUrl"
-        placeholder="Enter an url for the room image"
+        placeholder="Szoba kép url címe"
         class="form-control"
       />
       <small *ngIf="roomForm.get('roomImageUrl').errors?.serverError" class="text-danger">
@@ -120,7 +163,7 @@
 
     <div class="form-group">
       <label class="form-control-label">
-        Room features:
+        Szoba szolgáltatások:
       </label>
       <div formArrayName="roomFeatures" *ngFor="let roomFeatures of roomFeatureTypeOption; let i = index">
         <label>
@@ -128,10 +171,11 @@
           {{ roomFeatures?.displayName }}
         </label>
       </div>
+      <div><a>* - kötelezően kitöltendő mezők!</a></div>
     </div>
 
     <br/>
-    <button class="btn btn-primary my-buttons">Save Room</button>
+    <button [disabled]="roomForm.invalid" class="btn btn-primary my-buttons">Szoba mentése</button>
   </form>
   <br>
   <br>

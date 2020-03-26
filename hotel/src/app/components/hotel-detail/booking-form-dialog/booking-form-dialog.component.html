@@ -66,6 +66,11 @@
             <input formControlName="aSZF" type="checkbox">
             Elfogadom az Általános szerződési feltételeket
           </label>
+          <small
+            *ngIf="bookingForm.get('aSZF').invalid && bookingForm.get('aSZF').touched && !bookingForm.get('aSZF').errors?.serverError"
+            class="text-danger">
+            Kérlek fogadd el az Általános szerződési feltételeket!
+          </small>
         </div>
       </form>
     </div>
@@ -73,7 +78,7 @@
     <div class="modal-footer">
       <button [mat-dialog-close]="false" class="btn btn-secondary mr-4" data-dismiss="modal" type="button">Mégse
       </button>
-      <button (click)="onSubmit()" cdkFocusInitial class="btn btn-primary mr-4"
+      <button (click)="onSubmit()" [disabled]="bookingForm.invalid" cdkFocusInitial class="btn btn-primary mr-4"
               type="button">
         Fizetés
       </button>

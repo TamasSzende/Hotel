@@ -1,6 +1,5 @@
 <div class="container">
 
-<h2>Hotel list</h2>
 
   <div *ngFor="let hotel of hotelList" class="card mb-3" >
     <div class="row no-gutters">
@@ -15,7 +14,8 @@
       </div>
       <div class="col-md-8">
         <div class="card-body">
-          <h4 class="card-title">{{hotel?.name}} - {{hotel?.hotelType}}</h4>
+          <h4 (click)="hotelDetail(hotel.id)" class="card-title" style="cursor: pointer">{{hotel?.name}}
+            - {{hotel?.hotelType}}</h4>
           <h6 class="card-subtitle mb-2">
             Address: {{hotel?.postalCode}}  {{hotel?.city}}, {{hotel?.streetAddress}}
           </h6>
@@ -27,11 +27,11 @@
           <div class="btn-toolbar"  class="text-right" role="toolbar">
 
             <div class="btn-group mr-4">
-              <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">details</button>
+              <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">Tovább a hotelhez</button>
             </div>
             <div *ngIf="userRole === 'ROLE_ADMIN'" class="btn-group">
-              <button (click)="updateHotel(hotel.id)" class="btn btn-secondary btn-sm">edit&nbsp;&nbsp;</button>
-              <button (click)="deleteHotel(hotel.id)" class="btn btn-danger btn-sm">delete</button>
+              <button (click)="updateHotel(hotel.id)" class="btn btn-secondary btn-sm">Hotel szerkesztése</button>
+              <button (click)="deleteHotel(hotel.id)" class="btn btn-danger btn-sm">Hotel törlése</button>
             </div>
           </div>
         </div>

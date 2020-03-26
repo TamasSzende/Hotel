@@ -7,7 +7,7 @@ import {LoginService} from "../../services/login.service";
 import {RoomListItemModel} from "../../models/roomListItem.model";
 import {PopupService} from "../../services/popup.service";
 import {FlatpickrOptions} from "ng2-flatpickr";
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BookingService} from "../../services/booking.service";
 import {BookingFormDialogComponent} from "./booking-form-dialog/booking-form-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -26,6 +26,7 @@ export class HotelDetailsComponent implements OnInit {
 
   hotel: HotelDetailsModel;
   priceOfBooking: number;
+  maxNumberOfGuest: number;
   hotelIdFromLogin: number;
   hotelIdFromRoute: string;
   userRole: string;
@@ -45,9 +46,14 @@ export class HotelDetailsComponent implements OnInit {
       dateFormat: "Y-m-d",
     };
     this.bookingForm = new FormGroup({
-      'numberOfGuests': new FormControl(null),
-      'bookingDateRange': new FormControl([]),
-      'roomIdList': new FormArray([]),
+      'numberOfGuests': new FormControl(null,
+        [Validators.required,
+          Validators.min(1)]),
+      'bookingDateRange': new FormControl([],
+        [Validators.required,
+          Validators.minLength(2)]),
+      'roomIdList': new FormArray([],
+        this.checkBoxValidator),
     });
     this.filterForm = new FormGroup({
       'roomFeatures': new FormArray([]),
@@ -111,6 +117,7 @@ export class HotelDetailsComponent implements OnInit {
         this.clearRoomBookingFormArray();
         this.createRoomBookingFormArray();
         this.priceOfBooking = null;
+        this.maxNumberOfGuest = 0;
       },
       error => console.warn(error),
     );
@@ -124,17 +131,22 @@ export class HotelDetailsComponent implements OnInit {
     this.getFilteredRoomList();
   }
 
-  getPriceOfBooking() {
-    if (this.bookingForm.value.bookingDateRange) {
-      const numberOfNights =
+  getPriceOfBookingAndMaxCapacity() {
+    let numberOfNights: number;
+    if (this.bookingForm.value.bookingDateRange.length > 1) {
+      numberOfNights =
         Math.round((this.bookingForm.value.bookingDateRange[1].getTime() - this.bookingForm.value.bookingDateRange[0].getTime()) / 86400000);
       let roomsPricePerNight = 0;
+      let maxCapacity = 0;
       this.bookingForm.value.roomIdList.forEach((value, index) => {
         if (value) {
           roomsPricePerNight += this.hotel.rooms[index].pricePerNight;
+          maxCapacity += this.hotel.rooms[index].numberOfBeds;
         }
       });
       this.priceOfBooking = numberOfNights * roomsPricePerNight;
+      this.maxNumberOfGuest = maxCapacity;
+      console.log('max number of guest: ' + this.maxNumberOfGuest);
     }
   }
 
@@ -261,4 +273,11 @@ export class HotelDetailsComponent implements OnInit {
   getPublicId(imgURL: string) {
     return getPublicId(imgURL);
   }
+
+  checkBoxValidator(array: FormArray): { required: boolean } {
+    let counter = 0;
+    array.getRawValue().forEach(value => value ? counter++ : counter);
+    return counter < 1 ? {required: true} : null;
+  }
+
 }

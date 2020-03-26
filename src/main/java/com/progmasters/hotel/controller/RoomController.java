@@ -3,9 +3,11 @@ package com.progmasters.hotel.controller;
 import com.progmasters.hotel.domain.RoomFeatureType;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.RoomService;
+import com.progmasters.hotel.validator.RoomCreateItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,10 +21,17 @@ import java.util.stream.Collectors;
 public class RoomController {
 
     private RoomService roomService;
+    private RoomCreateItemValidator validator;
 
     @Autowired
-    public RoomController(RoomService roomService) {
+    public RoomController(RoomService roomService, RoomCreateItemValidator validator) {
         this.roomService = roomService;
+        this.validator = validator;
+    }
+
+    @InitBinder("RoomCreateItem")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(validator);
     }
 
     @GetMapping("/formData")
@@ -32,8 +41,6 @@ public class RoomController {
         RoomFormData roomFormData = new RoomFormData(roomTypeOptionList, roomFeatureTypeOptionList);
         return new ResponseEntity<>(roomFormData, HttpStatus.OK);
     }
-
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
 
     @GetMapping("/filter/{id}")
     public List<RoomListItem> getFilteredFreeRoomList(
