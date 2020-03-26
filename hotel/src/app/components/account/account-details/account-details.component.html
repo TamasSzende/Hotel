@@ -9,7 +9,7 @@
         <strong>Email cím</strong>
       </label>
       <input class="form-control"
-             placeholder="{{account.username}}" readonly
+             placeholder="{{account?.username}}" readonly
              type="text"/>
     </div>
 
@@ -18,7 +18,7 @@
         <strong>Vezetéknév</strong>
       </label>
       <input class="form-control"
-             placeholder="{{account.firstname}}" readonly
+             placeholder="{{account?.firstname}}" readonly
              type="text"/>
     </div>
 
@@ -27,7 +27,7 @@
         <strong>Utónév</strong>
       </label>
       <input class="form-control"
-             placeholder="{{account.lastname}}" readonly
+             placeholder="{{account?.lastname}}" readonly
              type="text"/>
     </div>
 
@@ -36,12 +36,12 @@
         <strong>Cím</strong>
       </label>
       <input class="form-control"
-             placeholder=" {{account.address}}" readonly
+             placeholder=" {{account?.address}}" readonly
              type="text"/>
     </div>
     <br>
-    <button (click)="doEdit()" class="btn btn-default login-popup-btna"
-            name="submit" type="submit" value="1">Szerkesztés
+    <button class="btn btn-default login-popup-btna"
+            name="submit" routerLink="/account-edit" type="submit" value="1">Szerkesztés
     </button>
   </form>
 </div>

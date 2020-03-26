@@ -31,11 +31,11 @@ export class LoginComponent implements OnInit {
     this.loginService.authenticate(data).subscribe(
       response => {
         this.loginService.authenticatedLoginDetailsModel.next(response);
-        this.notificationService.success('Sikeresen belépett!');
+        this.notificationService.success('Sikeresen beléptél!');
         this.navigateAfterLogin(response);
       },
       error => {
-        this.notificationService.unsuccessful('Rossz email cím vagy jelszó!');
+        this.notificationService.unsuccessful('Rossz a megadott email címed vagy jelszavad!');
         this.loginForm.reset();
         error.error = {
           fieldErrors: [
@@ -65,6 +65,14 @@ export class LoginComponent implements OnInit {
     } else {
       this.router.navigateByUrl('/login')
     }
+  }
+
+  fillDatas() {
+    this.loginService.filldatas().subscribe(
+      message => console.log(message),
+      err => console.log(err)
+    );
+
   }
 
 }

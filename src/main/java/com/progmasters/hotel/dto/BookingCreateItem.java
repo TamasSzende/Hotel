@@ -1,5 +1,7 @@
 package com.progmasters.hotel.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -8,7 +10,9 @@ public class BookingCreateItem {
     private String guestAccountName;
     private String remark;
     private Integer numberOfGuests;
+    @JsonFormat(pattern = "yyyy. MM. dd.")
     private LocalDate startDate;
+    @JsonFormat(pattern = "yyyy. MM. dd.")
     private LocalDate endDate;
     private List<Long> roomIdList;
 

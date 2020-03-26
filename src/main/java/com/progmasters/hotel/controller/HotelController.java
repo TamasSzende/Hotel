@@ -2,23 +2,15 @@ package com.progmasters.hotel.controller;
 
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.HotelService;
-import com.progmasters.hotel.service.RoomService;
 import com.progmasters.hotel.validator.HotelCreateItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.function.ServerRequest;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -26,13 +18,11 @@ import java.util.List;
 public class HotelController {
 
 	private HotelService hotelService;
-	private RoomService roomService;
 	private HotelCreateItemValidator validator;
 
     @Autowired
-    public HotelController(HotelService hotelService, RoomService roomService, HotelCreateItemValidator validator) {
+	public HotelController(HotelService hotelService, HotelCreateItemValidator validator) {
 		this.hotelService = hotelService;
-		this.roomService = roomService;
         this.validator = validator;
     }
 

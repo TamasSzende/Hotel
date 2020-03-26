@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
@@ -7,8 +7,7 @@ import {HotelTypeOptionModel} from "../../models/hotelTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {HotelCreateItemModel} from "../../models/hotelCreateItem.model";
 import {LoginService} from "../../services/login.service";
-
-// import {validationHandler} from "../../utils/validationHandler";
+import {validationHandler} from "../../utils/validationHandler";
 
 @Component({
   selector: 'app-hotel-form',
@@ -25,12 +24,15 @@ export class HotelFormComponent implements OnInit {
 
   constructor(private hotelService: HotelService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {
     this.hotelForm = new FormGroup({
-        'name': new FormControl(''),
-        'postalCode': new FormControl(''),
-        'city': new FormControl(''),
-        'streetAddress': new FormControl(''),
-        'hotelType': new FormControl(''),
-        'description': new FormControl(''),
+      'name': new FormControl('', Validators.required),
+      'postalCode': new FormControl('', Validators.required),
+      'city': new FormControl('', Validators.required),
+      'streetAddress': new FormControl('', Validators.required),
+      'hotelType': new FormControl('', Validators.required),
+      'description': new FormControl('',
+        [Validators.required,
+          Validators.minLength(500),
+          Validators.maxLength(2000)]),
         'hotelFeatures': new FormArray([]),
         'file': new FormControl(null),
         'fileSource': new FormControl('')
@@ -95,7 +97,7 @@ export class HotelFormComponent implements OnInit {
         console.log('hotelId:' + hotelId);
         // TODO
         this.router.navigate(['/admin/hotel']);
-      }, error => console.error(error),
+      }, error => validationHandler(error, this.hotelForm),
     );
   };
 
@@ -119,7 +121,7 @@ export class HotelFormComponent implements OnInit {
     this.hotelService.updateHotel(data, this.hotelIdFromLogin).subscribe(
       () => {
         this.router.navigate(['/admin/hotel']);
-      }, error => console.error(error),
+      }, error => validationHandler(error, this.hotelForm),
     );
   }
 

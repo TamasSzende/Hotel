@@ -55,7 +55,7 @@ export class HotelListComponent implements OnInit {
   };
 
   deleteHotel(id: number): void {
-    this.popupService.openConfirmPopup("Are you sure to delete this record?")
+    this.popupService.openConfirmPopup("Biztos törölni szeretnéd a tételt?")
       .afterClosed().subscribe(res => {
       if (res) {
         this.hotelService.deleteHotel(id).subscribe(

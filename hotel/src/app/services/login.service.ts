@@ -69,6 +69,10 @@ export class LoginService {
     return this.http.put<any>(this.BASE_URL + '/api/registrations', token);
   }
 
+  filldatas() {
+    return this.http.get<any>(this.BASE_URL + "/admin/fill-database");
+  }
+
   //-------Profilomhoz-------
 
   getAccountDetails = (email: string): Observable<AccountDetailsForMyProfileModel> => {
