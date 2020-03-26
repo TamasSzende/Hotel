@@ -17,14 +17,20 @@ export class RoomDetailsComponent implements OnInit {
   constructor(private roomService: RoomService, private loginService: LoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.loginService.hotelId.subscribe(
-      response => {
-        if (response) {
-          this.hotelId = response;
-        } else {
-          this.router.navigate(['/login'])
-        }
-      });
+    let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+    if (account) {
+      this.hotelId = account.hotelId;
+    } else {
+      this.loginService.checkSession().subscribe(
+        (response) => {
+          if (response) {
+            this.hotelId = response.hotelId;
+          } else {
+            this.router.navigate(['/login'])
+          }
+        });
+    }
+
 
     this.route.paramMap.subscribe(
       paramMap => {

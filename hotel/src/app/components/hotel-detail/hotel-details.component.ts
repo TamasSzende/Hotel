@@ -15,6 +15,7 @@ import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
+import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 
 
 @Component({
@@ -28,12 +29,12 @@ export class HotelDetailsComponent implements OnInit {
   priceOfBooking: number;
   hotelIdFromLogin: number;
   hotelIdFromRoute: string;
-  userRole: string;
 
   bookingForm: FormGroup;
   filterForm: FormGroup;
   roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
+  private account: AuthenticatedLoginDetailsModel;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
@@ -55,20 +56,31 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
+    if (this.account != null && this.account.role) {
+      this.showHotel();
+    } else {
+      this.loginService.checkSession().subscribe(
+        (account) => {
+          this.loginService.authenticatedLoginDetailsModel.next(account);
+          this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
+          if (this.account != null && this.account.role) {
+            this.showHotel();
+          } else {
+            this.loginService.logout();
+            this.router.navigate(['/login']);
+          }
+        });
+    }
 
-    this.loginService.role.subscribe(
-      (response) => {
-        if (response !== null) {
-          this.userRole = response;
-        } else {
-          this.router.navigate(['/login'])
-        }
-      });
+  }
 
-    if (this.userRole === "ROLE_HOTELOWNER") {
-      this.loginService.hotelId.subscribe(
+  showHotel() {
+
+    if (this.account.role === "ROLE_HOTELOWNER") {
+      this.loginService.authenticatedLoginDetailsModel.subscribe(
         response => {
-          this.hotelIdFromLogin = response;
+          this.hotelIdFromLogin = response.hotelId;
           this.getHotelDetail(String(this.hotelIdFromLogin))
         }
       );

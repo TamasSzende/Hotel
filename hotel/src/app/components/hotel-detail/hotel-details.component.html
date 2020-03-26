@@ -56,12 +56,14 @@
           </ul>
           <div class="btn-toolbar" class="text-right" role="toolbar">
             <div class="btn-group mr-4">
-              <button (click)="updateHotel()" *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN' "
+              <button (click)="updateHotel()"
+                      *ngIf="account?.role === 'ROLE_HOTELOWNER' || account?.role === 'ROLE_ADMIN' "
                       class="btn btn-success ">edit Hotel data
               </button>
             </div>
             <div class="btn-group mr-4">
-              <button (click)="backToHotelList()" *ngIf="userRole === 'ROLE_USER' || userRole === 'ROLE_ADMIN' "
+              <button (click)="backToHotelList()"
+                      *ngIf="account?.role === 'ROLE_USER' || account?.role === 'ROLE_ADMIN' "
                       class="btn btn-primary ">back to Hotel list
               </button>
             </div>
@@ -168,10 +170,12 @@
               </p>
               <div class="btn-toolbar" class="text-right" role="toolbar">
 
-                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN' " class="btn-group mr-4">
+                <div *ngIf="account?.role === 'ROLE_HOTELOWNER' || account?.role === 'ROLE_ADMIN' "
+                     class="btn-group mr-4">
                   <button (click)="roomDetail(room.id)" class="btn btn-primary btn-sm">details</button>
                 </div>
-                <div *ngIf="userRole === 'ROLE_HOTELOWNER' || userRole === 'ROLE_ADMIN'" class="btn-group mr-4">
+                <div *ngIf="account?.role === 'ROLE_HOTELOWNER' || account?.role === 'ROLE_ADMIN'"
+                     class="btn-group mr-4">
                   <button (click)="updateRoom(room.id)" class="btn btn-secondary btn-sm">&nbsp;&nbsp;edit&nbsp;&nbsp;
                   </button>
                   <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">delete</button>
@@ -194,7 +198,8 @@
     </div>
   </form>
 
-  <button (click)="createRoomInHotel()" *ngIf="userRole === 'ROLE_HOTELOWNER'" class="btn btn-primary btn-lg btn-block"
+  <button (click)="createRoomInHotel()" *ngIf="account?.role === 'ROLE_HOTELOWNER'"
+          class="btn btn-primary btn-lg btn-block"
           type="button">Add new room
   </button>
 
