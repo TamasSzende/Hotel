@@ -15,10 +15,10 @@ export class UserBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.userId.subscribe(
+    this.loginService.authenticatedLoginDetailsModel.subscribe(
       response => {
         if (response) {
-          this.userId = response;
+          this.userId = response.id;
         } else {
           this.router.navigate(['/login'])
         }

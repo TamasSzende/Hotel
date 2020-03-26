@@ -8,6 +8,7 @@ import {RoomTypeOptionModel} from "../../models/roomTypeOption.model";
 import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomCreateItemModel} from "../../models/roomCreateItem.model";
 import {LoginService} from "../../services/login.service";
+import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 
 @Component({
   selector: 'app-room-form',
@@ -48,14 +49,20 @@ export class RoomFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loginService.hotelId.subscribe(
-      response => {
-        if (response) {
-          this.hotelId = response;
-        } else {
-          this.router.navigate(['/login'])
-        }
-      });
+    let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+
+    if (account) {
+      this.hotelId = account.hotelId;
+    } else {
+      this.loginService.checkSession().subscribe(
+        (response) => {
+          if (response) {
+            this.hotelId = response.hotelId;
+          } else {
+            this.router.navigate(['/login'])
+          }
+        });
+    }
 
     this.roomService.getRoomFormData().subscribe(
       (roomFormData: RoomFormDataModel) => {

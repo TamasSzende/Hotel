@@ -36,10 +36,10 @@ export class BookingFormDialogComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loginService.username.subscribe(
+    this.loginService.authenticatedLoginDetailsModel.subscribe(
       (response) => {
         if (response !== null) {
-          this.username = response;
+          this.username = response.name;
         } else {
           this.router.navigate(['/login'])
         }

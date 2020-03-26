@@ -15,10 +15,10 @@ export class HotelBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.hotelId.subscribe(
+    this.loginService.authenticatedLoginDetailsModel.subscribe(
       response => {
         if (response) {
-          this.hotelId = response;
+          this.hotelId = response.hotelId;
         } else {
           this.router.navigate(['/login'])
         }

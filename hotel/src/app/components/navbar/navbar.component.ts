@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {LoginService} from "../../services/login.service";
@@ -12,17 +12,19 @@ export class NavbarComponent implements OnInit {
 
   loggedIn: boolean;
   userRole: string;
+  email: string;
   baseRouterLink: string = 'login';
 
   constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {
   }
 
   ngOnInit(): void {
-    this.loginService.role.subscribe(
+    this.loginService.authenticatedLoginDetailsModel.subscribe(
       (response) => {
         if (response !== null) {
           this.loggedIn = true;
-          this.userRole = response;
+          this.userRole = response.role;
+          this.email = response.name;
           if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_USER') {
             this.baseRouterLink = 'hotel';
           } else if (this.userRole === 'ROLE_HOTELOWNER') {
@@ -39,9 +41,9 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.loggedIn = false;
     this.userRole = null;
-    this.loginService.logout();
-    this.router.navigateByUrl('login');
-
+    this.router.navigateByUrl('login').then(() => this.loginService.logout().subscribe()
+    );
   }
+
 
 }

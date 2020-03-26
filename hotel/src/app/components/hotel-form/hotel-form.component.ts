@@ -41,18 +41,34 @@ export class HotelFormComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.loginService.role.subscribe(
-      (response) => {
-        if (response !== "ROLE_HOTELOWNER") {
-          this.router.navigate(['/login']);
-        } else {
-          this.loginService.hotelId.subscribe(
-            response => this.hotelIdFromLogin = response
-          );
+    let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+    if (account != null) {
+      let role = account.role;
+      if (role !== "ROLE_HOTELOWNER") {
+        this.router.navigate(['/login']);
+      } else {
+        this.hotelIdFromLogin = account.hotelId;
+        this.loadData();
+      }
+    } else {
+      this.loginService.checkSession().subscribe(
+        (response) => {
+          this.loginService.authenticatedLoginDetailsModel.next(response);
+          account = response;
+          let role = account.role;
+          if (role !== "ROLE_HOTELOWNER") {
+            this.router.navigate(['/login']);
+          } else {
+            this.hotelIdFromLogin = account.hotelId;
+            this.loadData();
+          }
         }
-      });
+      )
+    }
+  }
 
+
+  private loadData() {
     this.hotelService.getHotelFormData().subscribe(
       (hotelFormData: HotelFormDataModel) => {
         this.hotelTypeOption = hotelFormData.hotelType;
@@ -78,7 +94,8 @@ export class HotelFormComponent implements OnInit {
   createHotel = (data: HotelCreateItemModel) => {
     this.hotelService.createHotel(data).subscribe(
       (hotelId) => {
-        this.loginService.hotelId.next(hotelId);
+        console.log('hotelId:' + hotelId);
+        // TODO
         this.router.navigate(['/admin/hotel']);
       }, error => validationHandler(error, this.hotelForm),
     );
