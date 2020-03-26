@@ -1,55 +1,17 @@
 <div class="login-popup-wrap new_login_popup">
   <div class="login-popup-heading text-center">
-    <h3><i aria-hidden="true" class="fa fa-lock"></i> Regisztráció </h3>
+    <h3><i aria-hidden="true" class="fa fa-lock"></i> Profil szerkesztés </h3>
   </div>
+  <br><br>
   <form [formGroup]="registerForm" action="" id="loginMember" method="post" role="form">
-    <div class="form-group">
-      <label class="form-control-label" for="email">
-        <strong>Email cím <a> *</a></strong>
-
-      </label>
-      <input [ngClass]="{'is-invalid': registerForm.get('email').invalid && registerForm.get('email').touched
-                    || registerForm.get('email').errors?.serverError}" class="form-control" formControlName="email"
-             id="email" name="email"
-             placeholder="xy@z.com"
-             type="text"/>
-      <small
-        *ngIf="registerForm.get('email').invalid && registerForm.get('email').touched && !registerForm.get('email').errors?.serverError"
-        class="text-danger">
-        Kérlek írd be az email címed!
-      </small>
-      <small *ngIf="registerForm.get('email').errors?.serverError" class="text-danger">
-        {{registerForm.get('email').errors['serverError']}}
-      </small>
-    </div>
-
-    <div class="form-group">
-      <label class="form-control-label" for="password">
-        <strong>Jelszó <a> *</a> </strong>
-      </label>
-      <input [ngClass]="{'is-invalid': registerForm.get('password').invalid && registerForm.get('password').touched
-                    || registerForm.get('password').errors?.serverError}" class="form-control"
-             formControlName="password" id="password" name="password"
-             placeholder="Jelszó"
-             type="password"/>
-      <small
-        *ngIf="registerForm.get('password').invalid && registerForm.get('password').touched && !registerForm.get('password').errors?.serverError"
-        class="text-danger">
-        Kérlek írd be jelszót!
-      </small>
-      <small *ngIf="registerForm.get('password').errors?.serverError" class="text-danger">
-        {{registerForm.get('password').errors['serverError']}}
-      </small>
-    </div>
 
     <div class="form-group">
       <label class="form-control-label" for="firstname">
-        <strong>Vezetéknév <a> *</a> </strong>
+        <strong>Vezetéknév </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('firstname').invalid && registerForm.get('firstname').touched
                     || registerForm.get('firstname').errors?.serverError}" class="form-control"
              formControlName="firstname" id="firstname" name="firstname"
-             placeholder="Vezetéknév"
              type="text"/>
       <small
         *ngIf="registerForm.get('firstname').invalid && registerForm.get('firstname').touched && !registerForm.get('firstname').errors?.serverError"
@@ -63,12 +25,11 @@
 
     <div class="form-group">
       <label class="form-control-label" for="lastname">
-        <strong> Utónév <a> *</a> </strong>
+        <strong> Utónév </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('lastname').invalid && registerForm.get('lastname').touched
                     || registerForm.get('lastname').errors?.serverError}" class="form-control"
              formControlName="lastname" id="lastname" name="lastname"
-             placeholder="Utónév"
              type="text"/>
       <small
         *ngIf="registerForm.get('lastname').invalid && registerForm.get('lastname').touched && !registerForm.get('lastname').errors?.serverError"
@@ -82,12 +43,11 @@
 
     <div class="form-group">
       <label class="form-control-label" for="address">
-        <strong>Cím <a> *</a> </strong>
+        <strong>Cím </strong>
       </label>
       <input [ngClass]="{'is-invalid': registerForm.get('address').invalid && registerForm.get('address').touched
                     || registerForm.get('address').errors?.serverError}" class="form-control" formControlName="address"
              id="address" name="address"
-             placeholder="Cím"
              type="text"/>
       <small
         *ngIf="registerForm.get('address').invalid && registerForm.get('address').touched && !registerForm.get('address').errors?.serverError"
@@ -98,17 +58,10 @@
         {{registerForm.get('address').errors['serverError']}}
       </small>
       <br>
-      <div class="col-md-offset-4" id="required">* - kitöltése kötelező!</div>
     </div>
-    <button (click)="doRegistrationAsUser()" [disabled]="registerForm.invalid" class="btn btn-default login-popup-btna"
+    <button (click)="doSaveModifiedAccount()" [disabled]="registerForm.invalid" class="btn btn-default login-popup-btna"
             name="submit" type="submit" value="1">
-      Vendégként
-    </button>
-
-    <button (click)="doRegistrationAsHotelOwner()" [disabled]="registerForm.invalid"
-            class="btn btn-default login-popup-btnb"
-            name="submit" type="submit" value="1">
-      Hotel tulajdonosként
+      Mentés
     </button>
   </form>
 </div>

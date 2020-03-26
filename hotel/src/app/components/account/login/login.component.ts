@@ -30,17 +30,12 @@ export class LoginComponent implements OnInit {
     const data = {...this.loginForm.value};
     this.loginService.authenticate(data).subscribe(
       response => {
-        this.loginService.userId.next(response.id);
-        this.loginService.username.next(response.name);
-        this.loginService.role.next(response.role);
-        if (response.hotelId) {
-          this.loginService.hotelId.next(response.hotelId);
-        }
-        this.notificationService.success('Sikeresen belépett!');
+        this.loginService.authenticatedLoginDetailsModel.next(response);
+        this.notificationService.success('Sikeresen beléptél!');
         this.navigateAfterLogin(response);
       },
       error => {
-        this.notificationService.unsuccessful('Rossz email cím vagy jelszó!');
+        this.notificationService.unsuccessful('Rossz a megadott email címed vagy jelszavad!');
         this.loginForm.reset();
         error.error = {
           fieldErrors: [

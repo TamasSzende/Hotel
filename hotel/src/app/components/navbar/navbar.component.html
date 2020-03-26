@@ -1,4 +1,5 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+<!--<nav class="navbar fixed-top navbar-expand-lg navbar-dark nav-bk2">-->
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark my-navbar">
   <a [routerLink]="this.baseRouterLink" class="navbar-brand" id="nav-index">
     HOOTEL
   </a>
@@ -23,19 +24,23 @@
     <ul *ngIf="userRole === 'ROLE_HOTELOWNER'" class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item">
         <a class="nav-link" id="hotel-bookings" routerLink="/admin/hotel/bookings"
-           routerLinkActive="active">Foglalásaim</a>
+           routerLinkActive="active">Foglalások</a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link" id="hotel-account" routerLink="/account" routerLinkActive="active">Profilom</a>
       </li>
+
     </ul>
 
     <ul class="navbar-nav">
       <li *ngIf="!loggedIn" class="nav-item">
         <a class="nav-link" routerLink="login" routerLinkActive="active">Belépés</a>
       </li>
-
+      <li *ngIf="loggedIn" class="nav-item">
+        <a class="nav-link" id="email" routerLink="/account" routerLinkActive="active"
+           style="align-self: end">{{email}}</a>
+      </li>
       <li *ngIf="loggedIn" class="nav-item">
         <a (click)="logout()" class="nav-link" id="logout-link" style="cursor: pointer">Kilépés</a>
       </li>

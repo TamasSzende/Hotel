@@ -1,5 +1,6 @@
 package com.progmasters.hotel.controller;
 
+import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.dto.AccountDetails;
 import com.progmasters.hotel.security.AuthenticatedLoginDetails;
 import com.progmasters.hotel.service.AccountService;
@@ -11,10 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -30,7 +31,8 @@ public class AccountController {
     //----------GET A USER----------
 
     @GetMapping("/me")
-    public ResponseEntity<AuthenticatedLoginDetails> getUserInfo() {
+    public ResponseEntity<AuthenticatedLoginDetails> getUserInfo(HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails user = (UserDetails) authentication.getPrincipal();
 
@@ -45,6 +47,7 @@ public class AccountController {
 
             authenticatedLoginDetails.setId(userId);
             authenticatedLoginDetails.setHotelId(hotelId);
+            session.setAttribute("authenticatedLoginDetails", authenticatedLoginDetails);
             return new ResponseEntity<>(authenticatedLoginDetails, HttpStatus.OK);
         }
     }
@@ -52,5 +55,29 @@ public class AccountController {
     @GetMapping("/{email}")
     public ResponseEntity<AccountDetails> getUserAccount(@PathVariable String email) {
         return new ResponseEntity<>(accountService.getUserAccountByEmail(email), HttpStatus.OK);
+    }
+
+    @GetMapping("/sessionCheck")
+    public ResponseEntity<AuthenticatedLoginDetails> isSessionValid(HttpServletRequest request) {
+        Object authenticatedLoginDetails = request.getSession().getAttribute("authenticatedLoginDetails");
+        if (authenticatedLoginDetails instanceof AuthenticatedLoginDetails) {
+            return new ResponseEntity<>((AuthenticatedLoginDetails) authenticatedLoginDetails, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //---------------update the user account-------------
+
+    @PutMapping("/{username}")
+    public ResponseEntity<AccountDetails> updateUserAccount(@RequestBody AccountDetails accountDetails, @PathVariable String username) {
+        AccountDetails updateUserAccount = accountService.updateUserAccount(accountDetails, username);
+        logger.info("account saved");
+        return new ResponseEntity<>(updateUserAccount, HttpStatus.OK);
     }
 }

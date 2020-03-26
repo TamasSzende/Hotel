@@ -18,7 +18,8 @@ export class BookingService {
   }
 
   createBooking(data: BookingCreateItemModel): Observable<number> {
-    return this.http.post<number>(BASE_URL, data);
+    const parsedDate = this.parseBookingCreateData(data);
+    return this.http.post<number>(BASE_URL, parsedDate);
   }
 
   bookingDetail(id: number): Observable<BookingDetailsModel> {
@@ -77,6 +78,30 @@ export class BookingService {
     return this.http.get<Array<BookingListItemForUserModel>>(BASE_URL + '/user/past/' + userId);
   }
 
+  parseBookingCreateData(data: BookingCreateItemModel) {
+    return {
+      guestAccountName: data.guestAccountName,
+      remark: data.remark,
+      numberOfGuests: data.numberOfGuests,
+      startDate: this.dateToJsonDateString(data.startDate),
+      endDate: this.dateToJsonDateString(data.endDate),
+      roomIdList: data.roomIdList,
+    }
+  }
+
+  dateToJsonDateString(date: Date) {
+    let result: string = date.getFullYear() + '. ';
+    let month = date.getMonth() + 1;
+    if (month.toString().length === 1) {
+      result += '0';
+    }
+    result += month + '. ';
+    if (date.getDate().toString().length === 1) {
+      result += '0';
+    }
+    result += date.getDate() + '.';
+    return result;
+  }
 
 
 }

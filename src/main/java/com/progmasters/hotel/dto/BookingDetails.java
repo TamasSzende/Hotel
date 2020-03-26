@@ -15,9 +15,7 @@ public class BookingDetails {
     private HotelShortItem hotel;
     private AccountDetails guest;
     private String remark;
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private List<RoomShortListItem> reservedRooms = new ArrayList<>();
     private Integer numberOfGuests;

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BookingCreateItemModel} from "../../../models/bookingCreateItem.model";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BookingService} from "../../../services/booking.service";
 import {BookingDetailsModel} from "../../../models/bookingDetails.model";
 import {LoginService} from "../../../services/login.service";
@@ -29,17 +29,17 @@ export class BookingFormDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data) {
     this.bookingForm = new FormGroup({
         'remark': new FormControl(''),
-        'aSZF': new FormControl(false),
+      'aSZF': new FormControl(false, Validators.requiredTrue),
       }
     );
   }
 
   ngOnInit(): void {
 
-    this.loginService.username.subscribe(
+    this.loginService.authenticatedLoginDetailsModel.subscribe(
       (response) => {
         if (response !== null) {
-          this.username = response;
+          this.username = response.name;
         } else {
           this.router.navigate(['/login'])
         }
