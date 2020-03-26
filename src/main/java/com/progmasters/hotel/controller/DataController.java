@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,10 +85,10 @@ public class DataController {
 
         for (HotelDataCreatorItem hotelData : hotelList.getDataListOfHotel()) {
             if (hotelRepository.findByHotelName(hotelData.getName()).isEmpty()) {
-
+                List<Room>roomList = new ArrayList<>();
                 Hotel tempHotel = new Hotel(hotelData.getName(), hotelData.getPostalCode(),
                         hotelData.getCity(), hotelData.getStreetAddress(),
-                        HotelType.valueOf(hotelData.getHotelType()), null,
+                        HotelType.valueOf(hotelData.getHotelType()),roomList,
                         hotelData.getHotelImageUrls(), hotelData.getDescription(),
                         hotelData.getHotelFeatures().stream().map(HotelFeatureType::valueOf).collect(Collectors.toList()),
                         hotelData.getLongitude(), hotelData.getLatitude());
