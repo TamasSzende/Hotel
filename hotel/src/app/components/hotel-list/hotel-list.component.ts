@@ -6,7 +6,6 @@ import {PopupService} from "../../services/popup.service";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 
 import {LoginService} from "../../services/login.service";
-import {Cloudinary} from "cloudinary-core";
 import {scrollToTheTop} from "../../utils/smoothScroller";
 
 @Component({
@@ -46,7 +45,7 @@ export class HotelListComponent implements OnInit {
   };
 
   deleteHotel(id: number): void {
-    this.popupService.openConfirmPopup("Are you sure to delete this record?")
+    this.popupService.openConfirmPopup("Biztos törölni szeretnéd a tételt?")
       .afterClosed().subscribe(res => {
       if (res) {
         this.hotelService.deleteHotel(id).subscribe(

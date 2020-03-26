@@ -162,7 +162,7 @@ export class HotelDetailsComponent implements OnInit {
 
   //TODO lechekkolni, hogy van-e a szobához elkövetkező foglalás!!
   deleteRoom(id: number) {
-    this.popupService.openConfirmPopup("Are you sure to delete this record?")
+    this.popupService.openConfirmPopup("Biztos törölni szeretnéd a tételt?")
       .afterClosed().subscribe(res => {
       if (res) {
         this.roomService.deleteRoom(id).subscribe(
