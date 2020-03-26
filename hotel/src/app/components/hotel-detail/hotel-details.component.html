@@ -82,11 +82,11 @@
     <br>
   </div>
 
-  <form [formGroup]="bookingForm">
+  <form [formGroup]="bookingForm" class="needs-validation" novalidate>
     <div *ngIf="userRole === 'ROLE_USER'" class="card bg-light mb-3">
       <div class="card-body">
-        <div class="form-inline">
-
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
           <label for="numberOfGuests" lass="form-control-label">
             Vendégek száma:&nbsp;&nbsp;
           </label>
@@ -101,10 +101,14 @@
             class="text-danger">
             Kérlek add meg a vendégek számát!
           </small>
-          &nbsp;&nbsp;
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
           <label>
             Utazás időpontja:&nbsp;&nbsp;
           </label>
+
           <ng2-flatpickr
             (change)="getFilteredRoomList()"
             [config]="flatpickrOptions"
@@ -116,29 +120,39 @@
             <small
               *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
               class="text-danger">
+              <br>
               Kérlek válasz időpontot!
             </small>
           </ng2-flatpickr>
-          &nbsp;&nbsp;
 
-
-          <button (click)="makeBooking()" [disabled]="bookingForm.invalid" class="btn btn-warning mr-4">Foglalás
-          </button>
-          <small
-            *ngIf="bookingForm.get('roomIdList').invalid && bookingForm.get('roomIdList').touched && !bookingForm.get('roomIdList').errors?.serverError"
-            class="text-danger">
-            Kérlek válasz szobát!
-          </small>
-          <div class="btn-group mr-4">
-            <button (click)="resetFilters()" class="btn btn-secondary">Szűrés törlése</button>
+            </div>
           </div>
 
-          &nbsp;&nbsp;
-          <h5 *ngIf="priceOfBooking"> Ár: {{ priceOfBooking.toLocaleString('hu-HU') }} Ft </h5>
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <button (click)="makeBooking()" [disabled]="bookingForm.invalid" class="btn btn-warning mr-4">Foglalás
+              </button>
 
+              <h5 *ngIf="priceOfBooking" class="align-text-bottom"> Ár: {{ priceOfBooking.toLocaleString('hu-HU') }}
+                Ft </h5>
+              <small
+                *ngIf="bookingForm.get('roomIdList').invalid && bookingForm.get('roomIdList').touched && !bookingForm.get('roomIdList').errors?.serverError"
+                class="text-danger">
+                Kérlek válasz szobát!
+              </small>
+            </div>
+          </div>
         </div>
 
+        <hr>
+
         <form [formGroup]="filterForm">
+          <div>
+            <button (click)="resetFilters()" class="badge badge-secondary mr-2">x</button>
+            <label>
+              Szoba szolgáltatások szűrése
+            </label>
+          </div>
           <div class="form-group">
             <div *ngFor="let roomFeatures of roomFeatureTypeOption; let i = index" class="form-check form-check-inline"
                  formArrayName="roomFeatures">
