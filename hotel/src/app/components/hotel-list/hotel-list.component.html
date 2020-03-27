@@ -29,7 +29,7 @@
             <div class="btn-group mr-4">
               <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">Tovább a hotelhez</button>
             </div>
-            <div *ngIf="userRole === 'ROLE_ADMIN'" class="btn-group">
+            <div *ngIf="account.role === 'ROLE_ADMIN'" class="btn-group">
               <button (click)="updateHotel(hotel.id)" class="btn btn-secondary btn-sm">Hotel szerkesztése</button>
               <button (click)="deleteHotel(hotel.id)" class="btn btn-danger btn-sm">Hotel törlése</button>
             </div>
