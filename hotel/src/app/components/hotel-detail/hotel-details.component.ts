@@ -35,7 +35,7 @@ export class HotelDetailsComponent implements OnInit {
   filterForm: FormGroup;
   roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
-  private account: AuthenticatedLoginDetailsModel;
+   account: AuthenticatedLoginDetailsModel;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,

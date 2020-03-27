@@ -137,15 +137,15 @@ public class BookingService {
     }
 
     public List<BookingListItemForUser> getCurrentBookingListByUser(Long userId) {
-        return bookingRepository.findCurrentByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+        return bookingRepository.findCurrentByUserId(userId, LocalDate.now()).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForUser> getFutureBookingListByUser(Long userId) {
-        return bookingRepository.findFutureByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+        return bookingRepository.findFutureByUserId(userId, LocalDate.now()).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForUser> getPastBookingListByUser(Long userId) {
-        return bookingRepository.findPastByUserId(userId).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+        return bookingRepository.findPastByUserId(userId, LocalDate.now()).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     private List<RoomReservation> getRoomReservationsAndValidate(BookingCreateItem bookingCreateItem, Booking booking) {
