@@ -103,6 +103,12 @@
             class="text-danger">
             Kérlek add meg a vendégek számát!
           </small>
+
+            <small
+              *ngIf="bookingForm.get('numberOfGuests').value > this.maxNumberOfGuest"
+              class="text-danger">
+              Kérlek foglalj több szobát!
+            </small>
           </div>
 
           <div class="col-md-4 mb-3">
@@ -132,7 +138,9 @@
 
           <div class="col-md-4 mb-3">
             <div class="input-group">
-              <button (click)="makeBooking()" [disabled]="bookingForm.invalid" class="btn btn-warning mr-4">Foglalás
+              <button (click)="makeBooking()"
+                      [disabled]="bookingForm.invalid || bookingForm.get('numberOfGuests').value > this.maxNumberOfGuest"
+                      class="btn btn-warning mr-4">Foglalás
               </button>
 
               <h5 *ngIf="priceOfBooking" class="align-text-bottom"> Ár: {{ priceOfBooking.toLocaleString('hu-HU') }}

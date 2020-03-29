@@ -44,7 +44,7 @@ export class AccountEditComponent implements OnInit {
     this.registrationService.updateUserAccount(this.registerForm.value, this.user).subscribe(
       () => {
         this.notificationService.success('A változtatásaid elmentettük!');
-        this.router.navigate(['/hotel']);
+        this.router.navigate(['/account']);
       },
       error => {
         validationHandler(error, this.registerForm);

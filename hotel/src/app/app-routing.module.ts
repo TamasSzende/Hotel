@@ -17,8 +17,8 @@ import {AccountEditComponent} from "./components/account/account-edit/account-ed
 const routes: Routes = [
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},
-  {path: "account", component: AccountDetailsComponent},
   {path: "account-edit", component: AccountEditComponent},
+  {path: "account", component: AccountDetailsComponent},
   {path: 'bookings', component: UserBookingsComponent},
   {path: "admin/hotel/update-room/:id", component: RoomFormComponent},
   {path: "admin/hotel/create-room", component: RoomFormComponent},
@@ -34,7 +34,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

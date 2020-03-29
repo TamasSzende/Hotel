@@ -27,7 +27,7 @@ export class HotelDetailsComponent implements OnInit {
 
   hotel: HotelDetailsModel;
   priceOfBooking: number;
-  maxNumberOfGuest: number;
+  maxNumberOfGuest: number = 0;
   hotelIdFromLogin: number;
   hotelIdFromRoute: string;
 
@@ -137,32 +137,30 @@ export class HotelDetailsComponent implements OnInit {
 
   resetFilters() {
     this.filterForm.reset();
-    this.bookingForm.value.controls.bookingDateRange = "";
     //TODO resetelni a naptárat!!!
     // this.flatpickrInstance.clear();
     this.getFilteredRoomList();
   }
 
   getPriceOfBookingAndMaxCapacity() {
-    let numberOfNights: number;
+    let numberOfNights: number = 0;
+    let roomsPricePerNight = 0;
+    let maxCapacity = 0;
+    this.bookingForm.value.roomIdList.forEach((value, index) => {
+      if (value) {
+        roomsPricePerNight += this.hotel.rooms[index].pricePerNight;
+        maxCapacity += this.hotel.rooms[index].numberOfBeds;
+      }
+    });
+
     if (this.bookingForm.value.bookingDateRange.length > 1) {
       numberOfNights =
         Math.round((this.bookingForm.value.bookingDateRange[1].getTime() - this.bookingForm.value.bookingDateRange[0].getTime()) / 86400000);
-      let roomsPricePerNight = 0;
-      let maxCapacity = 0;
-      this.bookingForm.value.roomIdList.forEach((value, index) => {
-        if (value) {
-          roomsPricePerNight += this.hotel.rooms[index].pricePerNight;
-          maxCapacity += this.hotel.rooms[index].numberOfBeds;
-        }
-      });
-      this.priceOfBooking = numberOfNights * roomsPricePerNight;
-      this.maxNumberOfGuest = maxCapacity;
-      console.log('max number of guest: ' + this.maxNumberOfGuest);
     }
+    this.maxNumberOfGuest = maxCapacity;
+    console.log('max number of guest: ' + this.maxNumberOfGuest);
+    this.priceOfBooking = numberOfNights * roomsPricePerNight;
   }
-
-
 
   createRoomInHotel() {
     this.router.navigate(['/admin/hotel/create-room'])
