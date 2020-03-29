@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -50,20 +51,20 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT DISTINCT b FROM Booking b WHERE b.guest.id = :user_id")
     List<Booking> findAllByUserId(@Param("user_id") Long userId);
 
-    @Query("SELECT DISTINCT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
-            "AND r.startDate <= current_date AND r.endDate >= current_date " +
+    @Query("SELECT distinct b,r.startDate FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
+            "AND r.startDate <= :current_date AND r.endDate >= :current_date " +
             "ORDER BY r.startDate")
-    List<Booking> findCurrentByUserId(@Param("user_id") Long userId);
+    List<Booking> findCurrentByUserId(@Param("user_id") Long userId, @Param("current_date")LocalDate date);
 
-    @Query("SELECT DISTINCT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
-            "AND r.startDate > current_date " +
+    @Query("SELECT distinct b,r.startDate  FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
+            "AND r.startDate > :current_date " +
             "ORDER BY r.startDate")
-    List<Booking> findFutureByUserId(@Param("user_id") Long userId);
+    List<Booking> findFutureByUserId(@Param("user_id") Long userId,  @Param("current_date")LocalDate date);
 
-    @Query("SELECT DISTINCT b FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
-            "AND r.endDate < current_date " +
+    @Query("SELECT distinct b,r.startDate FROM Booking b JOIN b.roomReservations r WHERE b.guest.id = :user_id " +
+            "AND r.endDate < :current_date " +
             "ORDER BY r.startDate DESC")
-    List<Booking> findPastByUserId(@Param("user_id") Long userId);
+    List<Booking> findPastByUserId(@Param("user_id") Long userId,  @Param("current_date")LocalDate date);
 
 
 
