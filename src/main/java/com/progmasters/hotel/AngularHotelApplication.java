@@ -7,6 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class AngularHotelApplication {
     //----- GENERATE DEFAULT ADMIN, USER, HOTELOWNER ------
@@ -23,6 +26,11 @@ public class AngularHotelApplication {
         accountService.checkAdmin();
         accountService.checkUser();
         accountService.checkHotelOwner();
+    }
+
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
 

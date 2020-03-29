@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class BookingService {
     private RoomReservationRepository roomReservationRepository;
     private RoomRepository roomRepository;
     private AccountRepository accountRepository;
+    private static final ZoneId HOTELS_ZONEID = ZoneId.of("Europe/Budapest");
 
     @Autowired
     public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository, AccountRepository accountRepository) {
@@ -105,15 +107,18 @@ public class BookingService {
     }
 
     public List<BookingListItemForHotel> getCurrentBookingListByRoom(Long roomId) {
-        return bookingRepository.findCurrentByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return bookingRepository.findCurrentByRoomId(roomId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForHotel> getFutureBookingListByRoom(Long roomId) {
-        return bookingRepository.findFutureByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return bookingRepository.findFutureByRoomId(roomId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForHotel> getPastBookingListByRoom(Long roomId) {
-        return bookingRepository.findPastByRoomId(roomId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return bookingRepository.findPastByRoomId(roomId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForHotel> getBookingListByHotel(Long hotelId) {
@@ -121,15 +126,18 @@ public class BookingService {
     }
 
     public List<BookingListItemForHotel> getCurrentBookingListByHotel(Long hotelId) {
-        return bookingRepository.findCurrentByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return bookingRepository.findCurrentByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForHotel> getFutureBookingListByHotel(Long hotelId) {
-        return bookingRepository.findFutureByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return bookingRepository.findFutureByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForHotel> getPastBookingListByHotel(Long hotelId) {
-        return bookingRepository.findPastByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return bookingRepository.findPastByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForUser> getBookingListByUser(Long userId) {
@@ -137,15 +145,18 @@ public class BookingService {
     }
 
     public List<BookingListItemForUser> getCurrentBookingListByUser(Long userId) {
-        return bookingRepository.findCurrentByUserId(userId, LocalDate.now()).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+        return bookingRepository.findCurrentByUserId(userId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForUser> getFutureBookingListByUser(Long userId) {
-        return bookingRepository.findFutureByUserId(userId, LocalDate.now()).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+        return bookingRepository.findFutureByUserId(userId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     public List<BookingListItemForUser> getPastBookingListByUser(Long userId) {
-        return bookingRepository.findPastByUserId(userId, LocalDate.now()).stream().map(BookingListItemForUser::new).collect(Collectors.toList());
+        return bookingRepository.findPastByUserId(userId, LocalDate.now(HOTELS_ZONEID))
+                .stream().map(BookingListItemForUser::new).collect(Collectors.toList());
     }
 
     private List<RoomReservation> getRoomReservationsAndValidate(BookingCreateItem bookingCreateItem, Booking booking) {
