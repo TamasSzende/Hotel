@@ -4,7 +4,8 @@
   <div *ngFor="let hotel of hotelList" class="card mb-3" >
     <div class="row no-gutters">
       <div class="col-md-4">
-        <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%">
+        <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%" (click)="hotelDetail(hotel.id)"
+                  style="cursor: pointer">
           <cl-transformation
             height="230"
             width="360"
@@ -27,7 +28,7 @@
           <div class="btn-toolbar"  class="text-right" role="toolbar">
 
             <div class="btn-group mr-4">
-              <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">Tovább a hotelhez</button>
+              <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">Megnézem</button>
             </div>
             <div *ngIf="account?.role === 'ROLE_ADMIN'" class="btn-group">
               <button (click)="updateHotel(hotel.id)" class="btn btn-secondary btn-sm">Hotel szerkesztése</button>

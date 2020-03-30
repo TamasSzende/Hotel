@@ -37,19 +37,12 @@ public class AccountController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails user = (UserDetails) authentication.getPrincipal();
 
-        if (!accountService.accountIsActive(user.getUsername())) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            AuthenticatedLoginDetails authenticatedLoginDetails = new AuthenticatedLoginDetails(user);
-
-            String username = authenticatedLoginDetails.getName();
-            Long userId = this.accountService.findByUsername(username).getId();
-            Long hotelId = this.accountService.findByUsername(username).getHotelId();
-
-            authenticatedLoginDetails.setId(userId);
-            authenticatedLoginDetails.setHotelId(hotelId);
+        if (accountService.accountIsActive(user.getUsername())) {
+            AuthenticatedLoginDetails authenticatedLoginDetails = accountService.getAuthenticatedLoginDetails(user);
             session.setAttribute("authenticatedLoginDetails", authenticatedLoginDetails);
             return new ResponseEntity<>(authenticatedLoginDetails, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

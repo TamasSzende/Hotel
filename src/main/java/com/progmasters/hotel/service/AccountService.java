@@ -7,12 +7,14 @@ import com.progmasters.hotel.dto.AccountDetails;
 import com.progmasters.hotel.dto.RegistrationDetails;
 import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.ConfirmationTokenRepository;
+import com.progmasters.hotel.security.AuthenticatedLoginDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -218,5 +220,17 @@ public class AccountService {
         account.setFirstname(accountDetails.getFirstname());
         account.setLastname(accountDetails.getLastname());
         account.setAddress(accountDetails.getAddress());
+    }
+
+    public AuthenticatedLoginDetails getAuthenticatedLoginDetails(UserDetails user) {
+        AuthenticatedLoginDetails authenticatedLoginDetails = new AuthenticatedLoginDetails(user);
+
+        String username = authenticatedLoginDetails.getName();
+        Long userId = findByUsername(username).getId();
+        Long hotelId = findByUsername(username).getHotelId();
+
+        authenticatedLoginDetails.setId(userId);
+        authenticatedLoginDetails.setHotelId(hotelId);
+        return authenticatedLoginDetails;
     }
 }
