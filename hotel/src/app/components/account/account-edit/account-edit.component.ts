@@ -27,17 +27,34 @@ export class AccountEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.loginService.getUsername();
-    this.loginService.getAccountDetails(this.user).subscribe(
-      (userAccount: AccountDetailsForMyProfileModel) => {
-        this.account = userAccount;
+    let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+    if (account) {
+      this.loginService.getAccountDetails(account.name).subscribe((response) => {
+        this.account = response
         this.registerForm.patchValue({
-          firstname: userAccount.firstname,
-          lastname: userAccount.lastname,
-          address: userAccount.address
+          firstname: response.firstname,
+          lastname: response.lastname,
+          address: response.address
         })
-      }
-    )
+      });
+    } else {
+      this.loginService.checkSession().subscribe(
+        (response) => {
+          this.loginService.authenticatedLoginDetailsModel.next(response);
+          if (response) {
+            this.loginService.getAccountDetails(response.name).subscribe((response) => {
+              this.account = response
+              this.registerForm.patchValue({
+                firstname: response.firstname,
+                lastname: response.lastname,
+                address: response.address
+              })
+            });
+          } else {
+            this.router.navigate(['/login'])
+          }
+        });
+    }
   }
 
   doSaveModifiedAccount() {

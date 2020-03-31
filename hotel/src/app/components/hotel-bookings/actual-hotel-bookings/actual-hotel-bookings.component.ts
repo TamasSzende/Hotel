@@ -4,6 +4,7 @@ import {BookingService} from "../../../services/booking.service";
 import {PopupService} from "../../../services/popup.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-detail-dialog.component";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'actual-hotel-bookings',
@@ -12,7 +13,7 @@ import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-
 })
 export class ActualHotelBookingsComponent implements OnInit {
 
-  @Input() hotelId: number;
+  @Input() hotelId: BehaviorSubject<number>;
   currentBookingList: BookingListItemForHotelModel[];
 
   constructor(private bookingService: BookingService,
@@ -21,9 +22,11 @@ export class ActualHotelBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.hotelId) {
-      this.getCurrentBookingList(this.hotelId);
-    }
+    this.hotelId.subscribe((id) => {
+      if (id != 0) {
+        this.getCurrentBookingList(id);
+      }
+    });
   }
 
   getCurrentBookingList(hotelId: number) {

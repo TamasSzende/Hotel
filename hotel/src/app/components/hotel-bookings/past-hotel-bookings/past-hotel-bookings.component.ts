@@ -4,6 +4,7 @@ import {BookingService} from "../../../services/booking.service";
 import {PopupService} from "../../../services/popup.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-detail-dialog.component";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'past-hotel-bookings',
@@ -12,7 +13,7 @@ import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-
 })
 export class PastHotelBookingsComponent implements OnInit {
 
-  @Input() hotelId: number;
+  @Input() hotelId: BehaviorSubject<number>;
   pastBookingList: BookingListItemForHotelModel[];
 
   constructor(private bookingService: BookingService,
@@ -21,9 +22,11 @@ export class PastHotelBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.hotelId) {
-      this.getPastBookingList(this.hotelId);
-    }
+    this.hotelId.subscribe((id) => {
+      if (id != 0) {
+        this.getPastBookingList(id);
+      }
+    });
   }
 
   getPastBookingList(hotelId: number) {

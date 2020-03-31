@@ -4,6 +4,7 @@ import {PopupService} from "../../../services/popup.service";
 import {MatDialog} from "@angular/material/dialog";
 import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-detail-dialog.component";
 import {BookingListItemForUserModel} from "../../../models/bookingListItemForUser.model";
+import {BehaviorSubject} from "rxjs";
 
 
 @Component({
@@ -13,7 +14,7 @@ import {BookingListItemForUserModel} from "../../../models/bookingListItemForUse
 })
 export class ActualUserBookingsComponent implements OnInit {
 
-  @Input() userId: number;
+  @Input() userId: BehaviorSubject<number>;
   currentBookingList: BookingListItemForUserModel[];
   futureBookingList: BookingListItemForUserModel[];
 
@@ -23,10 +24,12 @@ export class ActualUserBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.userId) {
-      this.getCurrentBookingList(this.userId);
-      this.getFutureBookingList(this.userId);
-    }
+    this.userId.subscribe((id) => {
+      if (id != 0) {
+        this.getCurrentBookingList(id);
+        this.getFutureBookingList(id);
+      }
+    });
   }
 
   getCurrentBookingList(userId: number) {
