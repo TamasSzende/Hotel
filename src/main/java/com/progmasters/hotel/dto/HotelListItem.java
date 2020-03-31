@@ -14,6 +14,7 @@ public class HotelListItem {
     private String hotelType;
     private String hotelImageUrl;
     private String shortDescription;
+    private Double bestPricePerNightPerPerson;
 
     HotelListItem() {
     }
@@ -37,6 +38,11 @@ public class HotelListItem {
         } else {
             this.shortDescription = hotel.getDescription();
         }
+    }
+
+    public HotelListItem(Hotel hotel, double bestPricePerNightPerPerson) {
+        this(hotel);
+        this.setBestPricePerNightPerPerson(bestPricePerNightPerPerson);
     }
 
     public Long getId() {
@@ -71,6 +77,9 @@ public class HotelListItem {
         return shortDescription;
     }
 
+    public Double getBestPricePerNightPerPerson() {
+        return bestPricePerNightPerPerson;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -104,5 +113,8 @@ public class HotelListItem {
         this.shortDescription = shortDescription;
     }
 
-
+    public void setBestPricePerNightPerPerson(Double bestPricePerNightPerPerson) {
+        this.bestPricePerNightPerPerson = bestPricePerNightPerPerson;
+    }
 }
+

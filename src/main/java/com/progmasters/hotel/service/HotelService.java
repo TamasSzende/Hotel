@@ -46,6 +46,12 @@ public class HotelService {
 		return findAllHotel().stream().map(HotelListItem::new).collect(Collectors.toList());
 	}
 
+	public List<HotelListItem> getHotelListOrderByBestPrice() {
+		return hotelRepository.findAllOrderByBestPrice().stream().map(result -> {
+			return new HotelListItem(result.getFilteredHotel(), result.getBestPrice());
+		}).collect(Collectors.toList());
+	}
+
 	public List<HotelFeatureTypeOption> getHotelFeatureTypeOptionList() {
 		return Arrays.stream(HotelFeatureType.values()).map(HotelFeatureTypeOption::new).collect(Collectors.toList());
 	}
@@ -54,7 +60,7 @@ public class HotelService {
 	}
 
 	public List<HotelShortItem> getHotelListFilteredByDateAndPerson(LocalDate startDate, LocalDate endDate, long numberOfGuests) {
-		List<HotelRepository.HotelFilterResult> hotelFilterResults = this.hotelRepository.findAllByDateAndPersonFilter(startDate, endDate, numberOfGuests);
+		List<HotelRepository.HotelFilterResult> hotelFilterResults = this.hotelRepository.findAllByDateAndPersonFilterOrderByBestPrice(startDate, endDate, numberOfGuests);
 		List<HotelShortItem> result = new ArrayList<>();
 		for (HotelRepository.HotelFilterResult hotelFilterResult : hotelFilterResults) {
 			HotelShortItem hotelShortItem = new HotelShortItem(hotelFilterResult.getFilteredHotel());
@@ -66,7 +72,7 @@ public class HotelService {
 
 	public List<HotelShortItem> getHotelListFilteredByDatePersonAbdFeatures(LocalDate startDate, LocalDate endDate, long numberOfGuests, List<HotelFeatureType> hotelFeatures) {
 		List<HotelRepository.HotelFilterResult> hotelFilterResults =
-				this.hotelRepository.findAllByDatePersonAndFeaturesFilter(startDate, endDate, numberOfGuests, hotelFeatures, (long) hotelFeatures.size());
+				this.hotelRepository.findAllByDatePersonAndFeaturesFilterOrderByBestPrice(startDate, endDate, numberOfGuests, hotelFeatures, (long) hotelFeatures.size());
 		List<HotelShortItem> result = new ArrayList<>();
 		for (HotelRepository.HotelFilterResult hotelFilterResult : hotelFilterResults) {
 			HotelShortItem hotelShortItem = new HotelShortItem(hotelFilterResult.getFilteredHotel());

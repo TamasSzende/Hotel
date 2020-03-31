@@ -73,6 +73,11 @@ public class HotelController {
 		return new ResponseEntity<>(hotelShortItems, HttpStatus.OK);
 	}
 
+//	@GetMapping
+//	public ResponseEntity<List<HotelListItem>> getHotelList() {
+//		return new ResponseEntity<>(hotelService.getHotelListOrderByBestPrice(), HttpStatus.OK);
+//	}
+
 	@GetMapping
 	public ResponseEntity<List<HotelListItem>> getHotelList(@RequestParam(required = false) Integer offset) {
 		if (offset == null) {
