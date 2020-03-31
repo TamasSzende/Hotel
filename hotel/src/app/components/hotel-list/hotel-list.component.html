@@ -1,7 +1,87 @@
 <div class="container">
 
+  <form [formGroup]="filterForm">
 
-  <div *ngFor="let hotel of hotelList" class="card mb-3" >
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <label for="numberOfGuests" lass="form-control-label">
+              Vendégek száma:&nbsp;&nbsp;
+            </label>
+            <input
+              formControlName="numberOfGuests"
+              id="numberOfGuests"
+              name="numberOfGuests"
+              type="number"
+            />
+            <small
+              *ngIf="filterForm.get('numberOfGuests').invalid && filterForm.get('numberOfGuests').touched && !filterForm.get('numberOfGuests').errors?.serverError"
+              class="text-danger">
+              Kérlek add meg a vendégek számát!
+            </small>
+
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <label>
+                Utazás időpontja:&nbsp;&nbsp;
+              </label>
+
+              <ng2-flatpickr
+                [config]="flatpickrOptions"
+                formControlName="bookingDateRange"
+                id="bookingDateRange"
+                name="bookingDateRange"
+                placeholder="Válasz időpontot!"
+              >
+                <small
+                  *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
+                  class="text-danger">
+                  <br>
+                  Kérlek válasz időpontot!
+                </small>
+              </ng2-flatpickr>
+
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <button (click)="filterHotelList()" class="btn btn-primary mr-4">
+                Keresés
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+
+        <div>
+          <button (click)="resetFilters()" class="badge badge-secondary mr-2">x</button>
+          <label>
+            Hotel szolgáltatások szűrése
+          </label>
+        </div>
+        <div class="form-group">
+          <div *ngFor="let hotelFeatures of hotelFeatureTypeOption; let i = index" class="form-check form-check-inline"
+               formArrayName="hotelFeatures">
+            <input [formControlName]="i" class="form-check-input" type="checkbox">
+            <label class="form-check-label">
+              {{ hotelFeatures?.displayName }}
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+
+  <div *ngFor="let hotel of hotelList" class="card mb-3">
     <div class="row no-gutters">
       <div class="col-md-4">
         <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%" (click)="hotelDetail(hotel.id)"
@@ -25,7 +105,7 @@
             {{ hotel?.shortDescription}}
           </p>
 
-          <div class="btn-toolbar"  class="text-right" role="toolbar">
+          <div class="btn-toolbar" class="text-right" role="toolbar">
 
             <div class="btn-group mr-4">
               <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">Megnézem</button>

@@ -63,7 +63,6 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
-
     if (this.account != null && this.account.role) {
       this.showHotel();
     } else {
