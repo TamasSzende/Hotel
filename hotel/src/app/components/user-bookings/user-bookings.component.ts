@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {LoginService} from "../../services/login.service";
 import {Router} from "@angular/router";
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'user-bookings',
@@ -9,7 +10,7 @@ import {Router} from "@angular/router";
 })
 export class UserBookingsComponent implements OnInit {
 
-  userId: number;
+  userId = new BehaviorSubject<number>(0);
 
   constructor(private loginService: LoginService, private router: Router) {
   }
@@ -18,9 +19,16 @@ export class UserBookingsComponent implements OnInit {
     this.loginService.authenticatedLoginDetailsModel.subscribe(
       response => {
         if (response) {
-          this.userId = response.id;
+          this.userId.next(response.id);
         } else {
-          this.router.navigate(['/login'])
+          this.loginService.checkSession().subscribe((account) => {
+            this.loginService.authenticatedLoginDetailsModel.next(account);
+            if (account) {
+              this.userId.next(account.id);
+            } else {
+              this.router.navigate(['/login'])
+            }
+          });
         }
       });
   }

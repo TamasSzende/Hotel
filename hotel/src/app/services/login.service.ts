@@ -53,6 +53,18 @@ export class LoginService {
     }
   }
 
+  /*  getAuthenticatedLoginDetailsModel ():AuthenticatedLoginDetailsModel | null  {
+      if (this.authenticatedLoginDetailsModel.getValue() == null){
+        this.checkSession().subscribe(
+          (result) => {
+            this.authenticatedLoginDetailsModel.next(result);
+            return result;
+          })
+      } else {
+        return this.authenticatedLoginDetailsModel.getValue();
+      }
+    };*/
+
   authenticate(credentials): Observable<AuthenticatedLoginDetailsModel> {
     const headers = new HttpHeaders(credentials ? {
       authorization: 'Basic ' + btoa(credentials.email + ':' + credentials.password),

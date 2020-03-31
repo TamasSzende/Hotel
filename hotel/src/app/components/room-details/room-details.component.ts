@@ -23,6 +23,7 @@ export class RoomDetailsComponent implements OnInit {
     } else {
       this.loginService.checkSession().subscribe(
         (response) => {
+          this.loginService.authenticatedLoginDetailsModel.next(response);
           if (response) {
             this.hotelId = response.hotelId;
           } else {
