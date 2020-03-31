@@ -15,7 +15,7 @@ import {RegistrationComponent} from './components/account/registration/registrat
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PopupComponent} from './popup/popup.component';
 import {MatIconModule} from "@angular/material/icon";
-import {MatDialogModule} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MaterialModule} from "./material.module";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {Cloudinary} from 'cloudinary-core/cloudinary-core-shrinkwrap';
@@ -89,12 +89,14 @@ export const cloudinary = {
     ],
   providers: [[
     {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
-  ],],
+  ], [{provide: MatDialogRef}], [{provide: MAT_DIALOG_DATA, multi: true}]],
   bootstrap: [AppComponent],
   entryComponents: [
     PopupComponent,
     BookingFormDialogComponent,
     BookingDetailDialogComponent,
+    LoginComponent,
+    RegistrationComponent,
   ]
 })
 export class AppModule {

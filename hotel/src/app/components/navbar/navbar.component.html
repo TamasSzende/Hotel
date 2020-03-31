@@ -16,9 +16,6 @@
         <a class="nav-link" id="user-bookings" routerLink="/bookings" routerLinkActive="active">Foglalásaim</a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" id="user-account" routerLink="/account" routerLinkActive="active">Profilom</a>
-      </li>
     </ul>
 
     <ul *ngIf="userRole === 'ROLE_HOTELOWNER'" class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -27,24 +24,37 @@
            routerLinkActive="active">Foglalások</a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" id="hotel-account" routerLink="/account" routerLinkActive="active">Profilom</a>
+    </ul>
+  </div>
+
+  <div justify-content-end nav>
+    <ul class="navbar-nav">
+
+      <li class="nav-item dropdown">
+        <a *ngIf="!loggedIn" aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle"
+           data-toggle="dropdown" id="dropbar" style="cursor: pointer">
+          Regisztráció
+        </a>
+        <div aria-labelledby="dropbar" class="dropdown-menu">
+          <a (click)="doRegistration('asHotel')" *ngIf="!loggedIn" class="dropdown-item" routerLinkActive="active"
+             style="cursor: pointer">Hoteltulajdonos</a>
+          <a (click)="doRegistration('asUser')" *ngIf="!loggedIn" class="dropdown-item" routerLinkActive="active"
+             style="cursor: pointer">Vendég</a>
+        </div>
       </li>
 
-    </ul>
-    <ul class="navbar-nav">
+
       <li *ngIf="!loggedIn" class="nav-item">
-        <a class="nav-link" routerLink="login" routerLinkActive="active">Belépés</a>
+        <a (click)="doLogin()" class="nav-link" routerLink="" routerLinkActive="active" style="cursor: pointer">Bejelentkezés</a>
       </li>
       <li *ngIf="loggedIn" class="nav-item">
         <a class="nav-link" id="email" routerLink="/account" routerLinkActive="active"
-           style="align-self: end">{{email}}</a>
+           style="align-self: end">Profilom ({{email}})</a>
       </li>
       <li *ngIf="loggedIn" class="nav-item">
         <a (click)="logout()" class="nav-link" id="logout-link" style="cursor: pointer">Kilépés</a>
       </li>
     </ul>
-
   </div>
 
 </nav>

@@ -59,10 +59,14 @@
       </small>
       <br>
     </div>
-    <button (click)="doSaveModifiedAccount()" [disabled]="registerForm.invalid" class="btn btn-default login-popup-btna"
-            name="submit" type="submit" value="1">
-      Mentés
-    </button>
+    <div class="text-center">
+      <div class="btn-group mr-4">
+        <button (click)="doSaveModifiedAccount()" [disabled]="registerForm.invalid" class="btn btn-success"
+                name="submit" type="submit" value="1">
+          Mentés
+        </button>
+      </div>
+    </div>
   </form>
 </div>
 

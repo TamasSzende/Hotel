@@ -1,7 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {LoginService} from "../../services/login.service";
+import {MatDialog} from "@angular/material/dialog";
+import {LoginComponent} from "../account/login/login.component";
+import {RegistrationComponent} from "../account/registration/registration.component";
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +18,7 @@ export class NavbarComponent implements OnInit {
   email: string;
   baseRouterLink: string = 'login';
 
-  constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {
+  constructor(private http: HttpClient, private router: Router, private loginService: LoginService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -34,6 +37,7 @@ export class NavbarComponent implements OnInit {
           }
         } else {
           this.loggedIn = false;
+          this.baseRouterLink = 'hotel';
         }
       });
   }
@@ -42,9 +46,28 @@ export class NavbarComponent implements OnInit {
     this.loggedIn = false;
     this.userRole = null;
     this.baseRouterLink = 'login';
-    this.router.navigateByUrl('login').then(() => this.loginService.logout().subscribe()
+    this.router.navigateByUrl('').then(() => this.loginService.logout().subscribe()
     );
   }
 
+  doRegistration(registrationType: string) {
+    this.dialog.open(RegistrationComponent, {
+      height: '600px',
+      width: '400px',
+      data: {
+        registrationType: registrationType
+      }
+    });
+  }
+
+  doLogin() {
+    this.dialog.open(LoginComponent, {
+      height: '600px',
+      width: '400px',
+      data: {
+        openedBy: 'navbar'
+      }
+    });
+  }
 
 }
