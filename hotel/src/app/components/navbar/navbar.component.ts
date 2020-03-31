@@ -18,6 +18,8 @@ export class NavbarComponent implements OnInit {
   email: string;
   baseRouterLink: string = 'login';
 
+  isWindowOpen: boolean;
+
   constructor(private http: HttpClient, private router: Router, private loginService: LoginService, private dialog: MatDialog) {
   }
 
@@ -51,23 +53,37 @@ export class NavbarComponent implements OnInit {
   }
 
   doRegistration(registrationType: string) {
-    this.dialog.open(RegistrationComponent, {
+    if (this.isWindowOpen) {
+      return
+    }
+    this.isWindowOpen = true;
+    const dialogRef = this.dialog.open(RegistrationComponent, {
       height: '600px',
       width: '400px',
       data: {
         registrationType: registrationType
       }
     });
+    dialogRef.afterClosed().subscribe(() => {
+      this.isWindowOpen = false
+    })
   }
 
   doLogin() {
-    this.dialog.open(LoginComponent, {
+    if (this.isWindowOpen) {
+      return
+    }
+    this.isWindowOpen = true;
+    const dialogRef = this.dialog.open(LoginComponent, {
       height: '600px',
       width: '400px',
       data: {
         openedBy: 'navbar'
       }
     });
+    dialogRef.afterClosed().subscribe(() => {
+      this.isWindowOpen = false
+    })
   }
 
 }

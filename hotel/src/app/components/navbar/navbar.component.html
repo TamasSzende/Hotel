@@ -1,6 +1,6 @@
 <!--<nav class="navbar fixed-top navbar-expand-lg navbar-dark nav-bk2">-->
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark my-navbar">
-  <a [routerLink]="this.baseRouterLink" class="navbar-brand" id="nav-index">
+  <a *ngIf="!isWindowOpen" [routerLink]="this.baseRouterLink" class="navbar-brand" id="nav-index">
     HOOTEL
   </a>
   <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#navbar"
