@@ -14,16 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.File;
 import java.io.IOException;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,6 +51,29 @@ public class HotelService {
 	}
 	public List<HotelTypeOption> getHotelTypeOptionList() {
 		return Arrays.stream(HotelType.values()).map(HotelTypeOption::new).collect(Collectors.toList());
+	}
+
+	public List<HotelShortItem> getHotelListFilteredByDateAndPerson(LocalDate startDate, LocalDate endDate, long numberOfGuests) {
+		List<HotelRepository.HotelFilterResult> hotelFilterResults = this.hotelRepository.findAllByDateAndPersonFilter(startDate, endDate, numberOfGuests);
+		List<HotelShortItem> result = new ArrayList<>();
+		for (HotelRepository.HotelFilterResult hotelFilterResult : hotelFilterResults) {
+			HotelShortItem hotelShortItem = new HotelShortItem(hotelFilterResult.getFilteredHotel());
+			result.add(hotelShortItem);
+			System.out.println("hotel neve: " + hotelShortItem.getName() + ", best price: " + hotelFilterResult.getBestPrice());
+		}
+		return result;
+	}
+
+	public List<HotelShortItem> getHotelListFilteredByDatePersonAbdFeatures(LocalDate startDate, LocalDate endDate, long numberOfGuests, List<HotelFeatureType> hotelFeatures) {
+		List<HotelRepository.HotelFilterResult> hotelFilterResults =
+				this.hotelRepository.findAllByDatePersonAndFeaturesFilter(startDate, endDate, numberOfGuests, hotelFeatures, (long) hotelFeatures.size());
+		List<HotelShortItem> result = new ArrayList<>();
+		for (HotelRepository.HotelFilterResult hotelFilterResult : hotelFilterResults) {
+			HotelShortItem hotelShortItem = new HotelShortItem(hotelFilterResult.getFilteredHotel());
+			result.add(hotelShortItem);
+			System.out.println("hotel neve: " + hotelShortItem.getName() + ", best price: " + hotelFilterResult.getBestPrice());
+		}
+		return result;
 	}
 
 	public Long saveHotel(HotelCreateItem hotelCreateItem) {

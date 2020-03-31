@@ -6,7 +6,6 @@ import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.RoomService;
 import com.progmasters.hotel.validator.RoomCreateItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
@@ -50,11 +49,11 @@ public class RoomController {
             @RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
             @RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate,
             @RequestParam List<String> roomFeatures) {
-        if (!roomFeatures.isEmpty()) {
+        if (roomFeatures.isEmpty()) {
+            return roomService.getFreeRoomList(hotelId, startDate, endDate);
+        } else {
             List<RoomFeatureType> roomFeatureEnumList = roomFeatures.stream().map(RoomFeatureType::valueOf).collect(Collectors.toList());
             return roomService.getFreeRoomListFilterByRoomFeature(hotelId, startDate, endDate, roomFeatureEnumList);
-        } else {
-            return roomService.getFreeRoomList(hotelId, startDate, endDate);
         }
     }
 

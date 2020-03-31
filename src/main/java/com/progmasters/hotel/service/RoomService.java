@@ -74,6 +74,13 @@ public class RoomService {
                 .collect(Collectors.toList());
     }
 
+    public List<RoomShortListItem> findAllFreeRoomByDateRange(LocalDate startDate, LocalDate endDate) {
+        return this.roomRepository.findAllFreeRoomByDateRange(startDate, endDate)
+                .stream()
+                .map(RoomShortListItem::new)
+                .collect(Collectors.toList());
+    }
+
     public RoomDetails getRoomDetails(Long roomId) {
         RoomDetails roomDetails;
         Optional<Room> optionalRoom = roomRepository.findById(roomId);

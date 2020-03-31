@@ -1,5 +1,6 @@
 package com.progmasters.hotel.service;
 
+import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.domain.RoomReservation;
 import com.progmasters.hotel.repository.RoomReservationRepository;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,12 @@ public class RoomReservationService {
                 this.roomReservationRepository.findAllByRoomIdAndEndDateAfterAndStartDateBefore(roomId, startDate, enDate);
         return roomReservations.isEmpty();
     }
+
+    public List<Room> findAllOccupiedRoomIdByDateRange(LocalDate startDate, LocalDate endDate) {
+        return this.roomReservationRepository.findAllOccupiedRoomIdByDateRange(startDate, endDate);
+    }
+
+
 
 
 }

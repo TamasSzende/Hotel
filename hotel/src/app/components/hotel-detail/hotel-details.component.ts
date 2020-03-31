@@ -113,6 +113,7 @@ export class HotelDetailsComponent implements OnInit {
       (response: HotelDetailsModel) => {
         this.hotel = response;
         this.createRoomBookingFormArray();
+
       }
     );
   };
