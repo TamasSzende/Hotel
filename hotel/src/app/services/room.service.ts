@@ -6,7 +6,7 @@ import {RoomListItemModel} from "../models/roomListItem.model";
 import {RoomFormDataModel} from "../models/roomFormData.model";
 import {RoomDetailsModel} from "../models/roomDetails.model";
 import {environment} from "../../environments/environment";
-import {dateToJsonDateString} from '../utils/dateUtils';
+import {dateToJsonDateString} from "../utils/dateUtils";
 
 const BASE_URL = environment.BASE_URL + '/api/rooms';
 
@@ -15,7 +15,7 @@ const BASE_URL = environment.BASE_URL + '/api/rooms';
 })
 export class RoomService {
 
-  constructor(private http: HttpClient, private dateService) {
+  constructor(private http: HttpClient) {
   }
 
   createRoom(roomCreateItem: RoomCreateItemModel): Observable<any> {

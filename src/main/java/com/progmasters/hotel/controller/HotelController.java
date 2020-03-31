@@ -83,7 +83,7 @@ public class HotelController {
 		if (offset == null) {
 			offset = 1;
 		}
-		return new ResponseEntity<>(hotelService.getPageOfHotelListItems(offset, 10), HttpStatus.OK);
+		return new ResponseEntity<>(hotelService.getPageOfHotelListOrderByBestPrice(offset, 10), HttpStatus.OK);
 	}
 
 	@GetMapping("/numOfHotels")

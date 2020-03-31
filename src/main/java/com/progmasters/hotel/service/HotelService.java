@@ -196,14 +196,14 @@ public class HotelService {
 		return hotelImageUrls;
 	}
 
-	public List<HotelListItem> getPageOfHotelListItems(Integer pageNumber, Integer numOfElementsPerPage) {
-		List<HotelListItem> hotelListItems = getHotelListItemList();
+	public List<HotelListItem> getPageOfHotelListOrderByBestPrice(Integer pageNumber, Integer numOfElementsPerPage) {
+		List<HotelListItem> hotelListItems = getHotelListOrderByBestPrice();
 		int startIndex = (pageNumber - 1) * numOfElementsPerPage;
 		int endIndex = Math.min(startIndex + numOfElementsPerPage, hotelListItems.size());
 		return hotelListItems.subList(startIndex, endIndex);
 	}
 
 	public Long getNumOfHotels() {
-		return (long) Math.ceil((double) getHotelListItemList().size() / 10);
+		return (long) Math.ceil((double) getHotelListOrderByBestPrice().size() / 10);
 	}
 }

@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
-import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
 import {RoomListItemModel} from "../../models/roomListItem.model";
 import {PopupService} from "../../services/popup.service";
@@ -16,6 +15,7 @@ import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
+import {RoomService} from "../../services/room.service";
 
 
 @Component({
@@ -35,7 +35,7 @@ export class HotelDetailsComponent implements OnInit {
   filterForm: FormGroup;
   roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
-   account: AuthenticatedLoginDetailsModel;
+  account: AuthenticatedLoginDetailsModel;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
@@ -63,6 +63,7 @@ export class HotelDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
+
     if (this.account != null && this.account.role) {
       this.showHotel();
     } else {
@@ -83,6 +84,13 @@ export class HotelDetailsComponent implements OnInit {
 
   showHotel() {
 
+    this.roomService.getRoomFormData().subscribe(
+      (roomFormData: RoomFormDataModel) => {
+        this.roomFeatureTypeOption = roomFormData.roomFeatures;
+        this.createRoomFeaturesCheckboxControl();
+      }
+    );
+
     if (this.account.role === "ROLE_HOTELOWNER") {
       this.loginService.authenticatedLoginDetailsModel.subscribe(
         response => {
@@ -94,18 +102,14 @@ export class HotelDetailsComponent implements OnInit {
       this.route.paramMap.subscribe(
         paramMap => {
           const paramMapId = paramMap.get('id');
+
           if (paramMapId) {
             this.hotelIdFromRoute = paramMapId;
+
             this.getHotelDetail(this.hotelIdFromRoute);
           }
         });
     }
-
-    this.roomService.getRoomFormData().subscribe(
-      (roomFormData: RoomFormDataModel) => {
-        this.roomFeatureTypeOption = roomFormData.roomFeatures;
-        this.createRoomFeaturesCheckboxControl();
-      });
   }
 
   getHotelDetail = (hotelId: string) => {
@@ -281,6 +285,7 @@ export class HotelDetailsComponent implements OnInit {
       .map((roomFeatures, index) => roomFeatures ? this.roomFeatureTypeOption[index].name : null)
       .filter(roomFeatures => roomFeatures !== null);
   }
+
   getPublicId(imgURL: string) {
     return getPublicId(imgURL);
   }

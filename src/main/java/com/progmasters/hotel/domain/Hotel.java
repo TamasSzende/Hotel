@@ -54,6 +54,9 @@ public class Hotel {
     @Column(name = "hotel_features")
     private List<HotelFeatureType> hotelFeatures = new ArrayList<>();
 
+    @Column(name = "avg_rate")
+    private Double avgRate;
+
     public Hotel() {
     }
 
