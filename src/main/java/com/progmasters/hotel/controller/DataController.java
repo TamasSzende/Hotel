@@ -47,7 +47,7 @@ public class DataController {
 
     @GetMapping
     public ResponseEntity<Void> fillDatabase() {
-        File file = loadFileFromResources("hotels2.json");
+        File file = loadFileFromResources("hotelsAvg.json");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             List<Hotel> hotelList = objectMapper.readValue(file, new TypeReference<>() {
