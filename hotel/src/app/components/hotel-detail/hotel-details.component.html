@@ -176,17 +176,17 @@
 
         <form [formGroup]="filterForm">
           <div>
-            <strong>
-              <button (click)="resetFilters()" class="badge badge-secondary mr-2" id="redstar">X</button>
-            </strong>
-            <label id="textCenter">
+            <span (click)="resetFilters()" class="badge badge-secondary mr-2" id="redstar"
+                  style="cursor: pointer">X</span>
+            <label>
               Szoba szolgáltatás szűrések törlése
             </label>
           </div>
           <div class="form-group">
             <div *ngFor="let roomFeatures of roomFeatureTypeOption; let i = index" class="form-check form-check-inline"
                  formArrayName="roomFeatures">
-              <input (change)="getFilteredRoomList()" [formControlName]="i" class="form-check-input" type="checkbox">
+              <input (change)="getFilteredRoomList()" [formControlName]="i" class="form-check-input"
+                     style="cursor: pointer" type="checkbox">
               <label class="form-check-label">
                 {{ roomFeatures?.displayName }}
               </label>
@@ -253,7 +253,7 @@
                 <label *ngIf="account?.role === 'ROLE_USER' || !account">
                   Lefoglalom&nbsp;
                   <input (change)="getPriceOfBookingAndMaxCapacity()" [formControlName]="i"
-                         style="width: 18px; height: 18px"
+                         style="width: 18px; height: 18px; cursor: pointer"
                          type="checkbox">
                 </label>
               </div>
