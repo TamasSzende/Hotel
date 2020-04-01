@@ -10,6 +10,7 @@ import {AccountDetailsComponent} from "./components/account/account-details/acco
 import {HotelBookingsComponent} from "./components/hotel-bookings/hotel-bookings.component";
 import {UserBookingsComponent} from "./components/user-bookings/user-bookings.component";
 import {AccountEditComponent} from "./components/account/account-edit/account-edit.component";
+import {HomeComponent} from "./components/home/home.component";
 
 
 const routes: Routes = [
@@ -26,7 +27,7 @@ const routes: Routes = [
   {path: 'admin/hotel-update', component: HotelFormComponent},
   {path: 'admin/hotel', component: HotelDetailsComponent},
   {path: 'login/:token', component: ConfirmationComponent},
-  {path: "", component: HotelListComponent},
+  {path: "", component: HomeComponent},
 ];
 
 @NgModule({

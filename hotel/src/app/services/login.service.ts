@@ -74,7 +74,7 @@ export class LoginService {
 
   logout() {
     this.authenticatedLoginDetailsModel.next(null);
-    return this.http.post(this.BASE_URL + '/api/accounts/logout', {})
+    this.http.post(this.BASE_URL + '/api/accounts/logout', {}).subscribe();
   }
 
   activateUser(token: string) {

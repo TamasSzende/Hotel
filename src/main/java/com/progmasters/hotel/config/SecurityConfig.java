@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,13 +49,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/accounts/registrationConfirm").permitAll()
+                .antMatchers("/api/accounts/sessionCheck").permitAll()
                 .antMatchers("/api/accounts/**").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
                 .antMatchers("/api/accounts").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
+                .antMatchers(HttpMethod.GET, "/api/hotel").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/hotel/{id}").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/hotel").hasAnyRole("ADMIN,HOTELOWNER")
                 .antMatchers("/api").authenticated()
+
                 //TODO Ezzel a konfiggal jelenleg, csak az éri el az API bármely funkcióját, aki be van lépve
                 // Ezt biztos, hogy igy akarjátok? Mármint pl egy szoba listát el kéne hogy érjen bárki, nem?
                 // Ezt beszéljétek meg, irjátok át!
-                .antMatchers("/**").permitAll()
                 .and().logout()
                 .deleteCookies("JSESSIONID")
                 .logoutUrl("/api/accounts/logout")

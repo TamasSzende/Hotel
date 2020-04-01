@@ -41,7 +41,7 @@
 
   </div>
 
-  <nav aria-label="...">
+  <nav *ngIf="pageNumbers" aria-label="...">
     <ul class="pagination">
 
       <li class="page-item" [ngClass]="{'disabled': listPageNumber == 1}">

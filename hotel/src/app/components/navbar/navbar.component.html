@@ -45,10 +45,10 @@
 
 
       <li *ngIf="!loggedIn" class="nav-item">
-        <a (click)="doLogin()" class="nav-link" routerLink="" routerLinkActive="active" style="cursor: pointer">Bejelentkezés</a>
+        <a (click)="doLogin()" class="nav-link" style="cursor: pointer">Bejelentkezés</a>
       </li>
       <li *ngIf="loggedIn" class="nav-item">
-        <a class="nav-link" id="email" routerLink="/account" routerLinkActive="active"
+        <a class="nav-link" id="profile" routerLink="/account" routerLinkActive="active"
            style="align-self: end">Profilom ({{email}})</a>
       </li>
       <li *ngIf="loggedIn" class="nav-item">

@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit {
     this.loggedIn = false;
     this.userRole = null;
     this.baseRouterLink = 'login';
-    this.router.navigateByUrl('').then(() => this.loginService.logout().subscribe()
+    this.router.navigateByUrl('').then(() => this.loginService.logout()
     );
   }
 

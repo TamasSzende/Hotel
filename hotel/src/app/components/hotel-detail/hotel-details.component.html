@@ -64,7 +64,7 @@
             </div>
             <div class="btn-group mr-4">
               <button (click)="backToHotelList()"
-                      *ngIf="account?.role === 'ROLE_USER' || account?.role === 'ROLE_ADMIN' "
+                      *ngIf="account?.role === 'ROLE_USER' || account?.role === 'ROLE_ADMIN' || !account "
                       class="btn btn-primary ">
                 Vissza a hotel listához
               </button>
@@ -76,7 +76,7 @@
     </div>
   </div>
 
-  <div *ngIf="account.role === 'ROLE_HOTELOWNER'">
+  <div *ngIf="account?.role === 'ROLE_HOTELOWNER'">
     <button (click)="createRoomInHotel()" class="btn btn-primary btn-lg btn-block"
             type="button">
       Új szoba hozzáadása
@@ -85,24 +85,24 @@
   </div>
 
   <form [formGroup]="bookingForm" class="needs-validation" novalidate>
-    <div *ngIf="account.role === 'ROLE_USER'" class="card bg-light mb-3">
+    <div *ngIf="account?.role === 'ROLE_USER' || !account" class="card bg-light mb-3">
       <div class="card-body">
         <div class="form-row">
           <div class="col-md-4 mb-3">
-          <label for="numberOfGuests" lass="form-control-label">
-            Vendégek száma:&nbsp;&nbsp;
-          </label>
-          <input
-            formControlName="numberOfGuests"
-            id="numberOfGuests"
-            name="numberOfGuests"
-            type="number"
-          />
-          <small
-            *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
-            class="text-danger">
-            Kérlek add meg a vendégek számát!
-          </small>
+            <label for="numberOfGuests" lass="form-control-label">
+              Vendégek száma:&nbsp;&nbsp;
+            </label>
+            <input
+              formControlName="numberOfGuests"
+              id="numberOfGuests"
+              name="numberOfGuests"
+              type="number"
+            />
+            <small
+              *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
+              class="text-danger">
+              Kérlek add meg a vendégek számát!
+            </small>
 
             <small
               *ngIf="bookingForm.get('numberOfGuests').value > this.maxNumberOfGuest"
@@ -177,7 +177,7 @@
       </div>
     </div>
 
-    <div *ngIf="account.role === 'ROLE_USER'">
+    <div *ngIf="account?.role === 'ROLE_USER' || !account">
       <h4 *ngIf="hotel?.rooms.length !==0">
         Szabad szobák:
       </h4>
@@ -230,7 +230,7 @@
                   <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">törlése</button>
                 </div>
 
-                <label *ngIf="account.role === 'ROLE_USER'">
+                <label *ngIf="account?.role === 'ROLE_USER' || !account">
                   Lefoglalom&nbsp;
                   <input (change)="getPriceOfBookingAndMaxCapacity()" [formControlName]="i"
                          style="width: 18px; height: 18px"
