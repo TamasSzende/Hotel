@@ -60,7 +60,7 @@ export class HotelListComponent implements OnInit {
             this.listHotel();
           } else {
             this.loginService.logout();
-            this.router.navigate(['/login']);
+            this.router.navigate(['/hotel']);
           }
         });
     }

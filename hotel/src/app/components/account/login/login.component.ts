@@ -1,22 +1,26 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {LoginService} from "../../../services/login.service";
 import {RegistrationService} from "../../../services/registration.service";
 import {validationHandler} from "../../../utils/validationHandler";
 import {NotificationService} from "../../../services/notification.service";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {RegistrationComponent} from "../registration/registration.component";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
-  constructor(private loginService: LoginService, private router: Router,
-              private regService: RegistrationService, private notificationService: NotificationService) {
+  constructor(public dialogRef: MatDialogRef<LoginComponent>, private loginService: LoginService, private router: Router,
+              private regService: RegistrationService, private notificationService: NotificationService,
+              private dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data) {
     this.loginForm = new FormGroup({
       'email': new FormControl('', Validators.required),
       'password': new FormControl('', Validators.required),
@@ -32,10 +36,11 @@ export class LoginComponent implements OnInit {
       response => {
         this.loginService.authenticatedLoginDetailsModel.next(response);
         this.notificationService.success('Sikeresen beléptél!');
-        this.navigateAfterLogin(response);
+        this.closeDialog();
       },
       error => {
-        this.notificationService.unsuccessful('Rossz a megadott email címed vagy jelszavad!');
+        this.notificationService.unsuccessful('Rossz email cím vagy jelszó!');
+        this.closeDialog();
         this.loginForm.reset();
         error.error = {
           fieldErrors: [
@@ -51,28 +56,19 @@ export class LoginComponent implements OnInit {
     return false;
   }
 
+  closeDialog() {
+    this.dialogRef.close(true);
+  }
+
   doRegistration() {
-    this.router.navigate(['/registrations']);
+    this.dialog.open(RegistrationComponent, {
+      height: '600px',
+      width: '600px',
+      data: {
+        registrationType: 'asUser'
+      }
+    });
   }
 
-  navigateAfterLogin(response) {
-    if (response.role === "ROLE_ADMIN" || response.role === "ROLE_USER") {
-      this.router.navigateByUrl('/hotel');
-    } else if (response.role === "ROLE_HOTELOWNER" && !response.hotelId) {
-      this.router.navigateByUrl('/admin/hotel-create');
-    } else if (response.role === "ROLE_HOTELOWNER" && response.hotelId) {
-      this.router.navigateByUrl('admin/hotel');
-    } else {
-      this.router.navigateByUrl('/login')
-    }
-  }
-
-  fillDatas() {
-    this.loginService.filldatas().subscribe(
-      message => console.log(message),
-      err => console.log(err)
-    );
-
-  }
 
 }

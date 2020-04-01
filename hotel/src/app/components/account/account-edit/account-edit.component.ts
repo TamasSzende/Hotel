@@ -43,7 +43,7 @@ export class AccountEditComponent implements OnInit {
           this.loginService.authenticatedLoginDetailsModel.next(response);
           if (response) {
             this.loginService.getAccountDetails(response.name).subscribe((response) => {
-              this.account = response
+              this.account = response;
               this.registerForm.patchValue({
                 firstname: response.firstname,
                 lastname: response.lastname,
@@ -58,7 +58,7 @@ export class AccountEditComponent implements OnInit {
   }
 
   doSaveModifiedAccount() {
-    this.registrationService.updateUserAccount(this.registerForm.value, this.user).subscribe(
+    this.registrationService.updateUserAccount(this.registerForm.value, this.account.username).subscribe(
       () => {
         this.notificationService.success('A változtatásaid elmentettük!');
         this.router.navigate(['/account']);

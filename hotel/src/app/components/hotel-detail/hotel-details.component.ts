@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
+import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
 import {RoomListItemModel} from "../../models/roomListItem.model";
 import {PopupService} from "../../services/popup.service";
@@ -15,7 +16,8 @@ import {RoomFormDataModel} from "../../models/roomFormData.model";
 import {RoomFeatureTypeOptionModel} from "../../models/roomFeatureTypeOption.model";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
-import {RoomService} from "../../services/room.service";
+import {LoginComponent} from "../account/login/login.component";
+import {NotificationService} from "../../services/notification.service";
 
 
 @Component({
@@ -37,9 +39,11 @@ export class HotelDetailsComponent implements OnInit {
   flatpickrOptions: FlatpickrOptions;
   account: AuthenticatedLoginDetailsModel;
 
+  isLoggedIn: boolean = false;
+
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
-              private route: ActivatedRoute, private router: Router,
+              private route: ActivatedRoute, private router: Router, private notificationService: NotificationService,
               private popupService: PopupService, private dialog: MatDialog) {
     this.flatpickrOptions = {
       mode: "range",
@@ -64,6 +68,7 @@ export class HotelDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
     if (this.account != null && this.account.role) {
+      this.isLoggedIn = true;
       this.showHotel();
     } else {
       this.loginService.checkSession().subscribe(
@@ -71,6 +76,7 @@ export class HotelDetailsComponent implements OnInit {
           this.loginService.authenticatedLoginDetailsModel.next(account);
           this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
           if (this.account != null && this.account.role) {
+            this.isLoggedIn = true;
             this.showHotel();
           } else {
             this.loginService.logout();
@@ -83,13 +89,6 @@ export class HotelDetailsComponent implements OnInit {
 
   showHotel() {
 
-    this.roomService.getRoomFormData().subscribe(
-      (roomFormData: RoomFormDataModel) => {
-        this.roomFeatureTypeOption = roomFormData.roomFeatures;
-        this.createRoomFeaturesCheckboxControl();
-      }
-    );
-
     if (this.account.role === "ROLE_HOTELOWNER") {
       this.loginService.authenticatedLoginDetailsModel.subscribe(
         response => {
@@ -101,14 +100,18 @@ export class HotelDetailsComponent implements OnInit {
       this.route.paramMap.subscribe(
         paramMap => {
           const paramMapId = paramMap.get('id');
-
           if (paramMapId) {
             this.hotelIdFromRoute = paramMapId;
-
             this.getHotelDetail(this.hotelIdFromRoute);
           }
         });
     }
+
+    this.roomService.getRoomFormData().subscribe(
+      (roomFormData: RoomFormDataModel) => {
+        this.roomFeatureTypeOption = roomFormData.roomFeatures;
+        this.createRoomFeaturesCheckboxControl();
+      });
   }
 
   getHotelDetail = (hotelId: string) => {
@@ -116,7 +119,6 @@ export class HotelDetailsComponent implements OnInit {
       (response: HotelDetailsModel) => {
         this.hotel = response;
         this.createRoomBookingFormArray();
-
       }
     );
   };
@@ -204,18 +206,27 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   makeBooking() {
-    let dialogRef = this.dialog.open(BookingFormDialogComponent, {
-      height: '600px',
-      width: '800px',
-      data: this.createBookingFormDialogData(),
-    });
-    dialogRef.afterClosed().subscribe(
-      response => {
-        if (response) {
-          this.router.navigate(['/hotel']);
+    if (this.isLoggedIn == false) {
+      this.notificationService.unsuccessful("Foglaláshoz jelentkezz be kérlek!");
+      this.dialog.open(LoginComponent, {
+        data: {
+          openedBy: "BookingButton"
         }
-      }
-    )
+      });
+    } else {
+      let dialogRef = this.dialog.open(BookingFormDialogComponent, {
+        height: '600px',
+        width: '800px',
+        data: this.createBookingFormDialogData(),
+      });
+      dialogRef.afterClosed().subscribe(
+        response => {
+          if (response) {
+            this.router.navigate(['/hotel']);
+          }
+        }
+      )
+    }
   }
 
   createBookingFormDialogData() {
@@ -284,7 +295,6 @@ export class HotelDetailsComponent implements OnInit {
       .map((roomFeatures, index) => roomFeatures ? this.roomFeatureTypeOption[index].name : null)
       .filter(roomFeatures => roomFeatures !== null);
   }
-
   getPublicId(imgURL: string) {
     return getPublicId(imgURL);
   }

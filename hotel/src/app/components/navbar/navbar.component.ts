@@ -1,7 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {LoginService} from "../../services/login.service";
+import {MatDialog} from "@angular/material/dialog";
+import {LoginComponent} from "../account/login/login.component";
+import {RegistrationComponent} from "../account/registration/registration.component";
 
 @Component({
   selector: 'app-navbar',
@@ -14,8 +17,11 @@ export class NavbarComponent implements OnInit {
   userRole: string;
   email: string;
   baseRouterLink: string = 'login';
+  lastname: string;
 
-  constructor(private http: HttpClient, private router: Router, private loginService: LoginService) {
+  isWindowOpen: boolean;
+
+  constructor(private http: HttpClient, private router: Router, private loginService: LoginService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -25,6 +31,7 @@ export class NavbarComponent implements OnInit {
           this.loggedIn = true;
           this.userRole = response.role;
           this.email = response.name;
+          this.lastname = response.lastname;
           if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_USER') {
             this.baseRouterLink = 'hotel';
           } else if (this.userRole === 'ROLE_HOTELOWNER') {
@@ -34,6 +41,7 @@ export class NavbarComponent implements OnInit {
           }
         } else {
           this.loggedIn = false;
+          this.baseRouterLink = 'hotel';
         }
       });
   }
@@ -42,9 +50,42 @@ export class NavbarComponent implements OnInit {
     this.loggedIn = false;
     this.userRole = null;
     this.baseRouterLink = 'login';
-    this.router.navigateByUrl('login').then(() => this.loginService.logout().subscribe()
+    this.router.navigateByUrl('').then(() => this.loginService.logout().subscribe()
     );
   }
 
+  doRegistration(registrationType: string) {
+    if (this.isWindowOpen) {
+      return
+    }
+    this.isWindowOpen = true;
+    const dialogRef = this.dialog.open(RegistrationComponent, {
+      height: '600px',
+      width: '400px',
+      data: {
+        registrationType: registrationType
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.isWindowOpen = false
+    })
+  }
+
+  doLogin() {
+    if (this.isWindowOpen) {
+      return
+    }
+    this.isWindowOpen = true;
+    const dialogRef = this.dialog.open(LoginComponent, {
+      height: '600px',
+      width: '400px',
+      data: {
+        openedBy: 'navbar'
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.isWindowOpen = false
+    })
+  }
 
 }
