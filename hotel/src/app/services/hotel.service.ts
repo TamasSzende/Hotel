@@ -27,6 +27,16 @@ export class HotelService {
     return this.http.get<Array<HotelListItemModel>>(BASE_URL, {params});
   }
 
+  getFilteredHotelList(filterData: { numberOfGuests: string; startDate: string; endDate: string; hotelFeatures?: string }):
+    Observable<Array<HotelListItemModel>> {
+    const params = new HttpParams()
+      .set('numberOfGuests', filterData.numberOfGuests)
+      .set('startDate', filterData.startDate)
+      .set('endDate', filterData.endDate)
+      .set('hotelFeatures', filterData.hotelFeatures);
+    return this.http.get<Array<HotelListItemModel>>(BASE_URL + '/filter', {params});
+  }
+
   deleteHotel(id: number): Observable<Array<HotelListItemModel>> {
     return this.http.delete<Array<HotelListItemModel>>(BASE_URL + '/' + id);
   }
@@ -69,4 +79,6 @@ export class HotelService {
   getNumOfHotels(): Observable<number> {
     return this.http.get<number>(BASE_URL + '/numOfHotels');
   }
+
+
 }

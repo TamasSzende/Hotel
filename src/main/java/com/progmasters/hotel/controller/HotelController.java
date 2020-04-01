@@ -56,21 +56,19 @@ public class HotelController {
 	}
 
 	@GetMapping("/filter")
-	public ResponseEntity<List<HotelShortItem>> getFilteredHotelList(
+	public ResponseEntity<List<HotelListItem>> getFilteredHotelList(
 			@RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
 			@RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate,
 			@RequestParam("numberOfGuests") long numberOfGuests,
 			@RequestParam List<String> hotelFeatures) {
-		List<HotelShortItem> hotelShortItems;
+		List<HotelListItem> hotelList;
 		if (hotelFeatures.isEmpty()) {
-			hotelShortItems = hotelService.getHotelListFilteredByDateAndPerson(startDate, endDate, numberOfGuests);
+			hotelList = hotelService.getHotelListFilteredByDateAndPerson(startDate, endDate, numberOfGuests);
 		} else {
 			List<HotelFeatureType> hotelFeatureEnumList = hotelFeatures.stream().map(HotelFeatureType::valueOf).collect(Collectors.toList());
-			hotelShortItems = hotelService.getHotelListFilteredByDatePersonAbdFeatures(startDate, endDate, numberOfGuests, hotelFeatureEnumList);
+			hotelList = hotelService.getHotelListFilteredByDatePersonAbdFeatures(startDate, endDate, numberOfGuests, hotelFeatureEnumList);
 		}
-
-		System.out.println("hotel lista hossza: " + hotelShortItems.size());
-		return new ResponseEntity<>(hotelShortItems, HttpStatus.OK);
+		return new ResponseEntity<>(hotelList, HttpStatus.OK);
 	}
 
 //	@GetMapping

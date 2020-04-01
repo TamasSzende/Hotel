@@ -15,6 +15,7 @@ import {AccountEditComponent} from "./components/account/account-edit/account-ed
 
 
 const routes: Routes = [
+  {path: 'hotel/filter', component: HotelListComponent},
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},
   {path: "account-edit", component: AccountEditComponent},

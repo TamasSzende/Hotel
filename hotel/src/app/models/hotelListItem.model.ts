@@ -7,4 +7,6 @@ export interface HotelListItemModel {
 	hotelType: string;
 	hotelImageUrl: string;
   shortDescription: string;
+  bestPricePerNightPerPerson: number;
+  avgRate: number;
 }

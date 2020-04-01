@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
 import {PopupService} from "../../services/popup.service";
@@ -11,6 +11,7 @@ import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
+import {dateToJsonDateString} from "../../utils/dateUtils";
 
 @Component({
   selector: 'app-hotel-list',
@@ -28,7 +29,7 @@ export class HotelListComponent implements OnInit {
   listPageNumber: number = 1;
   pageNumbers: number[];
 
-  constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService, private loginService: LoginService) {
+  constructor(private hotelService: HotelService, private route: ActivatedRoute, private router: Router, private popupService: PopupService, private loginService: LoginService) {
     this.flatpickrOptions = {
       mode: "range",
       minDate: "today",
@@ -46,6 +47,7 @@ export class HotelListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
     if (this.account != null && this.account.role) {
       this.listHotel();
@@ -66,32 +68,60 @@ export class HotelListComponent implements OnInit {
 
 
   listHotel = () => {
-
     this.hotelService.getHotelFormData().subscribe(
       (hotelFormData: HotelFormDataModel) => {
         this.hotelFeatureTypeOption = hotelFormData.hotelFeatures;
         this.createHotelFeaturesCheckboxControl();
       }
     );
+    this.route.queryParams.subscribe(
+      queryParams => {
+        if (queryParams['numberOfGuests']) {
+          const filterData = {
+            numberOfGuests: queryParams['numberOfGuests'],
+            startDate: queryParams['startDate'],
+            endDate: queryParams['endDate'],
+            hotelFeatures: queryParams['hotelFeatures'],
+          };
+          this.hotelService.getFilteredHotelList(filterData).subscribe(
+            (hotelList: HotelListItemModel[]) => {
+              this.hotelList = hotelList;
+            }
+          )
+        } else {
+          this.hotelService.listHotel(this.listPageNumber).subscribe(
+            (hotelList: HotelListItemModel[]) => {
+              this.hotelList = hotelList;
+            }
+          );
 
-    this.hotelService.listHotel(this.listPageNumber).subscribe(
-      (hotelList: HotelListItemModel[]) => {
-        this.hotelList = hotelList;
+        }
+
       }
     );
+
+
     this.getPageNumbers();
   };
 
-
   filterHotelList() {
-
+    const queryParams = {
+      'numberOfGuests': this.filterForm.value.numberOfGuests,
+      'startDate': dateToJsonDateString(this.filterForm.value.bookingDateRange[0]),
+      'endDate': dateToJsonDateString(this.filterForm.value.bookingDateRange[1]),
+      'hotelFeatures': this.createHotelFeaturesFilterArrayToSend().join(', '),
+    };
+    this.router.navigate(['/hotel/filter'], {queryParams})
   }
-
 
   resetFilters() {
     this.filterForm.reset();
     //TODO resetelni a naptárat!!!
     // this.flatpickrInstance.clear();
+  }
+
+  backToHotelList() {
+    this.router.navigate(['/hotel'])
   }
 
   deleteHotel(id: number): void {
@@ -137,13 +167,18 @@ export class HotelListComponent implements OnInit {
     return numArray;
   }
 
-
   private createHotelFeaturesCheckboxControl() {
     this.hotelFeatureTypeOption.forEach(() => {
         const control = new FormControl(false);
         (this.filterForm.controls.hotelFeatures as FormArray).push(control);
       }
     );
+  }
+
+  private createHotelFeaturesFilterArrayToSend(): string[] {
+    return this.filterForm.value.hotelFeatures
+      .map((hotelFeatures, index) => hotelFeatures ? this.hotelFeatureTypeOption[index].name : null)
+      .filter(hotelFeatures => hotelFeatures !== null);
   }
 
   onPageNumClick(pageNum: number) {

@@ -12,4 +12,5 @@ export interface HotelDetailsModel {
 	hotelImageUrl: Array<string>;
 	description: string;
 	hotelFeatures: string[];
+  avgRate: number;
 }

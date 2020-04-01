@@ -127,6 +127,9 @@ public class Hotel {
         return hotelFeatures;
     }
 
+    public Double getAvgRate() {
+        return avgRate;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -184,5 +187,7 @@ public class Hotel {
         this.hotelFeatures = hotelFeatures;
     }
 
-
+    public void setAvgRate(Double avgRate) {
+        this.avgRate = avgRate;
+    }
 }
