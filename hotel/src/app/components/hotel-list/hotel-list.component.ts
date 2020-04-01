@@ -12,6 +12,7 @@ import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.m
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {dateToJsonDateString} from "../../utils/dateUtils";
 import {HotelListItemSubListModel} from "../../models/hotelListItemSubList.model";
+import {scrollToTheTop} from "../../utils/smoothScroller";
 
 @Component({
   selector: 'app-hotel-list',
