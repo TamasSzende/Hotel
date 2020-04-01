@@ -10,20 +10,16 @@ import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.File;
 import java.io.IOException;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,8 +52,42 @@ public class HotelService {
 	public List<HotelFeatureTypeOption> getHotelFeatureTypeOptionList() {
 		return Arrays.stream(HotelFeatureType.values()).map(HotelFeatureTypeOption::new).collect(Collectors.toList());
 	}
+
 	public List<HotelTypeOption> getHotelTypeOptionList() {
 		return Arrays.stream(HotelType.values()).map(HotelTypeOption::new).collect(Collectors.toList());
+	}
+
+	public HotelListItemSubList getPageOfHotelListOrderByBestPrice(Integer listPageNumber, Integer numOfElementsPerPage) {
+		Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+		Page<HotelRepository.HotelFilterResult> queryResults = hotelRepository.findAllOrderByBestPrice(pageable);
+		return getHotelListItemSubList(queryResults);
+	}
+
+	public HotelListItemSubList getPageOfHotelListFilteredByDateAndPerson
+			(LocalDate startDate, LocalDate endDate, long numberOfGuests, Integer listPageNumber, Integer numOfElementsPerPage) {
+		Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+		Page<HotelRepository.HotelFilterResult> queryResults =
+				this.hotelRepository.findAllByDateAndPersonFilterOrderByBestPrice(startDate, endDate, numberOfGuests, pageable);
+		return getHotelListItemSubList(queryResults);
+	}
+
+	public HotelListItemSubList getPageOfHotelListFilteredByDatePersonAndFeatures
+			(LocalDate startDate, LocalDate endDate, long numberOfGuests, List<HotelFeatureType> hotelFeatures, Integer listPageNumber, Integer numOfElementsPerPage) {
+		Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+		Page<HotelRepository.HotelFilterResult> queryResults =
+				this.hotelRepository.findAllByDatePersonAndFeaturesFilterOrderByBestPrice
+						(startDate, endDate, numberOfGuests, hotelFeatures, (long) hotelFeatures.size(), pageable);
+		return getHotelListItemSubList(queryResults);
+	}
+
+	private HotelListItemSubList getHotelListItemSubList(Page<HotelRepository.HotelFilterResult> queryResults) {
+		if (!queryResults.isEmpty()) {
+			List<HotelListItem> hotelList = new ArrayList<>();
+			for (HotelRepository.HotelFilterResult queryResult : queryResults) {
+				hotelList.add(new HotelListItem(queryResult.getFilteredHotel(), queryResult.getBestPrice().intValue()));
+			}
+			return new HotelListItemSubList(hotelList, queryResults.getNumber(), queryResults.getTotalPages());
+		} else return null;
 	}
 
 	public Long saveHotel(HotelCreateItem hotelCreateItem) {
@@ -131,12 +161,10 @@ public class HotelService {
 	}
 
 	public String saveHotelImage(MultipartFile file, Long id) {
-
 		String imageURL = uploadImage(file);
 		if (hotelRepository.findById(id).isPresent() && imageURL != null) {
 			hotelRepository.findById(id).get().getHotelImageUrls().add(imageURL);
 		}
-
 		return imageURL;
 	}
 
@@ -174,14 +202,4 @@ public class HotelService {
 		return hotelImageUrls;
 	}
 
-	public List<HotelListItem> getPageOfHotelListItems(Integer pageNumber, Integer numOfElementsPerPage) {
-		List<HotelListItem> hotelListItems = getHotelListItemList();
-		int startIndex = (pageNumber - 1) * numOfElementsPerPage;
-		int endIndex = Math.min(startIndex + numOfElementsPerPage, hotelListItems.size());
-		return hotelListItems.subList(startIndex, endIndex);
-	}
-
-	public Long getNumOfHotels() {
-		return (long) Math.ceil((double) getHotelListItemList().size() / 10);
-	}
 }

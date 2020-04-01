@@ -14,6 +14,7 @@ import {HomeComponent} from "./components/home/home.component";
 
 
 const routes: Routes = [
+  {path: 'hotel/filter', component: HotelListComponent},
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},
   {path: "account-edit", component: AccountEditComponent},

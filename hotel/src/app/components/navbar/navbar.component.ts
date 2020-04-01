@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit {
   userRole: string;
   email: string;
   baseRouterLink: string = 'login';
+  lastname: string;
 
   isWindowOpen: boolean;
 
@@ -30,6 +31,7 @@ export class NavbarComponent implements OnInit {
           this.loggedIn = true;
           this.userRole = response.role;
           this.email = response.name;
+          this.lastname = response.lastname;
           if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_USER') {
             this.baseRouterLink = 'hotel';
           } else if (this.userRole === 'ROLE_HOTELOWNER') {

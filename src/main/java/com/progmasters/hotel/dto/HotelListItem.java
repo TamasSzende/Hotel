@@ -14,6 +14,8 @@ public class HotelListItem {
     private String hotelType;
     private String hotelImageUrl;
     private String shortDescription;
+    private Integer bestPricePerNightPerPerson;
+    private Double avgRate;
 
     HotelListItem() {
     }
@@ -25,11 +27,9 @@ public class HotelListItem {
         this.city = hotel.getCity();
         this.streetAddress = hotel.getStreetAddress();
         this.hotelType = hotel.getHotelType().getDisplayName();
-
         if (!hotel.getHotelImageUrls().isEmpty()) {
             this.hotelImageUrl = hotel.getHotelImageUrls().get(0);
         }
-
         if (hotel.getDescription() != null && hotel.getDescription().length() > SHORTDESCRIPTIONLENGTH) {
             String hotelFullDescription = hotel.getDescription();
             String endOfTheDescription = (hotelFullDescription.substring(SHORTDESCRIPTIONLENGTH).split(" "))[0] + "...";
@@ -37,6 +37,12 @@ public class HotelListItem {
         } else {
             this.shortDescription = hotel.getDescription();
         }
+        this.avgRate = hotel.getAvgRate();
+    }
+
+    public HotelListItem(Hotel hotel, int bestPricePerNightPerPerson) {
+        this(hotel);
+        this.setBestPricePerNightPerPerson(bestPricePerNightPerPerson);
     }
 
     public Long getId() {
@@ -71,6 +77,13 @@ public class HotelListItem {
         return shortDescription;
     }
 
+    public Integer getBestPricePerNightPerPerson() {
+        return bestPricePerNightPerPerson;
+    }
+
+    public void setBestPricePerNightPerPerson(Integer bestPricePerNightPerPerson) {
+        this.bestPricePerNightPerPerson = bestPricePerNightPerPerson;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -104,5 +117,12 @@ public class HotelListItem {
         this.shortDescription = shortDescription;
     }
 
+    public Double getAvgRate() {
+        return avgRate;
+    }
 
+    public void setAvgRate(Double avgRate) {
+        this.avgRate = avgRate;
+    }
 }
+

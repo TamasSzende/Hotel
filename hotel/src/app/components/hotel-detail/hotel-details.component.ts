@@ -19,6 +19,7 @@ import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDet
 import {LoginComponent} from "../account/login/login.component";
 import {NotificationService} from "../../services/notification.service";
 import {error} from "util";
+import {scrollToTheTop} from "../../utils/smoothScroller";
 
 
 @Component({
@@ -304,4 +305,7 @@ export class HotelDetailsComponent implements OnInit {
     return counter < 1 ? {required: true} : null;
   }
 
+  gotoTop() {
+    scrollToTheTop(100);
+  }
 }
