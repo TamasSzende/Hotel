@@ -28,19 +28,19 @@ export class HotelService {
     return this.http.get<HotelListItemSubListModel>(BASE_URL, {params});
   }
 
-
-  getNumOfHotels(): Observable<number> {
-    return this.http.get<number>(BASE_URL + '/numOfHotels');
-  }
-
-  getFilteredHotelList(filterData: { numberOfGuests: string; startDate: string; endDate: string; hotelFeatures?: string }):
-    Observable<Array<HotelListItemModel>> {
-    const params = new HttpParams()
+  getFilteredHotelList(filterData: { numberOfGuests: string; startDate: string; endDate: string; hotelFeatures?: string }, listPageNumber?: number):
+    Observable<HotelListItemSubListModel> {
+    let params = new HttpParams()
       .set('numberOfGuests', filterData.numberOfGuests)
       .set('startDate', filterData.startDate)
       .set('endDate', filterData.endDate)
       .set('hotelFeatures', filterData.hotelFeatures);
-    return this.http.get<Array<HotelListItemModel>>(BASE_URL + '/filter', {params});
+    if (listPageNumber != null) {
+      params = params.set('listPageNumber', String(listPageNumber));
+    } else {
+      params = params.set('listPageNumber', '0');
+    }
+    return this.http.get<HotelListItemSubListModel>(BASE_URL + '/filter', {params});
   }
 
   deleteHotel(id: number): Observable<Array<HotelListItemModel>> {

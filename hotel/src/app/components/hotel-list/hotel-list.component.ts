@@ -5,7 +5,6 @@ import {HotelListItemModel} from "../../models/hotelListItem.model";
 import {PopupService} from "../../services/popup.service";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {LoginService} from "../../services/login.service";
-import {scrollToTheTop} from "../../utils/smoothScroller";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -74,21 +73,30 @@ export class HotelListComponent implements OnInit {
         this.createHotelFeaturesCheckboxControl();
       }
     );
-    this.route.queryParams.subscribe(
-      queryParams => {
-        if (queryParams['numberOfGuests']) {
+
+    if (this.router.url.startsWith('/hotel/filter?')) {
+      this.route.queryParams.subscribe(
+        queryParams => {
           const filterData = {
             numberOfGuests: queryParams['numberOfGuests'],
             startDate: queryParams['startDate'],
             endDate: queryParams['endDate'],
             hotelFeatures: queryParams['hotelFeatures'],
           };
-          this.hotelService.getFilteredHotelList(filterData).subscribe(
-            (hotelList: HotelListItemModel[]) => {
-              this.hotelList = hotelList;
+          this.listPageNumber = queryParams['listPageNumber'];
+          this.hotelService.getFilteredHotelList(filterData, this.listPageNumber).subscribe(
+            (response: HotelListItemSubListModel) => {
+              this.hotelList = response.hotelSubList;
+              this.listPageNumber = response.listPageNumber;
+              this.pageNumbers = this.generatePageNumberArray(response.fullNumberOfPages);
             }
-          )
-        } else {
+          );
+        }
+      );
+    } else {
+      this.route.queryParams.subscribe(
+        queryParams => {
+          this.listPageNumber = queryParams['listPageNumber'];
           this.hotelService.listHotel(this.listPageNumber).subscribe(
             (response: HotelListItemSubListModel) => {
               this.hotelList = response.hotelSubList;
@@ -97,14 +105,28 @@ export class HotelListComponent implements OnInit {
             }
           );
         }
-      }
-    );
+      );
+    }
   };
 
   onPageNumClick(pageNum: number) {
-    this.listPageNumber = pageNum;
-    this.listHotel();
-    scrollToTheTop(40);
+    if (this.router.url.startsWith('/hotel/filter?')) {
+      this.route.queryParams.subscribe(
+        queryParamsFromRoute => {
+          const queryParams = {
+            numberOfGuests: queryParamsFromRoute['numberOfGuests'],
+            startDate: queryParamsFromRoute['startDate'],
+            endDate: queryParamsFromRoute['endDate'],
+            hotelFeatures: queryParamsFromRoute['hotelFeatures'],
+            'listPageNumber': pageNum
+          };
+          this.router.navigate(['/hotel/filter'], {queryParams});
+        }
+      );
+    } else {
+      const queryParams = {'listPageNumber': pageNum};
+      this.router.navigate(['/hotel'], {queryParams});
+    }
   }
 
   generatePageNumberArray(numOfHotels: number) {
@@ -161,8 +183,6 @@ export class HotelListComponent implements OnInit {
   getPublicId(imgURL: string) {
     return getPublicId(imgURL);
   }
-
-
 
   private createHotelFeaturesCheckboxControl() {
     this.hotelFeatureTypeOption.forEach(() => {
