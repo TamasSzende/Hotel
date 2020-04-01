@@ -1,6 +1,5 @@
 package com.progmasters.hotel.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.progmasters.hotel.dto.HotelCreateItem;
 
 import javax.persistence.*;
@@ -10,7 +9,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "hotel")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Hotel {
 
     @Id
@@ -55,6 +53,9 @@ public class Hotel {
     @CollectionTable(name = "hotel_features")
     @Column(name = "hotel_features")
     private List<HotelFeatureType> hotelFeatures = new ArrayList<>();
+
+    @Column(name = "avg_rate")
+    private Double avgRate;
 
     public Hotel() {
     }
@@ -124,6 +125,9 @@ public class Hotel {
         return hotelFeatures;
     }
 
+    public Double getAvgRate() {
+        return avgRate;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -181,5 +185,7 @@ public class Hotel {
         this.hotelFeatures = hotelFeatures;
     }
 
-
+    public void setAvgRate(Double avgRate) {
+        this.avgRate = avgRate;
+    }
 }

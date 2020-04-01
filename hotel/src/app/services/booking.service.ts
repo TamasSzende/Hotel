@@ -6,6 +6,7 @@ import {BookingDetailsModel} from "../models/bookingDetails.model";
 import {environment} from "../../environments/environment";
 import {BookingListItemForUserModel} from "../models/bookingListItemForUser.model";
 import {BookingListItemForHotelModel} from "../models/bookingListItemForHotel.model";
+import {dateToJsonDateString} from '../utils/dateUtils';
 
 const BASE_URL = environment.BASE_URL + '/api/booking';
 
@@ -83,25 +84,10 @@ export class BookingService {
       guestAccountName: data.guestAccountName,
       remark: data.remark,
       numberOfGuests: data.numberOfGuests,
-      startDate: this.dateToJsonDateString(data.startDate),
-      endDate: this.dateToJsonDateString(data.endDate),
+      startDate: dateToJsonDateString(data.startDate),
+      endDate: dateToJsonDateString(data.endDate),
       roomIdList: data.roomIdList,
     }
   }
-
-  dateToJsonDateString(date: Date) {
-    let result: string = date.getFullYear() + '. ';
-    let month = date.getMonth() + 1;
-    if (month.toString().length === 1) {
-      result += '0';
-    }
-    result += month + '. ';
-    if (date.getDate().toString().length === 1) {
-      result += '0';
-    }
-    result += date.getDate() + '.';
-    return result;
-  }
-
 
 }

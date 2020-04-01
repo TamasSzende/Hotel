@@ -6,6 +6,7 @@ import {RoomListItemModel} from "../models/roomListItem.model";
 import {RoomFormDataModel} from "../models/roomFormData.model";
 import {RoomDetailsModel} from "../models/roomDetails.model";
 import {environment} from "../../environments/environment";
+import {dateToJsonDateString} from "../utils/dateUtils";
 
 const BASE_URL = environment.BASE_URL + '/api/rooms';
 
@@ -27,8 +28,8 @@ export class RoomService {
 
   getFilteredRoomList(hotelId: number, data: { startDate: Date; endDate: Date; roomFeatures: string[] }): Observable<Array<RoomListItemModel>> {
     const params = new HttpParams()
-      .set('startDate', this.dateToJsonDateString(data.startDate))
-      .set('endDate', this.dateToJsonDateString(data.endDate))
+      .set('startDate', dateToJsonDateString(data.startDate))
+      .set('endDate', dateToJsonDateString(data.endDate))
       .set('roomFeatures', data.roomFeatures.join(', '));
     return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/filter/' + hotelId, {params});
   }
@@ -54,17 +55,4 @@ export class RoomService {
     return this.http.get<RoomCreateItemModel>(BASE_URL + '/formData/' + id);
   }
 
-  dateToJsonDateString(date: Date) {
-    let result: string = date.getFullYear() + '. ';
-    let month = date.getMonth() + 1;
-    if (month.toString().length === 1) {
-      result += '0';
-    }
-    result += month + '. ';
-    if (date.getDate().toString().length === 1) {
-      result += '0';
-    }
-    result += date.getDate() + '.';
-    return result;
-  }
 }

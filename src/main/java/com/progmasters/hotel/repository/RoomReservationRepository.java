@@ -3,6 +3,8 @@ package com.progmasters.hotel.repository;
 import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.domain.RoomReservation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -19,5 +21,8 @@ public interface RoomReservationRepository extends JpaRepository<RoomReservation
 //    List<RoomReservation> findAllByRoomIdAndDateRange(@Param("roomId") Long roomId,
 //                                                      @Param("startDate") LocalDate startDate,
 //                                                      @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT DISTINCT r.room  FROM RoomReservation r WHERE r.endDate > :start_date AND r.startDate < :end_date")
+    List<Room> findAllOccupiedRoomIdByDateRange(@Param("start_date") LocalDate startDate, @Param("end_date") LocalDate endDate);
 
 }

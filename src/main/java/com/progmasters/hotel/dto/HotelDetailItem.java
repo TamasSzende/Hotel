@@ -20,6 +20,7 @@ public class HotelDetailItem {
 	private List<String> hotelImageUrl;
 	private String description;
 	private List<String> hotelFeatures = new ArrayList<>();
+	private Double avgRate;
 
 	HotelDetailItem() {
 	}
@@ -38,6 +39,7 @@ public class HotelDetailItem {
 		for (HotelFeatureType hotelFeatureType : hotel.getHotelFeatures()) {
 			this.hotelFeatures.add(hotelFeatureType.getDisplayName());
 		}
+		this.avgRate = hotel.getAvgRate();
 	}
 
     public Long getId() {
@@ -84,10 +86,13 @@ public class HotelDetailItem {
 		return hotelFeatures;
 	}
 
+	public Double getAvgRate() {
+		return avgRate;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setAvgRate(Double avgRate) {
+		this.avgRate = avgRate;
+	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -129,6 +134,7 @@ public class HotelDetailItem {
 		this.hotelFeatures = hotelFeatures;
 	}
 
-
-
+	public void setId(Long id) {
+		this.id = id;
+	}
 }
