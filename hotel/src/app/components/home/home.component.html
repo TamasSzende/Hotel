@@ -1,0 +1,69 @@
+<div class="container">
+
+  <form [formGroup]="filterForm">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <label for="numberOfGuests" lass="form-control-label">
+              Vendégek száma:&nbsp;&nbsp;
+            </label>
+            <input
+              formControlName="numberOfGuests"
+              id="numberOfGuests"
+              name="numberOfGuests"
+              type="number"
+            />
+            <small
+              *ngIf="filterForm.get('numberOfGuests').invalid && filterForm.get('numberOfGuests').touched && !filterForm.get('numberOfGuests').errors?.serverError"
+              class="text-danger">
+              Kérlek add meg a vendégek számát!
+            </small>
+
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <label>
+                Utazás időpontja:&nbsp;&nbsp;
+              </label>
+
+              <ng2-flatpickr
+                [config]="flatpickrOptions"
+                formControlName="bookingDateRange"
+                id="bookingDateRange"
+                name="bookingDateRange"
+                placeholder="Válasz időpontot!"
+              >
+                <small
+                  *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
+                  class="text-danger">
+                  <br>
+                  Kérlek válasz időpontot!
+                </small>
+              </ng2-flatpickr>
+
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div class="text-right">
+              <button (click)="filterHotelList()" class="btn btn-primary mr-4">
+                Keresés
+              </button>
+              <button (click)="goToHotelList()" class="btn btn-outline-primary mr-4">
+                Vissza a Hotel Listához
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+
+      </div>
+    </div>
+  </form>
+</div>

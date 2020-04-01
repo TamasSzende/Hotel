@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class HotelController {
 
 	private static final int NUM_OF_ELEMENTS_PER_PAGE = 10;
+	private static final int NUM_OF_ELEMENTS_ON_HOMEPAGE = 4;
 
 	private HotelService hotelService;
 	private RoomReservationService roomReservationService;
@@ -84,6 +85,21 @@ public class HotelController {
 			hotelList = hotelService.getPageOfHotelListFilteredByDatePersonAndFeatures(startDate, endDate, numberOfGuests, hotelFeatureEnumList, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE);
 		}
 		return new ResponseEntity<>(hotelList, HttpStatus.OK);
+	}
+
+	@GetMapping("/bestprice")
+	public ResponseEntity<List<HotelItemToHomePage>> getHotelListTheBestPriceForHomePage() {
+		return new ResponseEntity<>(hotelService.getHotelListTheBestPriceForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
+	}
+
+	@GetMapping("/bestavgrate")
+	public ResponseEntity<List<HotelItemToHomePage>> getHotelListTheBestAvgRateForHomePage() {
+		return new ResponseEntity<>(hotelService.getHotelListTheBestAvgRateForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
+	}
+
+	@GetMapping("/random")
+	public ResponseEntity<List<HotelItemToHomePage>> getRandomHotelListForHomePage() {
+		return new ResponseEntity<>(hotelService.getRandomHotelListForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

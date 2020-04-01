@@ -14,14 +14,29 @@ import java.util.Optional;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
+    @Query("SELECT h.id FROM Hotel h")
+    List<Long> findAllHotelId();
+
     @Query("SELECT h FROM Hotel h WHERE h.name = :name")
     Optional<Object> findByHotelName(String name);
+
+    @Query("SELECT h AS filteredHotel, MIN(room.pricePerNight/room.numberOfBeds) AS bestPrice " +
+            "FROM Hotel h JOIN h.rooms room " +
+            "WHERE h.id = :id " +
+            "GROUP BY h.id")
+    HotelFilterResult findByIdWithBestPrice(Long id);
 
     @Query("SELECT h AS filteredHotel, MIN(room.pricePerNight/room.numberOfBeds) AS bestPrice " +
             "FROM Hotel h JOIN h.rooms room " +
             "GROUP BY h.id " +
             "ORDER BY MIN(room.pricePerNight/room.numberOfBeds)")
     Page<HotelFilterResult> findAllOrderByBestPrice(Pageable pageable);
+
+    @Query("SELECT h AS filteredHotel, MIN(room.pricePerNight/room.numberOfBeds) AS bestPrice " +
+            "FROM Hotel h JOIN h.rooms room " +
+            "GROUP BY h.id " +
+            "ORDER BY h.avgRate DESC")
+    Page<HotelFilterResult> findAllOrderByBestAvgRateForHomePage(Pageable pageable);
 
     @Query("SELECT h AS filteredHotel, MIN(room.pricePerNight/room.numberOfBeds) AS bestPrice " +
             "FROM Hotel h JOIN h.rooms room WHERE room NOT IN " +
