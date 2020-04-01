@@ -12,6 +12,7 @@ import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.m
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {dateToJsonDateString} from "../../utils/dateUtils";
 import {HotelListItemSubListModel} from "../../models/hotelListItemSubList.model";
+import {scrollToTheTop} from "../../utils/smoothScroller";
 
 @Component({
   selector: 'app-hotel-list',
@@ -49,20 +50,29 @@ export class HotelListComponent implements OnInit {
   ngOnInit(): void {
 
     this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
-    if (this.account != null && this.account.role) {
-      this.listHotel();
-    } else {
+    if (!this.account) {
       this.loginService.checkSession().subscribe(
-        (account) => {
-          this.loginService.authenticatedLoginDetailsModel.next(account);
-          this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
-          if (this.account != null && this.account.role) {
-            this.listHotel();
-          } else {
-            this.loginService.logout();
-            this.router.navigate(['/hotel']);
+        (response) => {
+          if (response) {
+            this.loginService.authenticatedLoginDetailsModel.next(response);
+            this.account = response;
+            if (!this.account || this.account.role != "ROLE_HOTELOWNER") {
+              this.listHotel();
+            } else {
+              this.router.navigate(['admin/hotel'])
+            }
           }
-        });
+        },
+        error => {
+          this.listHotel()
+        }
+      )
+    } else {
+      if (this.account.role != "ROLE_HOTELOWNER") {
+        this.listHotel();
+      } else {
+        this.router.navigate(['admin/hotel'])
+      }
     }
   }
 
@@ -198,5 +208,8 @@ export class HotelListComponent implements OnInit {
       .filter(hotelFeatures => hotelFeatures !== null);
   }
 
+  gotoTop() {
+    scrollToTheTop(100);
+  }
 
 }

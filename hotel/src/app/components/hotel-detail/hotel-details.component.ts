@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
@@ -18,6 +18,8 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 import {LoginComponent} from "../account/login/login.component";
 import {NotificationService} from "../../services/notification.service";
+import {error} from "util";
+import {scrollToTheTop} from "../../utils/smoothScroller";
 
 
 @Component({
@@ -66,36 +68,33 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
-    if (this.account != null && this.account.role) {
-      this.isLoggedIn = true;
-      this.showHotel();
-    } else {
-      this.loginService.checkSession().subscribe(
-        (account) => {
-          this.loginService.authenticatedLoginDetailsModel.next(account);
-          this.account = this.loginService.authenticatedLoginDetailsModel.getValue();
-          if (this.account != null && this.account.role) {
-            this.isLoggedIn = true;
-            this.showHotel();
-          } else {
-            this.loginService.logout();
-            this.router.navigate(['/login']);
+    this.loginService.authenticatedLoginDetailsModel.subscribe(
+      (account) => {
+        if (account) {
+          this.account = account;
+          this.isLoggedIn = true;
+          this.showHotel();
+        } else {
+          if (this.router.isActive('/hotel', false)) {
+            this.loginService.checkSession().subscribe((response) => {
+              if (response != this.account) {
+                this.isLoggedIn = true;
+                this.loginService.authenticatedLoginDetailsModel.next(response);
+                this.account = response;
+              }
+              this.showHotel();
+            }, error1 => this.showHotel())
           }
-        });
-    }
-
+        }
+      }
+    )
   }
 
-  showHotel() {
 
-    if (this.account.role === "ROLE_HOTELOWNER") {
-      this.loginService.authenticatedLoginDetailsModel.subscribe(
-        response => {
-          this.hotelIdFromLogin = response.hotelId;
-          this.getHotelDetail(String(this.hotelIdFromLogin))
-        }
-      );
+  showHotel() {
+    if (this.account && this.account.role === "ROLE_HOTELOWNER") {
+      this.hotelIdFromLogin = this.account.hotelId;
+      this.getHotelDetail(String(this.hotelIdFromLogin))
     } else {
       this.route.paramMap.subscribe(
         paramMap => {
@@ -295,6 +294,7 @@ export class HotelDetailsComponent implements OnInit {
       .map((roomFeatures, index) => roomFeatures ? this.roomFeatureTypeOption[index].name : null)
       .filter(roomFeatures => roomFeatures !== null);
   }
+
   getPublicId(imgURL: string) {
     return getPublicId(imgURL);
   }
@@ -305,4 +305,7 @@ export class HotelDetailsComponent implements OnInit {
     return counter < 1 ? {required: true} : null;
   }
 
+  gotoTop() {
+    scrollToTheTop(100);
+  }
 }

@@ -35,6 +35,9 @@ export class LoginComponent implements OnInit {
     this.loginService.authenticate(data).subscribe(
       response => {
         this.loginService.authenticatedLoginDetailsModel.next(response);
+        if (response.role == "ROLE_HOTELOWNER") {
+          this.router.navigate(['admin/hotel'])
+        }
         this.notificationService.success('Sikeresen beléptél!');
         this.closeDialog();
       },

@@ -5,7 +5,6 @@
   <div class="card mb-3">
     <div class="row no-gutters">
 
-
       <div class="col-md-4">
         <div>
           <mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'">
@@ -80,24 +79,22 @@
                 <div class="btn-group mr-4" class="text-right">
                   <div class="align-bottom">
                     <button (click)="backToHotelList()"
-                            *ngIf="account?.role === 'ROLE_USER' || account?.role === 'ROLE_ADMIN' "
+                            *ngIf="account?.role === 'ROLE_USER' || account?.role === 'ROLE_ADMIN' || !account "
                             class="btn btn-outline-primary">
                       Vissza a hotel listához
                     </button>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
 
     </div>
   </div>
 
-  <div *ngIf="account.role === 'ROLE_HOTELOWNER'">
+  <div *ngIf="account?.role === 'ROLE_HOTELOWNER'">
     <button (click)="createRoomInHotel()" class="btn btn-primary btn-lg btn-block"
             type="button">
       Új szoba hozzáadása
@@ -106,24 +103,24 @@
   </div>
 
   <form [formGroup]="bookingForm" class="needs-validation" novalidate>
-    <div *ngIf="account.role === 'ROLE_USER'" class="card bg-light mb-3">
+    <div *ngIf="account?.role === 'ROLE_USER' || !account" class="card bg-light mb-3">
       <div class="card-body">
         <div class="form-row">
           <div class="col-md-4 mb-3">
-          <label for="numberOfGuests" lass="form-control-label">
-            Vendégek száma:&nbsp;&nbsp;
-          </label>
-          <input
-            formControlName="numberOfGuests"
-            id="numberOfGuests"
-            name="numberOfGuests"
-            type="number"
-          />
-          <small
-            *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
-            class="text-danger">
-            Kérlek add meg a vendégek számát!
-          </small>
+            <label for="numberOfGuests" lass="form-control-label">
+              Vendégek száma:&nbsp;&nbsp;
+            </label>
+            <input
+              formControlName="numberOfGuests"
+              id="numberOfGuests"
+              name="numberOfGuests"
+              type="number"
+            />
+            <small
+              *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
+              class="text-danger">
+              Kérlek add meg a vendégek számát!
+            </small>
 
             <small
               *ngIf="bookingForm.get('numberOfGuests').value > this.maxNumberOfGuest"
@@ -134,25 +131,25 @@
 
           <div class="col-md-4 mb-3">
             <div class="input-group">
-          <label>
-            Utazás időpontja:&nbsp;&nbsp;
-          </label>
+              <label>
+                Utazás időpontja:&nbsp;&nbsp;
+              </label>
 
-          <ng2-flatpickr
-            (change)="getFilteredRoomList()"
-            [config]="flatpickrOptions"
-            formControlName="bookingDateRange"
-            id="bookingDateRange"
-            name="bookingDateRange"
-            placeholder="Válasz időpontot!"
-          >
-            <small
-              *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
-              class="text-danger">
-              <br>
-              Kérlek válasz időpontot!
-            </small>
-          </ng2-flatpickr>
+              <ng2-flatpickr
+                (change)="getFilteredRoomList()"
+                [config]="flatpickrOptions"
+                formControlName="bookingDateRange"
+                id="bookingDateRange"
+                name="bookingDateRange"
+                placeholder="Válasz időpontot!"
+              >
+                <small
+                  *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
+                  class="text-danger">
+                  <br>
+                  Kérlek válasz időpontot!
+                </small>
+              </ng2-flatpickr>
 
             </div>
           </div>
@@ -179,17 +176,17 @@
 
         <form [formGroup]="filterForm">
           <div>
-            <strong>
-              <button (click)="resetFilters()" class="badge badge-secondary mr-2" id="redstar">X</button>
-            </strong>
-            <label id="textCenter">
+            <span (click)="resetFilters()" class="badge badge-secondary mr-2" id="redstar"
+                  style="cursor: pointer">X</span>
+            <label>
               Szoba szolgáltatás szűrések törlése
             </label>
           </div>
           <div class="form-group">
             <div *ngFor="let roomFeatures of roomFeatureTypeOption; let i = index" class="form-check form-check-inline"
                  formArrayName="roomFeatures">
-              <input (change)="getFilteredRoomList()" [formControlName]="i" class="form-check-input" type="checkbox">
+              <input (change)="getFilteredRoomList()" [formControlName]="i" class="form-check-input"
+                     style="cursor: pointer" type="checkbox">
               <label class="form-check-label">
                 {{ roomFeatures?.displayName }}
               </label>
@@ -200,7 +197,7 @@
       </div>
     </div>
 
-    <div *ngIf="account.role === 'ROLE_USER'">
+    <div *ngIf="account?.role === 'ROLE_USER' || !account">
       <h4 *ngIf="hotel?.rooms.length !==0">
         Szabad szobák:
       </h4>
@@ -253,10 +250,10 @@
                   <button (click)="deleteRoom(room.id)" class="btn btn-danger btn-sm">törlése</button>
                 </div>
 
-                <label *ngIf="account.role === 'ROLE_USER'">
+                <label *ngIf="account?.role === 'ROLE_USER' || !account">
                   Lefoglalom&nbsp;
                   <input (change)="getPriceOfBookingAndMaxCapacity()" [formControlName]="i"
-                         style="width: 18px; height: 18px"
+                         style="width: 18px; height: 18px; cursor: pointer"
                          type="checkbox">
                 </label>
               </div>
@@ -266,11 +263,9 @@
           </div>
         </div>
       </div>
-
-
     </div>
   </form>
-
+  <button (click)="gotoTop()" class="btn btn-outline-primary float-right" id="myButton" type="button">Tetejére</button>
 
   <br>
   <br>
