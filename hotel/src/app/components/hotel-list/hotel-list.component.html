@@ -1,7 +1,7 @@
 <div class="container">
 
 
-  <div *ngFor="let hotel of hotelList" class="card mb-3" >
+  <div *ngFor="let hotel of hotelList" class="card mb-3">
     <div class="row no-gutters">
       <div class="col-md-4">
         <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%" (click)="hotelDetail(hotel.id)"
@@ -25,7 +25,7 @@
             {{ hotel?.shortDescription}}
           </p>
 
-          <div class="btn-toolbar"  class="text-right" role="toolbar">
+          <div class="btn-toolbar" class="text-right" role="toolbar">
 
             <div class="btn-group mr-4">
               <button (click)="hotelDetail(hotel.id)" class="btn btn-primary btn-sm">Megnézem</button>
@@ -40,6 +40,8 @@
     </div>
 
   </div>
+
+  <button (click)="gotoTop()" class="btn btn-outline-primary float-right" type="button">Tetejére</button>
 
   <nav aria-label="...">
     <ul class="pagination">
@@ -62,7 +64,7 @@
           <span class="sr-only">Previous</span>
         </a>
       </li>
-
     </ul>
+
   </nav>
 </div>

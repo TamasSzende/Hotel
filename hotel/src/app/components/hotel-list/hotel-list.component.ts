@@ -103,5 +103,8 @@ export class HotelListComponent implements OnInit {
     scrollToTheTop(40);
   }
 
+  gotoTop() {
+    scrollToTheTop(100);
+  }
 
 }

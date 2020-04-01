@@ -5,7 +5,6 @@
   <div class="card mb-3">
     <div class="row no-gutters">
 
-
       <div class="col-md-4">
         <div>
           <mdb-carousel [isControls]="true" class="carousel slide carousel-fade" [animation]="'fade'">
@@ -89,20 +88,20 @@
       <div class="card-body">
         <div class="form-row">
           <div class="col-md-4 mb-3">
-          <label for="numberOfGuests" lass="form-control-label">
-            Vendégek száma:&nbsp;&nbsp;
-          </label>
-          <input
-            formControlName="numberOfGuests"
-            id="numberOfGuests"
-            name="numberOfGuests"
-            type="number"
-          />
-          <small
-            *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
-            class="text-danger">
-            Kérlek add meg a vendégek számát!
-          </small>
+            <label for="numberOfGuests" lass="form-control-label">
+              Vendégek száma:&nbsp;&nbsp;
+            </label>
+            <input
+              formControlName="numberOfGuests"
+              id="numberOfGuests"
+              name="numberOfGuests"
+              type="number"
+            />
+            <small
+              *ngIf="bookingForm.get('numberOfGuests').invalid && bookingForm.get('numberOfGuests').touched && !bookingForm.get('numberOfGuests').errors?.serverError"
+              class="text-danger">
+              Kérlek add meg a vendégek számát!
+            </small>
 
             <small
               *ngIf="bookingForm.get('numberOfGuests').value > this.maxNumberOfGuest"
@@ -113,25 +112,25 @@
 
           <div class="col-md-4 mb-3">
             <div class="input-group">
-          <label>
-            Utazás időpontja:&nbsp;&nbsp;
-          </label>
+              <label>
+                Utazás időpontja:&nbsp;&nbsp;
+              </label>
 
-          <ng2-flatpickr
-            (change)="getFilteredRoomList()"
-            [config]="flatpickrOptions"
-            formControlName="bookingDateRange"
-            id="bookingDateRange"
-            name="bookingDateRange"
-            placeholder="Válasz időpontot!"
-          >
-            <small
-              *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
-              class="text-danger">
-              <br>
-              Kérlek válasz időpontot!
-            </small>
-          </ng2-flatpickr>
+              <ng2-flatpickr
+                (change)="getFilteredRoomList()"
+                [config]="flatpickrOptions"
+                formControlName="bookingDateRange"
+                id="bookingDateRange"
+                name="bookingDateRange"
+                placeholder="Válasz időpontot!"
+              >
+                <small
+                  *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
+                  class="text-danger">
+                  <br>
+                  Kérlek válasz időpontot!
+                </small>
+              </ng2-flatpickr>
 
             </div>
           </div>
@@ -245,11 +244,9 @@
           </div>
         </div>
       </div>
-
-
     </div>
   </form>
-
+  <button (click)="gotoTop()" class="btn btn-outline-primary float-right" type="button">Tetejére</button>
 
   <br>
   <br>
