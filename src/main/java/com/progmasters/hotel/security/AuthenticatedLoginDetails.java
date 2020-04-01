@@ -12,6 +12,7 @@ public class AuthenticatedLoginDetails {
     private String name;
     private String role;
     private Long hotelId;
+    private String lastname;
 
     public AuthenticatedLoginDetails() {
     }
@@ -21,6 +22,7 @@ public class AuthenticatedLoginDetails {
         this.role = findRole(user);
         this.hotelId = 0L;
         this.id = 0L;
+        this.lastname = null;
     }
 
     private String findRole(UserDetails user) {
@@ -33,6 +35,14 @@ public class AuthenticatedLoginDetails {
         }
 
         return role;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getName() {

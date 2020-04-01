@@ -3,4 +3,5 @@ export interface AuthenticatedLoginDetailsModel {
   hotelId: number;
   name: string;
   role: string;
+  lastname: string;
 }

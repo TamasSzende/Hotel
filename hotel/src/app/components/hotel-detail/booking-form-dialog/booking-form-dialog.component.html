@@ -63,12 +63,11 @@
         </div>
         <div class="form-group">
           <label>
-            <input formControlName="aSZF" type="checkbox">
+            <input formControlName="aSZF" required type="checkbox">
             Elfogadom az Általános szerződési feltételeket
           </label>
-          <small
-            *ngIf="bookingForm.get('aSZF').invalid && bookingForm.get('aSZF').touched && !bookingForm.get('aSZF').errors?.serverError"
-            class="text-danger">
+          <small class="text-danger">
+            <!--            *ngIf="bookingForm.get('aSZF').invalid && !bookingForm.get('aSZF').touched && !bookingForm.get('aSZF').errors?.serverError"-->
             <br>
             Kérlek fogadd el az Általános szerződési feltételeket!
           </small>

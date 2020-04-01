@@ -228,9 +228,11 @@ public class AccountService {
         String username = authenticatedLoginDetails.getName();
         Long userId = findByUsername(username).getId();
         Long hotelId = findByUsername(username).getHotelId();
+        String lastname = findByUsername(username).getLastname();
 
         authenticatedLoginDetails.setId(userId);
         authenticatedLoginDetails.setHotelId(hotelId);
+        authenticatedLoginDetails.setLastname(lastname);
         return authenticatedLoginDetails;
     }
 }
