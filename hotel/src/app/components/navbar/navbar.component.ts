@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
   loggedIn: boolean;
   userRole: string;
   email: string;
-  baseRouterLink: string = 'login';
+  baseRouterLink: string = '';
   lastname: string;
 
   isWindowOpen: boolean;
@@ -32,18 +32,12 @@ export class NavbarComponent implements OnInit {
           this.userRole = response.role;
           this.email = response.name;
           this.lastname = response.lastname;
-          if (this.userRole === 'ROLE_ADMIN' || this.userRole === 'ROLE_USER') {
-            this.baseRouterLink = 'hotel';
-          } else if (this.userRole === 'ROLE_HOTELOWNER') {
+          if (this.userRole === 'ROLE_HOTELOWNER') {
             this.baseRouterLink = 'admin/hotel';
-          } else {
-            this.baseRouterLink = 'login';
           }
-        } else {
-          this.loggedIn = false;
-          this.baseRouterLink = 'hotel';
         }
-      });
+      }
+    );
   }
 
   logout() {

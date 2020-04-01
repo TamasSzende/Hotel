@@ -1,9 +1,7 @@
 package com.progmasters.hotel.controller;
 
-import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.dto.AccountDetails;
 import com.progmasters.hotel.security.AuthenticatedLoginDetails;
-
 import com.progmasters.hotel.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +55,7 @@ public class AccountController {
         if (authenticatedLoginDetails instanceof AuthenticatedLoginDetails) {
             return new ResponseEntity<>((AuthenticatedLoginDetails) authenticatedLoginDetails, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping("/logout")

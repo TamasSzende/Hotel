@@ -53,14 +53,12 @@ export class HotelListComponent implements OnInit {
     if (!this.account) {
       this.loginService.checkSession().subscribe(
         (response) => {
-          if (response) {
-            this.loginService.authenticatedLoginDetailsModel.next(response);
-            this.account = response;
-            if (!this.account || this.account.role != "ROLE_HOTELOWNER") {
-              this.listHotel();
-            } else {
-              this.router.navigate(['admin/hotel'])
-            }
+          this.loginService.authenticatedLoginDetailsModel.next(response);
+          this.account = response;
+          if (!this.account || this.account.role != "ROLE_HOTELOWNER") {
+            this.listHotel();
+          } else {
+            this.router.navigate(['admin/hotel'])
           }
         },
         error => {
@@ -87,12 +85,15 @@ export class HotelListComponent implements OnInit {
     if (this.router.url.startsWith('/hotel/filter?')) {
       this.route.queryParams.subscribe(
         queryParams => {
-          const filterData = {
+          let filterData = {
             numberOfGuests: queryParams['numberOfGuests'],
             startDate: queryParams['startDate'],
             endDate: queryParams['endDate'],
             hotelFeatures: queryParams['hotelFeatures'],
           };
+          if (filterData.hotelFeatures == undefined) {
+            filterData.hotelFeatures = '';
+          }
           this.listPageNumber = queryParams['listPageNumber'];
           this.hotelService.getFilteredHotelList(filterData, this.listPageNumber).subscribe(
             (response: HotelListItemSubListModel) => {
