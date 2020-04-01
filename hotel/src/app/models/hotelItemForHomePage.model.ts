@@ -1,4 +1,4 @@
-export interface HotelItemToHomePageModel {
+export interface HotelItemForHomePageModel {
   id: number;
   name: string;
   hotelType: string;

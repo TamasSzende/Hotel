@@ -2,7 +2,7 @@ package com.progmasters.hotel.dto;
 
 import com.progmasters.hotel.domain.Hotel;
 
-public class HotelItemToHomePage {
+public class HotelItemForHomePage {
 
     private Long id;
     private String name;
@@ -11,10 +11,10 @@ public class HotelItemToHomePage {
     private Integer bestPricePerNightPerPerson;
     private Double avgRate;
 
-    public HotelItemToHomePage() {
+    public HotelItemForHomePage() {
     }
 
-    public HotelItemToHomePage(Hotel hotel) {
+    public HotelItemForHomePage(Hotel hotel) {
         this.id = hotel.getId();
         this.name = hotel.getName();
         this.hotelType = hotel.getHotelType().getDisplayName();
@@ -24,7 +24,7 @@ public class HotelItemToHomePage {
         this.avgRate = hotel.getAvgRate();
     }
 
-    public HotelItemToHomePage(Hotel hotel, int bestPricePerNightPerPerson) {
+    public HotelItemForHomePage(Hotel hotel, int bestPricePerNightPerPerson) {
         this(hotel);
         this.setBestPricePerNightPerPerson(bestPricePerNightPerPerson);
     }

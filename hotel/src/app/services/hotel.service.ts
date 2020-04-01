@@ -7,6 +7,7 @@ import {HotelFormDataModel} from "../models/hotelFormData.model";
 import {HotelDetailsModel} from "../models/hotelDetails.model";
 import {environment} from "../../environments/environment";
 import {HotelListItemSubListModel} from "../models/hotelListItemSubList.model";
+import {HotelItemForHomePageModel} from "../models/hotelItemForHomePage.model";
 
 const BASE_URL = environment.BASE_URL + '/api/hotel';
 
@@ -42,6 +43,19 @@ export class HotelService {
     }
     return this.http.get<HotelListItemSubListModel>(BASE_URL + '/filter', {params});
   }
+
+  getTheBestHotelListPriceForHomePage(): Observable<Array<HotelItemForHomePageModel>> {
+    return this.http.get<Array<HotelItemForHomePageModel>>(BASE_URL + '/bestprice');
+  }
+
+  getTheBestAvgRateHotelListForHomePage(): Observable<Array<HotelItemForHomePageModel>> {
+    return this.http.get<Array<HotelItemForHomePageModel>>(BASE_URL + '/bestavgrate');
+  }
+
+  getRandomHotelListForHomePage(): Observable<Array<HotelItemForHomePageModel>> {
+    return this.http.get<Array<HotelItemForHomePageModel>>(BASE_URL + '/random');
+  }
+
 
   deleteHotel(id: number): Observable<Array<HotelListItemModel>> {
     return this.http.delete<Array<HotelListItemModel>>(BASE_URL + '/' + id);

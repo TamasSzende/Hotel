@@ -74,11 +74,11 @@ public class HotelController {
 			@RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
 			@RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate,
 			@RequestParam("numberOfGuests") long numberOfGuests,
-			@RequestParam List<String> hotelFeatures,
+			@RequestParam(required = false) List<String> hotelFeatures,
 			@RequestParam(required = false) Integer listPageNumber) {
 		if (listPageNumber == null) listPageNumber = 0;
 		HotelListItemSubList hotelList;
-		if (hotelFeatures.isEmpty()) {
+		if (hotelFeatures == null || hotelFeatures.isEmpty()) {
 			hotelList = hotelService.getPageOfHotelListFilteredByDateAndPerson(startDate, endDate, numberOfGuests, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE);
 		} else {
 			List<HotelFeatureType> hotelFeatureEnumList = hotelFeatures.stream().map(HotelFeatureType::valueOf).collect(Collectors.toList());
@@ -88,17 +88,17 @@ public class HotelController {
 	}
 
 	@GetMapping("/bestprice")
-	public ResponseEntity<List<HotelItemToHomePage>> getHotelListTheBestPriceForHomePage() {
+	public ResponseEntity<List<HotelItemForHomePage>> getHotelListTheBestPriceForHomePage() {
 		return new ResponseEntity<>(hotelService.getHotelListTheBestPriceForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
 	}
 
 	@GetMapping("/bestavgrate")
-	public ResponseEntity<List<HotelItemToHomePage>> getHotelListTheBestAvgRateForHomePage() {
+	public ResponseEntity<List<HotelItemForHomePage>> getHotelListTheBestAvgRateForHomePage() {
 		return new ResponseEntity<>(hotelService.getHotelListTheBestAvgRateForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
 	}
 
 	@GetMapping("/random")
-	public ResponseEntity<List<HotelItemToHomePage>> getRandomHotelListForHomePage() {
+	public ResponseEntity<List<HotelItemForHomePage>> getRandomHotelListForHomePage() {
 		return new ResponseEntity<>(hotelService.getRandomHotelListForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
 	}
 

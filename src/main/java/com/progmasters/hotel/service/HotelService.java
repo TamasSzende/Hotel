@@ -90,29 +90,29 @@ public class HotelService {
         } else return null;
     }
 
-    public List<HotelItemToHomePage> getHotelListTheBestPriceForHomePage(Integer numOfElementsPerPage) {
+    public List<HotelItemForHomePage> getHotelListTheBestPriceForHomePage(Integer numOfElementsPerPage) {
         Pageable pageable = PageRequest.of(0, numOfElementsPerPage);
         Page<HotelRepository.HotelFilterResult> queryResults = this.hotelRepository.findAllOrderByBestPrice(pageable);
         return queryResults.stream()
-                .map(result -> new HotelItemToHomePage(result.getFilteredHotel(), result.getBestPrice().intValue()))
+                .map(result -> new HotelItemForHomePage(result.getFilteredHotel(), result.getBestPrice().intValue()))
                 .collect(Collectors.toList());
     }
 
-    public List<HotelItemToHomePage> getHotelListTheBestAvgRateForHomePage(Integer numOfElementsPerPage) {
+    public List<HotelItemForHomePage> getHotelListTheBestAvgRateForHomePage(Integer numOfElementsPerPage) {
         Pageable pageable = PageRequest.of(0, numOfElementsPerPage);
         Page<HotelRepository.HotelFilterResult> queryResults = this.hotelRepository.findAllOrderByBestAvgRateForHomePage(pageable);
         return queryResults.stream()
-                .map(result -> new HotelItemToHomePage(result.getFilteredHotel(), result.getBestPrice().intValue()))
+                .map(result -> new HotelItemForHomePage(result.getFilteredHotel(), result.getBestPrice().intValue()))
                 .collect(Collectors.toList());
     }
 
-    public List<HotelItemToHomePage> getRandomHotelListForHomePage(Integer numOfElementsPerPage) {
+    public List<HotelItemForHomePage> getRandomHotelListForHomePage(Integer numOfElementsPerPage) {
         List<Long> hotelIdList = this.hotelRepository.findAllHotelId();
         Collections.shuffle(hotelIdList);
-        List<HotelItemToHomePage> result = new ArrayList<>();
+        List<HotelItemForHomePage> result = new ArrayList<>();
         for (int i = 0; i < numOfElementsPerPage; i++) {
             HotelRepository.HotelFilterResult queryResult = this.hotelRepository.findByIdWithBestPrice(hotelIdList.get(i));
-            result.add(new HotelItemToHomePage(queryResult.getFilteredHotel(), queryResult.getBestPrice().intValue()));
+            result.add(new HotelItemForHomePage(queryResult.getFilteredHotel(), queryResult.getBestPrice().intValue()));
         }
         return result;
     }

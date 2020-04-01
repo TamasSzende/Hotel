@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {PopupService} from "../../services/popup.service";
 import {LoginService} from "../../services/login.service";
 import {dateToJsonDateString} from "../../utils/dateUtils";
+import {HotelItemForHomePageModel} from "../../models/hotelItemForHomePage.model";
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,10 @@ import {dateToJsonDateString} from "../../utils/dateUtils";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  bestPriceHotelList: HotelItemForHomePageModel[];
+  bestAvgRateHotelList: HotelItemForHomePageModel[];
+  randomHotelList: HotelItemForHomePageModel[];
 
   filterForm: FormGroup;
   flatpickrOptions: FlatpickrOptions;
@@ -34,7 +39,18 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.hotelService.getTheBestHotelListPriceForHomePage().subscribe(
+      (response: HotelItemForHomePageModel[]) =>
+        this.bestPriceHotelList = response
+    );
+    this.hotelService.getTheBestAvgRateHotelListForHomePage().subscribe(
+      (response: HotelItemForHomePageModel[]) =>
+        this.bestAvgRateHotelList = response
+    );
+    this.hotelService.getRandomHotelListForHomePage().subscribe(
+      (response: HotelItemForHomePageModel[]) =>
+        this.randomHotelList = response
+    );
   }
 
   filterHotelList() {
