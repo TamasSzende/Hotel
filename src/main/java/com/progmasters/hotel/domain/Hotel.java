@@ -1,6 +1,5 @@
 package com.progmasters.hotel.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.progmasters.hotel.dto.HotelCreateItem;
 
 import javax.persistence.*;
@@ -10,7 +9,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "hotel")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Hotel {
 
     @Id

@@ -6,6 +6,7 @@ import {HotelCreateItemModel} from "../models/hotelCreateItem.model";
 import {HotelFormDataModel} from "../models/hotelFormData.model";
 import {HotelDetailsModel} from "../models/hotelDetails.model";
 import {environment} from "../../environments/environment";
+import {HotelListItemSubListModel} from "../models/hotelListItemSubList.model";
 
 const BASE_URL = environment.BASE_URL + '/api/hotel';
 
@@ -17,14 +18,19 @@ export class HotelService {
   constructor(private http: HttpClient) {
   }
 
-  listHotel(pageNumber?: number): Observable<Array<HotelListItemModel>> {
+  listHotel(listPageNumber?: number): Observable<HotelListItemSubListModel> {
     let params = new HttpParams();
-    if (pageNumber != null) {
-      params = params.set('offset', String(pageNumber));
+    if (listPageNumber != null) {
+      params = params.set('listPageNumber', String(listPageNumber));
     } else {
-      params = params.set('offset', '1');
+      params = params.set('listPageNumber', '0');
     }
-    return this.http.get<Array<HotelListItemModel>>(BASE_URL, {params});
+    return this.http.get<HotelListItemSubListModel>(BASE_URL, {params});
+  }
+
+
+  getNumOfHotels(): Observable<number> {
+    return this.http.get<number>(BASE_URL + '/numOfHotels');
   }
 
   getFilteredHotelList(filterData: { numberOfGuests: string; startDate: string; endDate: string; hotelFeatures?: string }):
@@ -71,13 +77,8 @@ export class HotelService {
     formData.append('imageURL', image);
     return this.http.post(BASE_URL + "/deleteImage/" + hotelIdFromLogin, formData);
   }
-
   getHotelImages(hotelId: number): Observable<Array<string>> {
     return this.http.get<Array<string>>(BASE_URL + "/images/" + hotelId);
-  }
-
-  getNumOfHotels(): Observable<number> {
-    return this.http.get<number>(BASE_URL + '/numOfHotels');
   }
 
 

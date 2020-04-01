@@ -12,6 +12,7 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {dateToJsonDateString} from "../../utils/dateUtils";
+import {HotelListItemSubListModel} from "../../models/hotelListItemSubList.model";
 
 @Component({
   selector: 'app-hotel-list',
@@ -26,7 +27,7 @@ export class HotelListComponent implements OnInit {
   filterForm: FormGroup;
   hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
   flatpickrOptions: FlatpickrOptions;
-  listPageNumber: number = 1;
+  listPageNumber: number = 0;
   pageNumbers: number[];
 
   constructor(private hotelService: HotelService, private route: ActivatedRoute, private router: Router, private popupService: PopupService, private loginService: LoginService) {
@@ -66,7 +67,6 @@ export class HotelListComponent implements OnInit {
     }
   }
 
-
   listHotel = () => {
     this.hotelService.getHotelFormData().subscribe(
       (hotelFormData: HotelFormDataModel) => {
@@ -90,19 +90,30 @@ export class HotelListComponent implements OnInit {
           )
         } else {
           this.hotelService.listHotel(this.listPageNumber).subscribe(
-            (hotelList: HotelListItemModel[]) => {
-              this.hotelList = hotelList;
+            (response: HotelListItemSubListModel) => {
+              this.hotelList = response.hotelSubList;
+              this.listPageNumber = response.listPageNumber;
+              this.pageNumbers = this.generatePageNumberArray(response.fullNumberOfPages);
             }
           );
-
         }
-
       }
     );
-
-
-    this.getPageNumbers();
   };
+
+  onPageNumClick(pageNum: number) {
+    this.listPageNumber = pageNum;
+    this.listHotel();
+    scrollToTheTop(40);
+  }
+
+  generatePageNumberArray(numOfHotels: number) {
+    let numArray = new Array<number>();
+    for (let i = 0; i < numOfHotels; i++) {
+      numArray.push(i);
+    }
+    return numArray;
+  }
 
   filterHotelList() {
     const queryParams = {
@@ -138,13 +149,6 @@ export class HotelListComponent implements OnInit {
     })
   }
 
-  getPageNumbers() {
-    this.hotelService.getNumOfHotels().subscribe(
-      (numOfHotels) => {
-        this.pageNumbers = this.generatePageNumberArray(numOfHotels);
-      }
-    );
-  }
 
   updateHotel(id: number): void {
     this.router.navigate(['/admin/hotel-update'])
@@ -159,13 +163,6 @@ export class HotelListComponent implements OnInit {
   }
 
 
-  generatePageNumberArray(numOfHotels: number) {
-    let numArray = new Array<number>();
-    for (let i = 1; i <= numOfHotels; i++) {
-      numArray.push(i);
-    }
-    return numArray;
-  }
 
   private createHotelFeaturesCheckboxControl() {
     this.hotelFeatureTypeOption.forEach(() => {
@@ -179,12 +176,6 @@ export class HotelListComponent implements OnInit {
     return this.filterForm.value.hotelFeatures
       .map((hotelFeatures, index) => hotelFeatures ? this.hotelFeatureTypeOption[index].name : null)
       .filter(hotelFeatures => hotelFeatures !== null);
-  }
-
-  onPageNumClick(pageNum: number) {
-    this.listPageNumber = pageNum;
-    this.listHotel();
-    scrollToTheTop(40);
   }
 
 

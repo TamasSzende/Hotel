@@ -146,7 +146,7 @@
       </li>
 
       <li *ngFor="let pageNumber of pageNumbers" class="page-item" [ngClass]="{'active': pageNumber == listPageNumber}">
-        <a class="page-link" (click)="onPageNumClick(pageNumber)">{{pageNumber}}<span
+        <a (click)="onPageNumClick(pageNumber)" class="page-link">{{pageNumber + 1}}<span
           *ngIf="pageNumber == listPageNumber" class="sr-only">(current)</span></a>
       </li>
 
