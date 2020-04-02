@@ -7,6 +7,7 @@ import {PopupService} from "../../services/popup.service";
 import {LoginService} from "../../services/login.service";
 import {dateToJsonDateString} from "../../utils/dateUtils";
 import {HotelItemForHomePageModel} from "../../models/hotelItemForHomePage.model";
+import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    document.body.classList.add('bg-img');
     this.hotelService.getTheBestHotelListPriceForHomePage().subscribe(
       (response: HotelItemForHomePageModel[]) =>
         this.bestPriceHotelList = response
@@ -64,6 +66,14 @@ export class HomeComponent implements OnInit {
 
   goToHotelList() {
     this.router.navigate(['/hotel'])
+  }
+
+  goToHotelDetails(id: number): void {
+    this.router.navigate(['/hotel/', id])
+  }
+
+  getPublicId(imgURL: string) {
+    return getPublicId(imgURL);
   }
 
 }
