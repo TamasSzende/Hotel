@@ -114,10 +114,12 @@ public class HotelController {
 		return new ResponseEntity<>(hotelService.getRandomHotelListForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
 	}
 
+	// TODO check if hotel has rooms
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<List<HotelListItem>> deleteHotel(@PathVariable Long id) {
 		boolean isDeleteSuccessful = hotelService.deleteHotel(id);
- 		ResponseEntity<List<HotelListItem>> result;
+		ResponseEntity<List<HotelListItem>> result;
 		if (isDeleteSuccessful) {
 			result = new ResponseEntity<>(hotelService.getHotelListItemList(), HttpStatus.OK);
 		} else {
