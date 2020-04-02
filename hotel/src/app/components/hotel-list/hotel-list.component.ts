@@ -53,14 +53,16 @@ export class HotelListComponent implements OnInit {
     if (!this.account) {
       this.loginService.checkSession().subscribe(
         (response) => {
-          this.loginService.authenticatedLoginDetailsModel.next(response);
+          if (response) {
+            this.loginService.authenticatedLoginDetailsModel.next(response);
+          }
           this.account = response;
           if (!this.account || this.account.role != "ROLE_HOTELOWNER") {
             this.listHotel();
           } else {
             this.router.navigate(['admin/hotel'])
           }
-        },
+        }
       )
     } else {
       if (this.account.role != "ROLE_HOTELOWNER") {

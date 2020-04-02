@@ -74,7 +74,7 @@ export class HotelDetailsComponent implements OnInit {
           this.isLoggedIn = true;
           this.showHotel();
         } else {
-          if (this.router.isActive('/hotel', false)) {
+          if (this.router.isActive('/hotel', false) || this.router.isActive('/admin/hotel', false)) {
             this.loginService.checkSession().subscribe((response) => {
               if (response != this.account) {
                 this.isLoggedIn = true;
