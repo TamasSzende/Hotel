@@ -30,7 +30,7 @@ export class AccountDetailsComponent implements OnInit {
               this.account = response
             });
           } else {
-            this.router.navigate(['/login'])
+            this.router.navigate([''])
           }
         });
     }

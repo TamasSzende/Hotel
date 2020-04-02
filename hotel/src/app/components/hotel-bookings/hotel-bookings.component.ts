@@ -27,7 +27,7 @@ export class HotelBookingsComponent implements OnInit {
             if (account) {
               this.hotelId.next(account.hotelId);
             } else {
-              this.router.navigate(['/login'])
+              this.router.navigate([''])
             }
           });
         }
