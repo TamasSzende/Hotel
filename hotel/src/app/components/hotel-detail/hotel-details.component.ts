@@ -18,7 +18,6 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 import {LoginComponent} from "../account/login/login.component";
 import {NotificationService} from "../../services/notification.service";
-import {scrollToTheTop} from "../../utils/smoothScroller";
 
 
 @Component({
@@ -310,7 +309,4 @@ export class HotelDetailsComponent implements OnInit {
     return counter < 1 ? {required: true} : null;
   }
 
-  gotoTop() {
-    scrollToTheTop(100);
-  }
 }
