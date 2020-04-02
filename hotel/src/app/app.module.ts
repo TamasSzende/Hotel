@@ -40,6 +40,7 @@ import {FutureHotelBookingsComponent} from "./components/hotel-bookings/future-h
 import {PastHotelBookingsComponent} from "./components/hotel-bookings/past-hotel-bookings/past-hotel-bookings.component";
 import {AccountEditComponent} from './components/account/account-edit/account-edit.component';
 import {HomeComponent} from "./components/home/home.component";
+import {FooterComponent} from "./components/footer/footer.component";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -74,6 +75,7 @@ export const cloudinary = {
     AccountDetailsComponent,
     AccountEditComponent,
     HomeComponent,
+    FooterComponent,
   ],
     imports: [
       HttpClientModule,
