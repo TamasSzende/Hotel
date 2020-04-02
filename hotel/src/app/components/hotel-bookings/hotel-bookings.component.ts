@@ -17,21 +17,22 @@ export class HotelBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.authenticatedLoginDetailsModel.subscribe(
-      response => {
-        if (response) {
-          this.hotelId.next(response.hotelId);
-        } else {
-          this.loginService.checkSession().subscribe((account) => {
-            this.loginService.authenticatedLoginDetailsModel.next(account);
-            if (account) {
-              this.hotelId.next(account.hotelId);
-            } else {
-              this.router.navigate([''])
-            }
-          });
+    let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+    if (account) {
+      this.hotelId.next(account.hotelId);
+    } else {
+      this.loginService.checkSession().subscribe(
+        (response) => {
+          debugger;
+          if (response) {
+            this.loginService.authenticatedLoginDetailsModel.next(response);
+            this.hotelId.next(response.hotelId);
+          } else {
+            this.router.navigate([''])
+          }
         }
-      });
+      )
+    }
   }
 
 

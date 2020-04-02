@@ -16,21 +16,21 @@ export class UserBookingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.authenticatedLoginDetailsModel.subscribe(
-      response => {
-        if (response) {
-          this.userId.next(response.id);
-        } else {
-          this.loginService.checkSession().subscribe((account) => {
-            this.loginService.authenticatedLoginDetailsModel.next(account);
-            if (account) {
-              this.userId.next(account.id);
-            } else {
-              this.router.navigate([''])
-            }
-          });
+    let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+    if (account) {
+      this.userId.next(account.id);
+    } else {
+      this.loginService.checkSession().subscribe(
+        (response) => {
+          if (response) {
+            this.loginService.authenticatedLoginDetailsModel.next(response);
+            this.userId.next(response.id);
+          } else {
+            this.router.navigate([''])
+          }
         }
-      });
+      )
+    }
   }
 
 
