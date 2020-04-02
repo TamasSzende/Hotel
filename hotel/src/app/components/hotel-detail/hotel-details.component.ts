@@ -93,7 +93,11 @@ export class HotelDetailsComponent implements OnInit {
   showHotel() {
     if (this.account && this.account.role === "ROLE_HOTELOWNER") {
       this.hotelIdFromLogin = this.account.hotelId;
-      this.getHotelDetail(String(this.hotelIdFromLogin))
+      if (this.hotelIdFromLogin) {
+        this.getHotelDetail(String(this.hotelIdFromLogin))
+      } else {
+        this.router.navigate(['admin/hotel-create'])
+      }
     } else {
       this.route.paramMap.subscribe(
         paramMap => {

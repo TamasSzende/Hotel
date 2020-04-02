@@ -41,7 +41,7 @@ export class BookingFormDialogComponent implements OnInit {
         if (response !== null) {
           this.username = response.name;
         } else {
-          this.router.navigate(['/login'])
+          this.router.navigate([''])
         }
       });
 

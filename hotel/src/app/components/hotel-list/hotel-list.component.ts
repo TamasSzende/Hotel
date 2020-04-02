@@ -136,7 +136,7 @@ export class HotelListComponent implements OnInit {
       );
     } else {
       const queryParams = {'listPageNumber': pageNum};
-      this.router.navigate(['/hotel'], {queryParams});
+      this.router.navigate(['hotel'], {queryParams});
     }
   }
 

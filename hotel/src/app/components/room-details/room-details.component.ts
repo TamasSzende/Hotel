@@ -27,7 +27,7 @@ export class RoomDetailsComponent implements OnInit {
           if (response) {
             this.hotelId = response.hotelId;
           } else {
-            this.router.navigate(['/login'])
+            this.router.navigate([''])
           }
         });
     }

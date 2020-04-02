@@ -1,8 +1,10 @@
 package com.progmasters.hotel.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.domain.HotelFeatureType;
 import com.progmasters.hotel.dto.*;
+import com.progmasters.hotel.service.AccountService;
 import com.progmasters.hotel.service.HotelService;
 import com.progmasters.hotel.service.RoomReservationService;
 import com.progmasters.hotel.service.RoomService;
@@ -10,6 +12,9 @@ import com.progmasters.hotel.validator.HotelCreateItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,14 +35,16 @@ public class HotelController {
 	private RoomReservationService roomReservationService;
 	private RoomService roomService;
 	private HotelCreateItemValidator validator;
+	private AccountService accountService;
 
-    @Autowired
-	public HotelController(HotelService hotelService, RoomReservationService roomReservationService, RoomService roomService, HotelCreateItemValidator validator) {
+	@Autowired
+	public HotelController(HotelService hotelService, RoomReservationService roomReservationService, RoomService roomService, HotelCreateItemValidator validator, AccountService accountService) {
 		this.hotelService = hotelService;
 		this.roomReservationService = roomReservationService;
 		this.roomService = roomService;
 		this.validator = validator;
-    }
+		this.accountService = accountService;
+	}
 
     @InitBinder("HotelCreateItem")
     protected void initBinder(WebDataBinder binder) {
@@ -54,7 +61,12 @@ public class HotelController {
 
 	@PostMapping
 	public ResponseEntity<Long> saveHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails user = (UserDetails) authentication.getPrincipal();
 		Long hotelId = hotelService.saveHotel(hotelCreateItem);
+		Account account = accountService.findByUsername(user.getUsername());
+		account.setHotelId(hotelId);
+		accountService.saveConfirmedAccount(account);
 		return new ResponseEntity<>(hotelId, HttpStatus.CREATED);
 	}
 
@@ -102,10 +114,12 @@ public class HotelController {
 		return new ResponseEntity<>(hotelService.getRandomHotelListForHomePage(NUM_OF_ELEMENTS_ON_HOMEPAGE), HttpStatus.OK);
 	}
 
+	// TODO check if hotel has rooms
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<List<HotelListItem>> deleteHotel(@PathVariable Long id) {
 		boolean isDeleteSuccessful = hotelService.deleteHotel(id);
- 		ResponseEntity<List<HotelListItem>> result;
+		ResponseEntity<List<HotelListItem>> result;
 		if (isDeleteSuccessful) {
 			result = new ResponseEntity<>(hotelService.getHotelListItemList(), HttpStatus.OK);
 		} else {

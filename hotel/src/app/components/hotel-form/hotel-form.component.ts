@@ -57,7 +57,7 @@ export class HotelFormComponent implements OnInit {
           account = response;
           let role = account.role;
           if (role !== "ROLE_HOTELOWNER") {
-            this.router.navigate(['/login']);
+            this.router.navigate(['']);
           } else {
             this.hotelIdFromLogin = account.hotelId;
             this.loadData();
@@ -95,7 +95,9 @@ export class HotelFormComponent implements OnInit {
     this.hotelService.createHotel(data).subscribe(
       (hotelId) => {
         console.log('hotelId:' + hotelId);
-        // TODO
+        let account = this.loginService.authenticatedLoginDetailsModel.getValue();
+        account.hotelId = hotelId;
+        this.loginService.authenticatedLoginDetailsModel.next(account);
         this.router.navigate(['/admin/hotel']);
       }, error => validationHandler(error, this.hotelForm),
     );

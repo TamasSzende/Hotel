@@ -30,7 +30,7 @@ export class AccountEditComponent implements OnInit {
     let account = this.loginService.authenticatedLoginDetailsModel.getValue();
     if (account) {
       this.loginService.getAccountDetails(account.name).subscribe((response) => {
-        this.account = response
+        this.account = response;
         this.registerForm.patchValue({
           firstname: response.firstname,
           lastname: response.lastname,
@@ -51,7 +51,7 @@ export class AccountEditComponent implements OnInit {
               })
             });
           } else {
-            this.router.navigate(['/login'])
+            this.router.navigate([''])
           }
         });
     }

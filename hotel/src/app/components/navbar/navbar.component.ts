@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
   loggedIn: boolean;
   userRole: string;
   email: string;
-  baseRouterLink: string = 'home';
+  baseRouterLink: string = '';
   lastname: string;
 
   isWindowOpen: boolean;
@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.loggedIn = false;
     this.userRole = null;
-    this.baseRouterLink = 'home';
+    this.baseRouterLink = '';
     this.router.navigateByUrl('').then(() => this.loginService.logout()
     );
   }

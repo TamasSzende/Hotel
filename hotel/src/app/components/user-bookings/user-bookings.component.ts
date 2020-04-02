@@ -26,7 +26,7 @@ export class UserBookingsComponent implements OnInit {
             if (account) {
               this.userId.next(account.id);
             } else {
-              this.router.navigate(['/login'])
+              this.router.navigate([''])
             }
           });
         }
