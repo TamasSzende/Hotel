@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
       dateFormat: "Y-m-d",
     };
     this.filterForm = new FormGroup({
-      'numberOfGuests': new FormControl(null,
+      'numberOfGuests': new FormControl("1",
         [Validators.required,
           Validators.min(1)]),
       'bookingDateRange': new FormControl([],

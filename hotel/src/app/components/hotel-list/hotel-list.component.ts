@@ -61,9 +61,6 @@ export class HotelListComponent implements OnInit {
             this.router.navigate(['admin/hotel'])
           }
         },
-        error => {
-          this.listHotel()
-        }
       )
     } else {
       if (this.account.role != "ROLE_HOTELOWNER") {
