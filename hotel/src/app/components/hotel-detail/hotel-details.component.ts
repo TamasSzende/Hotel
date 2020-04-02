@@ -18,7 +18,6 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 import {LoginComponent} from "../account/login/login.component";
 import {NotificationService} from "../../services/notification.service";
-import {error} from "util";
 import {scrollToTheTop} from "../../utils/smoothScroller";
 
 
@@ -212,6 +211,8 @@ export class HotelDetailsComponent implements OnInit {
     if (this.isLoggedIn == false) {
       this.notificationService.unsuccessful("Foglaláshoz jelentkezz be kérlek!");
       this.dialog.open(LoginComponent, {
+        height: '600px',
+        width: '400px',
         data: {
           openedBy: "BookingButton"
         }

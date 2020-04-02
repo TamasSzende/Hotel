@@ -1,34 +1,35 @@
-<div class="container">
+<div class="bg">
 
-  <form [formGroup]="filterForm">
+  <div class="container" style="padding-top: 30px">
 
-    <div class="card bg-light mb-3">
-      <div class="card-body">
-        <div class="form-row">
-          <div class="col-md-4 mb-3">
-            <label for="numberOfGuests" lass="form-control-label">
-              Vendégek száma:&nbsp;&nbsp;
-            </label>
-            <input
-              formControlName="numberOfGuests"
-              id="numberOfGuests"
-              name="numberOfGuests"
-              type="number"
-            />
-            <small
-              *ngIf="filterForm.get('numberOfGuests').invalid && filterForm.get('numberOfGuests').touched && !filterForm.get('numberOfGuests').errors?.serverError"
-              class="text-danger">
-              Kérlek add meg a vendégek számát!
-            </small>
-
-          </div>
-
-          <div class="col-md-4 mb-3">
-            <div class="input-group">
-              <label>
-                Utazás időpontja:&nbsp;&nbsp;
+    <div class="d-flex flex-wrap justify-content-between">
+      <div class="card text-center bg-light mb-3" style="width: 16rem;">
+        <div class="card-body">
+          <form [formGroup]="filterForm">
+            <div class="form-group ">
+              <label for="numberOfGuests">
+                Vendégek száma:
               </label>
+              <br>
+              <input
+                formControlName="numberOfGuests"
+                id="numberOfGuests"
+                name="numberOfGuests"
+                placeholder="2"
+                type="number"
+              >
+              <small
+                *ngIf="filterForm.get('numberOfGuests').invalid && filterForm.get('numberOfGuests').touched && !filterForm.get('numberOfGuests').errors?.serverError"
+                class="text-danger">
+                Kérlek add meg a vendégek számát!
+              </small>
+            </div>
 
+
+            <div class="form-group">
+              <label>
+                Utazás időpontja:
+              </label>
               <ng2-flatpickr
                 [config]="flatpickrOptions"
                 formControlName="bookingDateRange"
@@ -43,27 +44,147 @@
                   Kérlek válasz időpontot!
                 </small>
               </ng2-flatpickr>
-
             </div>
-          </div>
+            <br>
+            <hr>
 
-          <div class="col-md-4 mb-3">
-            <div class="text-right">
-              <button (click)="filterHotelList()" class="btn btn-primary mr-4">
+            <div>
+              <button (click)="filterHotelList()" class="btn btn-primary btn-block">
                 Keresés a Hotelek között
               </button>
-              <button (click)="goToHotelList()" class="btn btn-outline-primary mr-4">
+              <br>
+
+              <button (click)="goToHotelList()" class="btn btn-outline-primary btn-block">
                 Megnézem a teljes listát
               </button>
-
             </div>
-          </div>
+          </form>
         </div>
-
-        <hr>
-
-
+      </div>
+      <div>
+        <br>
+        <br>
+        <h1 class="display-1 text-right" style="color: white">BUDAPEST</h1>
+        <h1 class="display-4 text-right" style="color: white">Téged vár!*</h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <p class="text-right" style="color: white">*csak nem most...</p>
       </div>
     </div>
-  </form>
+
+    <br>
+    <br>
+
+    <h5 style="color: white">Népszerű ajánlataink:</h5>
+
+    <div class="d-flex flex-wrap justify-content-between">
+      <div (click)="goToHotelDetails(bestAvgRateHotel?.id)" *ngFor="let bestAvgRateHotel of bestAvgRateHotelList"
+           class="card mb-3 shadow " style="width: 16rem; cursor: pointer">
+
+        <cl-image [public-id]="getPublicId(bestAvgRateHotel?.hotelImageUrl)" class="card-img-top" width="100%">
+          <cl-transformation
+            crop="fill"
+            height="200"
+            width="280">
+          </cl-transformation>
+        </cl-image>
+
+        <div class="card-body" style="padding: 10px; padding-bottom: 0px">
+          <h6 class="card-text" style="margin-bottom: 0px">{{bestAvgRateHotel?.name}}</h6>
+          <p class="card-text" style="margin-bottom: 8px">{{bestAvgRateHotel?.hotelType}}</p>
+        </div>
+        <div class="card-footer bg-transparent border-0"
+             style="padding-top: 0px; padding-left: 10px; padding-right: 10px; ">
+          <table style="width:100%">
+            <tr>
+              <th>
+                <h6 class="card-text">{{bestAvgRateHotel?.bestPricePerNightPerPerson.toLocaleString('hu-HU')}}
+                  Ft/fő/éj</h6>
+              </th>
+              <th>
+                <h4 class="text-right"><span class="badge badge-primary">{{bestAvgRateHotel?.avgRate}}</span></h4>
+              </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <h5 style="color: white">Legkedvezőbb ajánlataink:</h5>
+
+    <div class="d-flex flex-wrap justify-content-between">
+      <div (click)="goToHotelDetails(bestPriceHotel?.id)" *ngFor="let bestPriceHotel of bestPriceHotelList"
+           class="card mb-3 shadow" style="width: 16rem; cursor: pointer">
+
+        <cl-image [public-id]="getPublicId(bestPriceHotel?.hotelImageUrl)" class="card-img-top" width="100%">
+          <cl-transformation
+            crop="fill"
+            height="200"
+            width="280">
+          </cl-transformation>
+        </cl-image>
+
+        <div class="card-body" style="padding: 10px; padding-bottom: 0px">
+          <h6 class="card-text" style="margin-bottom: 0px">{{bestPriceHotel?.name}}</h6>
+          <p class="card-text" style="margin-bottom: 8px">{{bestPriceHotel?.hotelType}}</p>
+        </div>
+        <div class="card-footer bg-transparent border-0"
+             style="padding-top: 0px; padding-left: 10px; padding-right: 10px; ">
+          <table style="width:100%">
+            <tr>
+              <th>
+                <h6 class="card-text">{{bestPriceHotel?.bestPricePerNightPerPerson.toLocaleString('hu-HU')}}
+                  Ft/fő/éj</h6>
+              </th>
+              <th>
+                <h4 class="text-right"><span class="badge badge-primary">{{bestPriceHotel?.avgRate}}</span></h4>
+              </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <h5>Aktuális ajánlataink:</h5>
+
+    <div class="d-flex flex-wrap justify-content-between">
+      <div (click)="goToHotelDetails(randomHotel?.id)" *ngFor="let randomHotel of randomHotelList"
+           class="card mb-3 shadow" style="width: 16rem; cursor: pointer">
+
+        <cl-image [public-id]="getPublicId(randomHotel?.hotelImageUrl)" class="card-img-top" width="100%">
+          <cl-transformation
+            crop="fill"
+            height="200"
+            width="280">
+          </cl-transformation>
+        </cl-image>
+
+        <div class="card-body" style="padding: 10px; padding-bottom: 0px">
+          <h6 class="card-text" style="margin-bottom: 0px">{{randomHotel?.name}}</h6>
+          <p class="card-text" style="margin-bottom: 8px">{{randomHotel?.hotelType}}</p>
+        </div>
+        <div class="card-footer bg-transparent border-0"
+             style="padding-top: 0px; padding-left: 10px; padding-right: 10px; ">
+          <table style="width:100%">
+            <tr>
+              <th>
+                <h6 class="card-text">{{randomHotel?.bestPricePerNightPerPerson.toLocaleString('hu-HU')}}
+                  Ft/fő/éj</h6>
+              </th>
+              <th>
+                <h4 class="text-right"><span class="badge badge-primary">{{randomHotel?.avgRate}}</span></h4>
+              </th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+  </div>
 </div>

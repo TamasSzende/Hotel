@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
   doRegistration() {
     this.dialog.open(RegistrationComponent, {
       height: '600px',
-      width: '600px',
+      width: '400px',
       data: {
         registrationType: 'asUser'
       }
