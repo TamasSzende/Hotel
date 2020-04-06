@@ -41,6 +41,8 @@ import {PastHotelBookingsComponent} from "./components/hotel-bookings/past-hotel
 import {AccountEditComponent} from './components/account/account-edit/account-edit.component';
 import {HomeComponent} from "./components/home/home.component";
 import {FooterComponent} from "./components/footer/footer.component";
+import {HotelBookingsCalendarComponent} from "./components/hotel-bookings/hotel-bookings-calendar/hotel-bookings-calendar.component";
+import {HotelBookingsStatisticsComponent} from "./components/hotel-bookings/hotel-bookings-statistics/hotel-bookings-statistics.component";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -61,6 +63,8 @@ export const cloudinary = {
     ActualHotelBookingsComponent,
     FutureHotelBookingsComponent,
     PastHotelBookingsComponent,
+    HotelBookingsCalendarComponent,
+    HotelBookingsStatisticsComponent,
     RegistrationComponent,
     PopupComponent,
     BookingFormDialogComponent,

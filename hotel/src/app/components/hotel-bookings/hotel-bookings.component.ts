@@ -1,7 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {LoginService} from "../../services/login.service";
 import {Router} from "@angular/router";
-import {serialize} from "@angular/compiler/src/i18n/serializers/xml_helper";
 import {BehaviorSubject} from "rxjs";
 
 @Component({
@@ -23,7 +22,6 @@ export class HotelBookingsComponent implements OnInit {
     } else {
       this.loginService.checkSession().subscribe(
         (response) => {
-          debugger;
           if (response) {
             this.loginService.authenticatedLoginDetailsModel.next(response);
             this.hotelId.next(response.hotelId);

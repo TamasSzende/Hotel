@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +73,21 @@ public class RoomService {
                 .filter(room -> isRoomFree(room, startDate, endDate))
                 .map(RoomListItem::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<RoomBookingData> getRoomBookingDataByDateRange(Long hotelId, LocalDate startDate, LocalDate endDate) {
+        List<Room> roomList = roomRepository.findAllByHotelId(hotelId);
+        List<RoomBookingData> result = new ArrayList<>();
+        for (Room room : roomList) {
+            List<RoomReservationData> roomReservationDataList =
+                    roomReservationRepository.findAllByRoomIdAndDateRange(room, startDate, endDate).stream()
+                            .map(RoomReservationData::new)
+                            .collect(Collectors.toList());
+            RoomBookingData roomBookingData = new RoomBookingData(room);
+            roomBookingData.setRoomReservationDataList(roomReservationDataList);
+            result.add(roomBookingData);
+        }
+        return result;
     }
 
     public List<RoomShortListItem> findAllFreeRoomByDateRange(LocalDate startDate, LocalDate endDate) {
