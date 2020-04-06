@@ -1,1 +1,34 @@
+<div class="container" style="padding-top: 30px;  margin-left: auto; margin-right: auto;">
+  <table>
+    <tr>
+      <td></td>
+      <td *ngFor="let day of this?.dayList" style="text-align: center"> {{day.weekDayName}} <br> {{day.dayDateString}}
+      </td>
+    </tr>
 
+    <tr *ngFor="let room of this?.roomBookingTable">
+
+      <td style="max-width:100%; white-space:nowrap;"> {{room?.roomName}}</td>
+
+      <td *ngFor="let day of room?.roomDayList" style="margin: 0; padding: 0;">
+
+        <table style="border: 0px; margin: 0; padding: 0; height: 50%; width: 100%; table-layout: fixed" width="100%">
+          <td style="border: 0px; margin: 0; padding: 0">
+            <div (dblclick)="bookingDetails(day.morning.bookingId)" *ngIf="day.morning !== null"
+                 ngbTooltip="Tooltip on top" style="height: 10px; width: 100%; background-color: black"></div>
+          </td>
+          <td style="border: 0px; margin: 0; padding: 0; height: 10px">
+            <div (dblclick)="bookingDetails(day.noon.bookingId)" *ngIf="day.noon !== null"
+                 style="height: 10px; width: 100%; background-color: black"></div>
+          </td>
+          <td style="border: 0px; margin: 0; padding: 0; height: 10px">
+            <div (dblclick)="bookingDetails(day.evening.bookingId)" *ngIf="day.evening !== null"
+                 style="height: 10px; width: 100%; background-color: black"></div>
+          </td>
+        </table>
+
+      </td>
+
+    </tr>
+  </table>
+</div>

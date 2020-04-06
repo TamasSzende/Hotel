@@ -27,7 +27,8 @@ public interface RoomReservationRepository extends JpaRepository<RoomReservation
 
 
     @Query("SELECT reservation FROM RoomReservation reservation " +
-            "WHERE reservation.room = :room AND reservation.endDate > :start_date AND reservation.startDate < :end_date")
+            "WHERE reservation.room = :room AND reservation.endDate > :start_date AND reservation.startDate < :end_date " +
+            "ORDER BY reservation.startDate")
     List<RoomReservation> findAllByRoomIdAndDateRange(@Param("room") Room room, @Param("start_date") LocalDate startDate, @Param("end_date") LocalDate endDate);
 
 
