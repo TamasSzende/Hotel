@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,10 +27,10 @@ public class AccountService {
     private static final String ADMINMAIL = "hotel.team.five.a@gmail.com";
     private static final String USERMAIL = "hotel.team.five.u@gmail.com";
     private static final String HOTELOWNERMAIL = "hotel.team.five.h@gmail.com";
-    private JavaMailSender javaMailSender;
     private BCryptPasswordEncoder passwordEncoder;
     private AccountRepository accountRepository;
     private ConfirmationTokenRepository confirmationTokenRepository;
+    private EmailService emailService;
 
     @Value("${spring.mail.username}")
     private String MESSAGE_FROM;
@@ -41,9 +39,9 @@ public class AccountService {
     private String mailSenderAddress;
 
     @Autowired
-    public AccountService(JavaMailSender javaMailSender, AccountRepository accountRepository, ConfirmationTokenRepository confirmationTokenRepository) {
-        this.javaMailSender = javaMailSender;
+    public AccountService(AccountRepository accountRepository, ConfirmationTokenRepository confirmationTokenRepository, EmailService emailService) {
         this.confirmationTokenRepository = confirmationTokenRepository;
+        this.emailService = emailService;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.accountRepository = accountRepository;
     }
@@ -58,7 +56,7 @@ public class AccountService {
             account.setRole(Role.ROLE_USER);
             accountRepository.save(account);
 
-            sendConfirmationMail(account);
+            emailService.sendConfirmationMail(account);
 
         } else {
             throw new Exception("Mail already taken!");
@@ -73,24 +71,11 @@ public class AccountService {
             account.setRole(Role.ROLE_HOTELOWNER);
             accountRepository.save(account);
 
-            sendConfirmationMail(account);
+            emailService.sendConfirmationMail(account);
 
         } else {
             throw new Exception("Mail already taken!");
         }
-    }
-
-    public void sendConfirmationMail(Account account) {
-        ConfirmationToken confirmationToken = new ConfirmationToken(account);
-        confirmationTokenRepository.save(confirmationToken);
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(MESSAGE_FROM);
-        message.setTo(account.getEmail());
-        message.setSubject("Complete Registration!");
-        message.setText("To confirm your account, please click here : "
-                + this.mailSenderAddress + "/login/" + confirmationToken.getConfirmationToken());
-        javaMailSender.send(message);
     }
 
     public ConfirmationToken findToken(String confirmationToken) {
