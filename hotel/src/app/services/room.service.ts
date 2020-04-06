@@ -7,6 +7,7 @@ import {RoomFormDataModel} from "../models/roomFormData.model";
 import {RoomDetailsModel} from "../models/roomDetails.model";
 import {environment} from "../../environments/environment";
 import {dateToJsonDateString} from "../utils/dateUtils";
+import {RoomBookingDataModel} from "../models/roomBookingData.model";
 
 const BASE_URL = environment.BASE_URL + '/api/rooms';
 
@@ -32,6 +33,13 @@ export class RoomService {
       .set('endDate', dateToJsonDateString(data.endDate))
       .set('roomFeatures', data.roomFeatures.join(', '));
     return this.http.get<Array<RoomListItemModel>>(BASE_URL + '/filter/' + hotelId, {params});
+  }
+
+  getRoomBookingData(hotelId: number, startDate: Date, endDate: Date): Observable<Array<RoomBookingDataModel>> {
+    const params = new HttpParams()
+      .set('startDate', dateToJsonDateString(startDate))
+      .set('endDate', dateToJsonDateString(endDate));
+    return this.http.get<Array<RoomBookingDataModel>>(BASE_URL + '/data/' + hotelId, {params});
   }
 
   getRoomFormData(): Observable<RoomFormDataModel> {

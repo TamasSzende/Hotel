@@ -49,10 +49,13 @@
     </div>
 
     <div aria-labelledby="pills-search-tab" class="tab-pane fade" id="pills-search" role="tabpanel">coming soon...</div>
-    <div aria-labelledby="pills-calendar-tab" class="tab-pane fade" id="pills-calendar" role="tabpanel">coming soon...
+
+    <div aria-labelledby="pills-calendar-tab" class="tab-pane fade" id="pills-calendar" role="tabpanel">
+      <hotel-bookings-calendar [hotelId]="hotelId"></hotel-bookings-calendar>
     </div>
-    <div aria-labelledby="pills-statistics-tab" class="tab-pane fade" id="pills-statistics" role="tabpanel">coming
-      soon...
+
+    <div aria-labelledby="pills-statistics-tab" class="tab-pane fade" id="pills-statistics" role="tabpanel">
+      <hotel-bookings-statistics [hotelId]="hotelId"></hotel-bookings-statistics>
     </div>
   </div>
 

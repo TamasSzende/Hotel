@@ -57,6 +57,14 @@ public class RoomController {
         }
     }
 
+    @GetMapping("/data/{id}")
+    public List<RoomBookingData> getRoomBookingDataByDateRange(
+            @PathVariable("id") Long hotelId,
+            @RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
+            @RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate) {
+        return roomService.getRoomBookingDataByDateRange(hotelId, startDate, endDate);
+    }
+
     @GetMapping("/{id}")
     public RoomDetails roomDetail(@PathVariable("id") Long id) {
         return roomService.getRoomDetails(id);
