@@ -11,7 +11,6 @@ import com.progmasters.hotel.security.AuthenticatedLoginDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,12 +30,6 @@ public class AccountService {
     private AccountRepository accountRepository;
     private ConfirmationTokenRepository confirmationTokenRepository;
     private EmailService emailService;
-
-    @Value("${spring.mail.username}")
-    private String MESSAGE_FROM;
-
-    @Value("${spring.mail.url}")
-    private String mailSenderAddress;
 
     @Autowired
     public AccountService(AccountRepository accountRepository, ConfirmationTokenRepository confirmationTokenRepository, EmailService emailService) {
