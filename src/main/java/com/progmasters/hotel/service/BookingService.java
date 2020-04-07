@@ -35,13 +35,15 @@ public class BookingService {
     private RoomRepository roomRepository;
     private AccountRepository accountRepository;
     private static final ZoneId HOTELS_ZONEID = ZoneId.of("Europe/Budapest");
+    private EmailService emailService;
 
     @Autowired
-    public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository, AccountRepository accountRepository) {
+    public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository, AccountRepository accountRepository, EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.roomReservationRepository = roomReservationRepository;
         this.roomRepository = roomRepository;
         this.accountRepository = accountRepository;
+        this.emailService = emailService;
     }
 
     public Long saveBooking(BookingCreateItem bookingCreateItem) {
@@ -71,8 +73,9 @@ public class BookingService {
         roomReservations.forEach(this.roomReservationRepository::save);
         this.bookingRepository.save(booking);
 
-        //TODO send an email!!!!
-       return booking.getId();
+        emailService.sendMailAtBooking(guestAccount);
+
+        return booking.getId();
     }
 
     public boolean deleteBooking(Long bookingId) {
@@ -84,8 +87,10 @@ public class BookingService {
                 this.roomReservationRepository.delete(deletedRoomReservation);
             }
             bookingRepository.delete(booking);
+
+            emailService.sendMailAtDeleteBooking(booking.getGuest());
+
             return true;
-            //TODO send an email!!!!
         } else {
             return false;
         }
