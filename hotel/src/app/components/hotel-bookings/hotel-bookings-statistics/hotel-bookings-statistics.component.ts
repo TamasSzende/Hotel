@@ -1,10 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {PopupService} from "../../../services/popup.service";
-import {MatDialog} from "@angular/material/dialog";
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {RoomBookingDataModel} from "../../../models/roomBookingData.model";
 import {RoomService} from "../../../services/room.service";
-import {ChartsModule, WavesModule} from 'angular-bootstrap-md'
 
 const START_DAY_BEFORE_TODAY = 20;
 const END_DAY_AFTER_TODAY = 5;
@@ -19,6 +16,8 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   @Input() hotelId: BehaviorSubject<number>;
   roomBookingDataList: RoomBookingDataModel[];
   roomBookingDataListPrev: RoomBookingDataModel[];
+  @ViewChild('canvas', {static: true})
+  canvas: ElementRef<HTMLCanvasElement>;
   startDate: Date = new Date();
   endDate: Date = new Date();
   chartType: string = 'line';
@@ -35,7 +34,15 @@ export class HotelBookingsStatisticsComponent implements OnInit {
     }
   ];
   chartOptions: any = {
-    responsive: true
+    responsive: true,
+    scales: {
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Napi Bevétel'
+        }
+      }]
+    }
   };
 
   public chartDatasets: Array<any>;
@@ -59,6 +66,7 @@ export class HotelBookingsStatisticsComponent implements OnInit {
     });
   }
 
+
   doSomething(hotelId: number) {
     this.setStartAndEndDate();
     this.createDayList();
@@ -68,6 +76,7 @@ export class HotelBookingsStatisticsComponent implements OnInit {
       }
     });
   }
+
 
   private getRoomBookingDataList(hotelId: number) {
     this.roomService.getRoomBookingData(hotelId, this.startDate, this.endDate).subscribe(
@@ -102,8 +111,16 @@ export class HotelBookingsStatisticsComponent implements OnInit {
       this.previousYearsDays.push(previousYearDay.getTime());
       this.chartLabels.push(this.createDayDateString(actualDate));
     }
-    console.log(this.previousYearsDays);
-    console.log(this.days);
+  }
+
+  private drawTodayLine(todayXOffset: number) {
+    let context = this.canvas.nativeElement.getContext("2d");
+    let height = context.canvas.height;
+    let width = context.canvas.width;
+    context.beginPath();
+    context.moveTo(width * todayXOffset, 0);
+    context.lineTo(width * todayXOffset, height);
+    context.stroke();
   }
 
 
@@ -114,10 +131,6 @@ export class HotelBookingsStatisticsComponent implements OnInit {
     this.previousYearsDays.forEach((day) => {
       this.previousYearsIncomes.push(this.calculateDailyIncome(new Date(day), this.roomBookingDataListPrev));
     });
-    console.log(this.actualYearsIncomes)
-    console.log(this.previousYearsIncomes);
-
-
     this.chartDatasets = [
       {data: this.actualYearsIncomes, label: '2020'},
       {data: this.previousYearsIncomes, label: '2019'}
@@ -158,5 +171,6 @@ export class HotelBookingsStatisticsComponent implements OnInit {
     result += date.getDate() + '.';
     return result;
   }
+
 
 }

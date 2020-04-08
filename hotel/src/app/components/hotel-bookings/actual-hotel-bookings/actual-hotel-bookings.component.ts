@@ -15,6 +15,10 @@ export class ActualHotelBookingsComponent implements OnInit {
 
   @Input() hotelId: BehaviorSubject<number>;
   currentBookingList: BookingListItemForHotelModel[];
+  private id: number;
+  fullNumberOfPages: number;
+  private listPageNumber: number = 0;
+  private pageNumbers: number[];
 
   constructor(private bookingService: BookingService,
               private popupService: PopupService,
@@ -24,15 +28,18 @@ export class ActualHotelBookingsComponent implements OnInit {
   ngOnInit(): void {
     this.hotelId.subscribe((id) => {
       if (id != 0) {
+        this.id = id;
         this.getCurrentBookingList(id);
       }
     });
   }
 
   getCurrentBookingList(hotelId: number) {
-    this.bookingService.getCurrentBookingListByHotel(hotelId).subscribe(
-      (response: BookingListItemForHotelModel[]) => {
-        this.currentBookingList = response;
+    this.bookingService.getCurrentBookingListByHotel(hotelId, this.listPageNumber).subscribe(
+      (response) => {
+        this.currentBookingList = response.bookingSubList;
+        this.fullNumberOfPages = response.fullNumberOfPages;
+        this.pageNumbers = this.generatePageNumberArray(this.fullNumberOfPages);
       },
       error => console.warn(error)
     );
@@ -65,6 +72,20 @@ export class ActualHotelBookingsComponent implements OnInit {
         );
       }
     })
+  }
+
+  onPageNumClick(number: number) {
+    this.listPageNumber = number;
+    this.getCurrentBookingList(this.id);
+  }
+
+
+  generatePageNumberArray(numOfHotels: number) {
+    let numArray = new Array<number>();
+    for (let i = 0; i < numOfHotels; i++) {
+      numArray.push(i);
+    }
+    return numArray;
   }
 
 }
