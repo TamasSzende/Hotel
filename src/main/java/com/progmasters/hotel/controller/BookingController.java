@@ -1,9 +1,6 @@
 package com.progmasters.hotel.controller;
 
-import com.progmasters.hotel.dto.BookingCreateItem;
-import com.progmasters.hotel.dto.BookingDetails;
-import com.progmasters.hotel.dto.BookingListItemForHotel;
-import com.progmasters.hotel.dto.BookingListItemForUser;
+import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/booking")
 public class BookingController {
+
+    private static final int NUM_OF_ELEMENTS_PER_PAGE = 10;
 
     private BookingService bookingService;
 
@@ -53,13 +52,17 @@ public class BookingController {
     }
 
     @GetMapping("room/future/{id}")
-    public ResponseEntity<List<BookingListItemForHotel>> getFutureBookingListByRoom(@PathVariable("id") Long roomId) {
-        return new ResponseEntity<>(bookingService.getFutureBookingListByRoom(roomId), HttpStatus.OK);
+    public ResponseEntity<BookingSubListForHotel> getFutureBookingListByRoom
+            (@PathVariable("id") Long roomId, @RequestParam(required = false) Integer listPageNumber) {
+        if (listPageNumber == null) listPageNumber = 0;
+        return new ResponseEntity<>(bookingService.getFutureBookingListByRoom(roomId, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
     }
 
     @GetMapping("room/past/{id}")
-    public ResponseEntity<List<BookingListItemForHotel>> getPastBookingListByRoom(@PathVariable("id") Long roomId) {
-        return new ResponseEntity<>(bookingService.getPastBookingListByRoom(roomId), HttpStatus.OK);
+    public ResponseEntity<BookingSubListForHotel> getPastBookingListByRoom
+            (@PathVariable("id") Long roomId, @RequestParam(required = false) Integer listPageNumber) {
+        if (listPageNumber == null) listPageNumber = 0;
+        return new ResponseEntity<>(bookingService.getPastBookingListByRoom(roomId, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
     }
 
     @GetMapping("hotel/{id}")
@@ -68,18 +71,24 @@ public class BookingController {
     }
 
     @GetMapping("hotel/current/{id}")
-    public ResponseEntity<List<BookingListItemForHotel>> getCurrentBookingListByHotel(@PathVariable("id") Long hotelId) {
-        return new ResponseEntity<>(bookingService.getCurrentBookingListByHotel(hotelId), HttpStatus.OK);
+    public ResponseEntity<BookingSubListForHotel> getCurrentBookingListByHotel
+            (@PathVariable("id") Long hotelId, @RequestParam(required = false) Integer listPageNumber) {
+        if (listPageNumber == null) listPageNumber = 0;
+        return new ResponseEntity<>(bookingService.getCurrentBookingListByHotel(hotelId, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
     }
 
     @GetMapping("hotel/future/{id}")
-    public ResponseEntity<List<BookingListItemForHotel>> getFutureBookingListByHotel(@PathVariable("id") Long hotelId) {
-        return new ResponseEntity<>(bookingService.getFutureBookingListByHotel(hotelId), HttpStatus.OK);
+    public ResponseEntity<BookingSubListForHotel> getFutureBookingListByHotel
+            (@PathVariable("id") Long hotelId, @RequestParam(required = false) Integer listPageNumber) {
+        if (listPageNumber == null) listPageNumber = 0;
+        return new ResponseEntity<>(bookingService.getFutureBookingListByHotel(hotelId, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
     }
 
     @GetMapping("hotel/past/{id}")
-    public ResponseEntity<List<BookingListItemForHotel>> getPastBookingListByHotel(@PathVariable("id") Long hotelId) {
-        return new ResponseEntity<>(bookingService.getPastBookingListByHotel(hotelId), HttpStatus.OK);
+    public ResponseEntity<BookingSubListForHotel> getPastBookingListByHotel
+            (@PathVariable("id") Long hotelId, @RequestParam(required = false) Integer listPageNumber) {
+        if (listPageNumber == null) listPageNumber = 0;
+        return new ResponseEntity<>(bookingService.getPastBookingListByHotel(hotelId, listPageNumber, NUM_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
     }
 
     @GetMapping("user/{id}")

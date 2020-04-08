@@ -6,9 +6,12 @@ import {BookingDetailDialogComponent} from "../../booking-detail-dialog/booking-
 import {BehaviorSubject} from "rxjs";
 import {RoomBookingDataModel} from "../../../models/roomBookingData.model";
 import {RoomService} from "../../../services/room.service";
+import {Router} from "@angular/router";
 
 const START_DAY_BEFORE_TODAY = 5;
-const END_DAY_AFTER_TODAY = 20;
+const END_DAY_AFTER_TODAY = 24;
+const BACKGROUND_LIGHTESTGREY = 'hsl(0, 0%, 92%)';
+const BACKGROUND_LIGHTGREY = 'hsl(0, 0%, 86%)';
 
 @Component({
   selector: 'hotel-bookings-calendar',
@@ -27,6 +30,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
   constructor(private bookingService: BookingService,
               private roomService: RoomService,
               private popupService: PopupService,
+              private router: Router,
               private dialog: MatDialog) {
   }
 
@@ -55,6 +59,10 @@ export class HotelBookingsCalendarComponent implements OnInit {
     );
   }
 
+  roomDetail(id: number): void {
+    this.router.navigate(['/admin/hotel/room/', id])
+  }
+
   bookingDetails(bookingId: number) {
     let dialogRef = this.dialog.open(BookingDetailDialogComponent, {
       height: '600px',
@@ -78,10 +86,17 @@ export class HotelBookingsCalendarComponent implements OnInit {
   private createDayList() {
     this.dayList = [];
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
+      let cellBackground = '';
+      if (actualDate.getDay() === 0 || actualDate.getDay() === 6) {
+        cellBackground = BACKGROUND_LIGHTGREY;
+      } else {
+        cellBackground = 'hsl(0, 0%, 95%)';
+      }
       let dayData = {
-        date: actualDate,
+        date: actualDate.getTime(),
         weekDayName: this.createWeekDayName(actualDate),
         dayDateString: this.createDayDateString(actualDate),
+        backgroundColor: cellBackground,
       };
       this.dayList.push(dayData);
     }
@@ -102,14 +117,22 @@ export class HotelBookingsCalendarComponent implements OnInit {
   private createRoomDayList(roomBookingData: RoomBookingDataModel) {
     let roomDayList = [];
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
-      let roomDay = {morning: null, noon: null, evening: null,};
+      let cellBackground = '';
+      if (actualDate.getDay() === 0 || actualDate.getDay() === 6) {
+        cellBackground = BACKGROUND_LIGHTGREY;
+      } else if (actualDate.getTime() < new Date().getTime()) {
+        cellBackground = BACKGROUND_LIGHTESTGREY;
+      } else {
+        cellBackground = 'transparent';
+      }
+      let roomDay = [null, null, null];
       actualDate.setHours(0, 0, 0, 0);
       for (let roomReservationData of roomBookingData.roomReservationDataList) {
         let roomDayData = {
           bookingId: roomReservationData.bookingId,
-          guestName: roomReservationData.guestFirstName + roomReservationData.guestLastName,
+          guestName: roomReservationData.guestLastName + ' ' + roomReservationData.guestFirstName,
           numberOfGuests: roomReservationData.numberOfGuests,
-          colour: 'X',
+          colour: 'hsl(' + (roomReservationData.bookingId * 21) % 360 + ', 50%, 50%)',
         };
         let roomReservationStartDate = new Date(roomReservationData.startDate);
         let roomReservationEndDate = new Date(roomReservationData.endDate);
@@ -117,17 +140,17 @@ export class HotelBookingsCalendarComponent implements OnInit {
         roomReservationEndDate.setHours(0, 0, 0, 0);
 
         if (actualDate.getTime() === roomReservationStartDate.getTime()) {
-          roomDay.evening = roomDayData;
+          roomDay[2] = roomDayData;
         } else if (actualDate.getTime() > roomReservationStartDate.getTime() &&
           actualDate.getTime() < roomReservationEndDate.getTime()) {
-          roomDay.morning = roomDayData;
-          roomDay.noon = roomDayData;
-          roomDay.evening = roomDayData;
+          roomDay[0] = roomDayData;
+          roomDay[1] = roomDayData;
+          roomDay[2] = roomDayData;
         } else if (actualDate.getTime() === roomReservationEndDate.getTime()) {
-          roomDay.morning = roomDayData;
+          roomDay[0] = roomDayData;
         }
       }
-      roomDayList.push(roomDay);
+      roomDayList.push({backgroundColor: cellBackground, roomDay: roomDay});
     }
     return roomDayList;
   }
