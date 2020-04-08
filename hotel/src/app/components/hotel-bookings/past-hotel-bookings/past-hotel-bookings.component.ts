@@ -14,7 +14,11 @@ import {BehaviorSubject} from "rxjs";
 export class PastHotelBookingsComponent implements OnInit {
 
   @Input() hotelId: BehaviorSubject<number>;
+  id: number;
   pastBookingList: BookingListItemForHotelModel[];
+  fullNumberOfPages: number;
+  pageNumbers: number[] = [];
+  listPageNumber: number = 0;
 
   constructor(private bookingService: BookingService,
               private popupService: PopupService,
@@ -24,15 +28,18 @@ export class PastHotelBookingsComponent implements OnInit {
   ngOnInit(): void {
     this.hotelId.subscribe((id) => {
       if (id != 0) {
+        this.id = id;
         this.getPastBookingList(id);
       }
     });
   }
 
   getPastBookingList(hotelId: number) {
-    this.bookingService.getPastBookingListByHotel(hotelId).subscribe(
-      (response: BookingListItemForHotelModel[]) => {
-        this.pastBookingList = response;
+    this.bookingService.getPastBookingListByHotel(hotelId, this.listPageNumber).subscribe(
+      (response) => {
+        this.pastBookingList = response.bookingSubList;
+        this.fullNumberOfPages = response.fullNumberOfPages;
+        this.pageNumbers = this.generatePageNumberArray(this.fullNumberOfPages);
       },
       error => console.warn(error)
     );
@@ -67,4 +74,16 @@ export class PastHotelBookingsComponent implements OnInit {
     })
   }
 
+  onPageNumClick(number: number) {
+    this.listPageNumber = number;
+    this.getPastBookingList(this.id);
+  }
+
+  generatePageNumberArray(numOfHotels: number) {
+    let numArray = new Array<number>();
+    for (let i = 0; i < numOfHotels; i++) {
+      numArray.push(i);
+    }
+    return numArray;
+  }
 }

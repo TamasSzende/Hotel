@@ -90,7 +90,7 @@ export const cloudinary = {
       MaterialModule,
       MatIconModule,
       MatDialogModule,
-      MDBBootstrapModule,
+      MDBBootstrapModule.forRoot(),
       CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
       FileUploadModule

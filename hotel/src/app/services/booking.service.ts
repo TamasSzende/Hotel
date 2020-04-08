@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BookingCreateItemModel} from "../models/bookingCreateItem.model";
 import {BookingDetailsModel} from "../models/bookingDetails.model";
@@ -7,6 +7,7 @@ import {environment} from "../../environments/environment";
 import {BookingListItemForUserModel} from "../models/bookingListItemForUser.model";
 import {BookingListItemForHotelModel} from "../models/bookingListItemForHotel.model";
 import {dateToJsonDateString} from '../utils/dateUtils';
+import {BookingSublistForHotelModel} from "../models/bookingSublistForHotel.model";
 
 const BASE_URL = environment.BASE_URL + '/api/booking';
 
@@ -51,16 +52,22 @@ export class BookingService {
     return this.http.get<Array<BookingListItemForHotelModel>>(BASE_URL + '/hotel/' + hotelId);
   }
 
-  getCurrentBookingListByHotel(hotelId: number): Observable<Array<BookingListItemForHotelModel>> {
-    return this.http.get<Array<BookingListItemForHotelModel>>(BASE_URL + '/hotel/current/' + hotelId);
+  getCurrentBookingListByHotel(hotelId: number, listPageNumber: number): Observable<BookingSublistForHotelModel> {
+    let params = new HttpParams()
+      .set('listPageNumber', listPageNumber.toString());
+    return this.http.get<BookingSublistForHotelModel>(BASE_URL + '/hotel/current/' + hotelId, {params});
   }
 
-  getFutureBookingListByHotel(hotelId: number): Observable<Array<BookingListItemForHotelModel>> {
-    return this.http.get<Array<BookingListItemForHotelModel>>(BASE_URL + '/hotel/future/' + hotelId);
+  getFutureBookingListByHotel(hotelId: number, listPageNumber: number): Observable<BookingSublistForHotelModel> {
+    let params = new HttpParams()
+      .set('listPageNumber', listPageNumber.toString());
+    return this.http.get<BookingSublistForHotelModel>(BASE_URL + '/hotel/future/' + hotelId, {params});
   }
 
-  getPastBookingListByHotel(hotelId: number): Observable<Array<BookingListItemForHotelModel>> {
-    return this.http.get<Array<BookingListItemForHotelModel>>(BASE_URL + '/hotel/past/' + hotelId);
+  getPastBookingListByHotel(hotelId: number, listPageNumber: number): Observable<BookingSublistForHotelModel> {
+    let params = new HttpParams()
+      .set('listPageNumber', listPageNumber.toString());
+    return this.http.get<BookingSublistForHotelModel>(BASE_URL + '/hotel/past/' + hotelId, {params});
   }
 
   getBookingListByUser(userId: number): Observable<Array<BookingListItemForUserModel>> {
