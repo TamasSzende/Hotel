@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 
 const START_DAY_BEFORE_TODAY = 5;
 const END_DAY_AFTER_TODAY = 24;
+const DAY_STEP = 25;
 const BACKGROUND_LIGHTESTGREY = 'hsl(0, 0%, 92%)';
 const BACKGROUND_LIGHTGREY = 'hsl(0, 0%, 86%)';
 
@@ -22,8 +23,9 @@ export class HotelBookingsCalendarComponent implements OnInit {
 
   @Input() hotelId: BehaviorSubject<number>;
   roomBookingDataList: RoomBookingDataModel[];
-  startDate: Date = new Date();
-  endDate: Date = new Date();
+  baseDate: Date;
+  startDate: Date;
+  endDate: Date;
   dayList;
   roomBookingTable;
 
@@ -35,6 +37,16 @@ export class HotelBookingsCalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setBaseDateToday();
+    this.initializeTable();
+  }
+
+  setBaseDateToday() {
+    this.baseDate = new Date();
+    this.baseDate.setHours(0, 0, 0, 0);
+  }
+
+  initializeTable() {
     this.setStartAndEndDate();
     this.hotelId.subscribe((id) => {
       if (id != 0) {
@@ -44,9 +56,10 @@ export class HotelBookingsCalendarComponent implements OnInit {
   }
 
   setStartAndEndDate() {
-    let today = new Date();
-    this.startDate.setDate(today.getDate() - START_DAY_BEFORE_TODAY);
-    this.endDate.setDate(today.getDate() + END_DAY_AFTER_TODAY);
+    this.startDate = new Date(this.baseDate.getTime());
+    this.endDate = new Date(this.baseDate.getTime());
+    this.startDate.setDate(this.startDate.getDate() - START_DAY_BEFORE_TODAY);
+    this.endDate.setDate(this.endDate.getDate() + END_DAY_AFTER_TODAY);
   }
 
   getRoomBookingDataList(hotelId: number, startDate: Date, endDate: Date) {
@@ -57,6 +70,21 @@ export class HotelBookingsCalendarComponent implements OnInit {
       },
       error => console.warn(error)
     );
+  }
+
+  goBack() {
+    this.baseDate.setDate(this.baseDate.getDate() - DAY_STEP);
+    this.initializeTable();
+  }
+
+  goActual() {
+    this.setBaseDateToday();
+    this.initializeTable();
+  }
+
+  goNext() {
+    this.baseDate.setDate(this.baseDate.getDate() + DAY_STEP);
+    this.initializeTable();
   }
 
   roomDetail(id: number): void {
@@ -72,7 +100,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       response => {
         if (response) {
-          this.ngOnInit();
+          this.initializeTable();
         }
       }
     )
@@ -85,18 +113,25 @@ export class HotelBookingsCalendarComponent implements OnInit {
 
   private createDayList() {
     this.dayList = [];
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
       let cellBackground = '';
+      let isToday = false;
       if (actualDate.getDay() === 0 || actualDate.getDay() === 6) {
         cellBackground = BACKGROUND_LIGHTGREY;
       } else {
         cellBackground = 'hsl(0, 0%, 95%)';
+      }
+      if (actualDate.getTime() === today.getTime()) {
+        isToday = true;
       }
       let dayData = {
         date: actualDate.getTime(),
         weekDayName: this.createWeekDayName(actualDate),
         dayDateString: this.createDayDateString(actualDate),
         backgroundColor: cellBackground,
+        isToday: isToday,
       };
       this.dayList.push(dayData);
     }
@@ -116,14 +151,20 @@ export class HotelBookingsCalendarComponent implements OnInit {
 
   private createRoomDayList(roomBookingData: RoomBookingDataModel) {
     let roomDayList = [];
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
       let cellBackground = '';
+      let isToday = false;
       if (actualDate.getDay() === 0 || actualDate.getDay() === 6) {
         cellBackground = BACKGROUND_LIGHTGREY;
-      } else if (actualDate.getTime() < new Date().getTime()) {
+      } else if (actualDate.getTime() < today.getTime()) {
         cellBackground = BACKGROUND_LIGHTESTGREY;
       } else {
         cellBackground = 'transparent';
+      }
+      if (actualDate.getTime() === today.getTime()) {
+        isToday = true;
       }
       let roomDay = [null, null, null];
       actualDate.setHours(0, 0, 0, 0);
@@ -150,7 +191,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
           roomDay[0] = roomDayData;
         }
       }
-      roomDayList.push({backgroundColor: cellBackground, roomDay: roomDay});
+      roomDayList.push({isToday: isToday, backgroundColor: cellBackground, roomDay: roomDay});
     }
     return roomDayList;
   }
@@ -187,4 +228,5 @@ export class HotelBookingsCalendarComponent implements OnInit {
     result += date.getDate();
     return result;
   }
+
 }

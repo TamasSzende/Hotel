@@ -1,8 +1,24 @@
 <div class="container" style=" width: 100vw; position: relative; left: calc(-50vw + 50%); margin-top: 50px">
-  <table>
+
+  <div class="card w-auto">
+    <table style="border: none">
+      <tr style="border: none">
+        <td style="border: none"></td>
+        <td colspan="30" style="border: none">
+          <div class="d-flex justify-content-between">
+            <button (click)="goBack()" class="btn btn-link text-decoration-none" type="button">&nbsp;&laquo;&nbsp;
+            </button>
+            <button (click)="goActual()" class="btn btn-link text-decoration-none" type="button">Aktuális</button>
+            <button (click)="goNext()" class="btn btn-link text-decoration-none" type="button">&nbsp;&raquo;&nbsp;
+            </button>
+          </div>
+        </td>
+      </tr>
     <tr>
-      <td></td>
+      <td style="border: none">
+      </td>
       <td *ngFor="let day of this?.dayList" [style.background-color]="day.backgroundColor"
+          [ngStyle]="{'border-left':day.isToday === true ? '3px solid hsl(0, 100%, 50%)' : '0px'}"
           style="text-align: center; font-size: 14px"> {{day.weekDayName}} <br> {{day.dayDateString}}
       </td>
     </tr>
@@ -10,19 +26,18 @@
     <tr *ngFor="let room of this?.roomBookingTable">
 
       <td (click)="roomDetail(room.roomId)"
-          style="max-width:100%; white-space:nowrap; height: 40px; padding-left: 7px; padding-right: 5px; background-color: hsl(0, 0%, 95%); cursor: pointer"> {{room?.roomName}}</td>
+          style="text-align: right; max-width:100%; white-space:nowrap; height: 40px; padding-left: 7px; padding-right: 5px; border: none; color: mediumblue; cursor: pointer"> {{room?.roomName}}</td>
 
       <td *ngFor="let day of room?.roomDayList" [style.background-color]="day.backgroundColor"
+          [ngStyle]="{'border-left':day.isToday === true ? '3px solid hsl(0, 100%, 50%)' : '0px'}"
           style="margin: 0; padding: 0;">
 
-        <table style="border: 0px; margin: 0; padding: 0; height: 50%; width: 100%; table-layout: fixed" width="100%">
+        <table style="border: 0px; margin: 0; padding: 0; height: 100%; width: 100%; table-layout: fixed" width="100%">
 
           <td *ngFor="let partOfDay of day.roomDay" style="border: 0px; margin: 0; padding: 0">
-
             <div (dblclick)="bookingDetails(partOfDay.bookingId)" *ngIf="partOfDay !== null"
                  [style.background-color]="partOfDay.colour" data-placement="top" data-toggle="tooltip"
                  style="height: 18px; width: 100%;" title="{{partOfDay.guestName}} - {{partOfDay.numberOfGuests}} fő">
-
             </div>
           </td>
 
@@ -32,6 +47,8 @@
 
     </tr>
   </table>
+    <br>
+</div>
 </div>
 
 
