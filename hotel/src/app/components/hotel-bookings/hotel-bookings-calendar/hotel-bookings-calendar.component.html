@@ -1,30 +1,31 @@
-<div class="container" style="padding-top: 30px;  margin-left: auto; margin-right: auto;">
+<div class="container" style=" width: 100vw; position: relative; left: calc(-50vw + 50%); margin-top: 50px">
   <table>
     <tr>
       <td></td>
-      <td *ngFor="let day of this?.dayList" style="text-align: center"> {{day.weekDayName}} <br> {{day.dayDateString}}
+      <td *ngFor="let day of this?.dayList" [style.background-color]="day.backgroundColor"
+          style="text-align: center; font-size: 14px"> {{day.weekDayName}} <br> {{day.dayDateString}}
       </td>
     </tr>
 
     <tr *ngFor="let room of this?.roomBookingTable">
 
-      <td style="max-width:100%; white-space:nowrap;"> {{room?.roomName}}</td>
+      <td (click)="roomDetail(room.roomId)"
+          style="max-width:100%; white-space:nowrap; height: 40px; padding-left: 7px; padding-right: 5px; background-color: hsl(0, 0%, 95%); cursor: pointer"> {{room?.roomName}}</td>
 
-      <td *ngFor="let day of room?.roomDayList" style="margin: 0; padding: 0;">
+      <td *ngFor="let day of room?.roomDayList" [style.background-color]="day.backgroundColor"
+          style="margin: 0; padding: 0;">
 
         <table style="border: 0px; margin: 0; padding: 0; height: 50%; width: 100%; table-layout: fixed" width="100%">
-          <td style="border: 0px; margin: 0; padding: 0">
-            <div (dblclick)="bookingDetails(day.morning.bookingId)" *ngIf="day.morning !== null"
-                 ngbTooltip="Tooltip on top" style="height: 10px; width: 100%; background-color: black"></div>
+
+          <td *ngFor="let partOfDay of day.roomDay" style="border: 0px; margin: 0; padding: 0">
+
+            <div (dblclick)="bookingDetails(partOfDay.bookingId)" *ngIf="partOfDay !== null"
+                 [style.background-color]="partOfDay.colour" data-placement="top" data-toggle="tooltip"
+                 style="height: 18px; width: 100%;" title="{{partOfDay.guestName}} - {{partOfDay.numberOfGuests}} fő">
+
+            </div>
           </td>
-          <td style="border: 0px; margin: 0; padding: 0; height: 10px">
-            <div (dblclick)="bookingDetails(day.noon.bookingId)" *ngIf="day.noon !== null"
-                 style="height: 10px; width: 100%; background-color: black"></div>
-          </td>
-          <td style="border: 0px; margin: 0; padding: 0; height: 10px">
-            <div (dblclick)="bookingDetails(day.evening.bookingId)" *ngIf="day.evening !== null"
-                 style="height: 10px; width: 100%; background-color: black"></div>
-          </td>
+
         </table>
 
       </td>
@@ -32,3 +33,6 @@
     </tr>
   </table>
 </div>
+
+
+

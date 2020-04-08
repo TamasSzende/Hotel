@@ -4,15 +4,15 @@ import com.progmasters.hotel.domain.Account;
 import com.progmasters.hotel.domain.Booking;
 import com.progmasters.hotel.domain.Room;
 import com.progmasters.hotel.domain.RoomReservation;
-import com.progmasters.hotel.dto.BookingCreateItem;
-import com.progmasters.hotel.dto.BookingDetails;
-import com.progmasters.hotel.dto.BookingListItemForHotel;
-import com.progmasters.hotel.dto.BookingListItemForUser;
+import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.BookingRepository;
 import com.progmasters.hotel.repository.RoomRepository;
 import com.progmasters.hotel.repository.RoomReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,33 +116,52 @@ public class BookingService {
                 .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItemForHotel> getFutureBookingListByRoom(Long roomId) {
-        return bookingRepository.findFutureByRoomId(roomId, LocalDate.now(HOTELS_ZONEID))
-                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+    public BookingSubListForHotel getFutureBookingListByRoom
+            (Long roomId, Integer listPageNumber, Integer numOfElementsPerPage) {
+        Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+        Page<Booking> bookingPage = bookingRepository.findFutureByRoomId(roomId, LocalDate.now(HOTELS_ZONEID), pageable);
+        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return new BookingSubListForHotel(bookingList, bookingPage.getNumber(), bookingPage.getTotalPages());
     }
 
-    public List<BookingListItemForHotel> getPastBookingListByRoom(Long roomId) {
-        return bookingRepository.findPastByRoomId(roomId, LocalDate.now(HOTELS_ZONEID))
-                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+    public BookingSubListForHotel getPastBookingListByRoom
+            (Long roomId, Integer listPageNumber, Integer numOfElementsPerPage) {
+        Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+        Page<Booking> bookingPage = bookingRepository.findPastByRoomId(roomId, LocalDate.now(HOTELS_ZONEID), pageable);
+        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return new BookingSubListForHotel(bookingList, bookingPage.getNumber(), bookingPage.getTotalPages());
     }
 
     public List<BookingListItemForHotel> getBookingListByHotel(Long hotelId) {
         return bookingRepository.findAllByHotelId(hotelId).stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
     }
 
-    public List<BookingListItemForHotel> getCurrentBookingListByHotel(Long hotelId) {
-        return bookingRepository.findCurrentByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID))
-                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+    public BookingSubListForHotel getCurrentBookingListByHotel
+            (Long hotelId, Integer listPageNumber, Integer numOfElementsPerPage) {
+        Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+        Page<Booking> bookingPage = bookingRepository.findCurrentByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID), pageable);
+        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return new BookingSubListForHotel(bookingList, bookingPage.getNumber(), bookingPage.getTotalPages());
     }
 
-    public List<BookingListItemForHotel> getFutureBookingListByHotel(Long hotelId) {
-        return bookingRepository.findFutureByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID))
-                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+    public BookingSubListForHotel getFutureBookingListByHotel
+            (Long hotelId, Integer listPageNumber, Integer numOfElementsPerPage) {
+        Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+        Page<Booking> bookingPage = bookingRepository.findFutureByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID), pageable);
+//        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        List<BookingListItemForHotel> bookingList = new ArrayList<>();
+        for (Booking booking : bookingPage) {
+            bookingList.add(new BookingListItemForHotel(booking));
+        }
+        return new BookingSubListForHotel(bookingList, bookingPage.getNumber(), bookingPage.getTotalPages());
     }
 
-    public List<BookingListItemForHotel> getPastBookingListByHotel(Long hotelId) {
-        return bookingRepository.findPastByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID))
-                .stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+    public BookingSubListForHotel getPastBookingListByHotel
+            (Long hotelId, Integer listPageNumber, Integer numOfElementsPerPage) {
+        Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
+        Page<Booking> bookingPage = bookingRepository.findPastByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID), pageable);
+        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
+        return new BookingSubListForHotel(bookingList, bookingPage.getNumber(), bookingPage.getTotalPages());
     }
 
     public List<BookingListItemForUser> getBookingListByUser(Long userId) {
