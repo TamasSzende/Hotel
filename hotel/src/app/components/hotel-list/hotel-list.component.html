@@ -4,7 +4,7 @@
 
     <div class="card bg-light mb-3">
       <div class="card-body">
-        <div class="form-row">
+        <div class="d-flex flex-wrap justify-content-between">
           <div class="col-md-4 mb-3">
             <label for="numberOfGuests" lass="form-control-label">
               Vendégek száma:&nbsp;&nbsp;
@@ -47,16 +47,16 @@
             </div>
           </div>
 
-          <div class="col-md-4 mb-3">
-            <div class="text-right">
-              <button (click)="filterHotelList()" class="btn btn-primary mr-4">
+          <div class="col-md-4 mb-3 text-right">
+
+            <button (click)="filterHotelList()" class="btn btn-primary mr-4">
                 Keresés
               </button>
               <button (click)="backToHotelList()" class="btn btn-outline-primary mr-4">
-                Vissza a Hotel Listához
+                Teljes lista
               </button>
 
-            </div>
+
           </div>
         </div>
 

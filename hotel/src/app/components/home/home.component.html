@@ -3,74 +3,69 @@
   <div class="container" style="padding-top: 30px;  margin-left: auto;
   margin-right: auto;">
 
-    <div class="d-flex flex-wrap justify-content-between">
-      <div class="card text-center bg-light mb-3" style="width: 16rem;">
-        <div class="card-body">
-          <form [formGroup]="filterForm">
-            <div class="form-group ">
-              <label for="numberOfGuests">
-                Vendégek száma:
-              </label>
-              <br>
-              <input
-                formControlName="numberOfGuests"
-                id="numberOfGuests"
-                name="numberOfGuests"
-                type="number"
-              >
-              <small
-                *ngIf="filterForm.get('numberOfGuests').invalid && filterForm.get('numberOfGuests').touched && !filterForm.get('numberOfGuests').errors?.serverError"
-                class="text-danger">
-                Kérlek add meg a vendégek számát!
-              </small>
-            </div>
+    <div class="float-right">
+      <br>
+      <br>
+      <h1 class="display-1 text-right" style="font-size: calc(60px + 2vw); color: white">BUDAPEST</h1>
+      <h1 class="display-4 text-right" style="font-size: calc(30px + 1vw); color: white">Téged vár!</h1>
+      <br>
+    </div>
 
-
-            <div class="form-group">
-              <label>
-                Utazás időpontja:
-              </label>
-              <ng2-flatpickr
-                [config]="flatpickrOptions"
-                formControlName="bookingDateRange"
-                id="bookingDateRange"
-                name="bookingDateRange"
-                placeholder="Válasz időpontot!"
-              >
-                <small
-                  *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
-                  class="text-danger">
-                  <br>
-                  Kérlek válasz időpontot!
-                </small>
-              </ng2-flatpickr>
-            </div>
+    <div class="card text-center bg-light mb-3" style="margin-top: 1.5rem; width: 16rem;">
+      <div class="card-body">
+        <form [formGroup]="filterForm">
+          <div class="form-group ">
+            <label for="numberOfGuests">
+              Vendégek száma:
+            </label>
             <br>
-            <hr>
+            <input
+              formControlName="numberOfGuests"
+              id="numberOfGuests"
+              name="numberOfGuests"
+              type="number"
+            >
+            <small
+              *ngIf="filterForm.get('numberOfGuests').invalid && filterForm.get('numberOfGuests').touched && !filterForm.get('numberOfGuests').errors?.serverError"
+              class="text-danger">
+              Kérlek add meg a vendégek számát!
+            </small>
+          </div>
 
-            <div>
-              <button (click)="filterHotelList()" class="btn btn-primary btn-block">
-                Keresés a Hotelek között
-              </button>
-              <br>
 
-              <button (click)="goToHotelList()" class="btn btn-outline-primary btn-block">
-                Megnézem a teljes listát
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div>
-        <br>
-        <br>
-        <h1 class="display-1 text-right" style="color: white">BUDAPEST</h1>
-        <h1 class="display-4 text-right" style="color: white">Téged vár!*</h1>
-        <br>
-        <br>
-        <br>
-        <br>
-        <p class="text-right" style="color: white">*csak nem most...</p>
+          <div class="form-group">
+            <label>
+              Utazás időpontja:
+            </label>
+            <ng2-flatpickr
+              [config]="flatpickrOptions"
+              formControlName="bookingDateRange"
+              id="bookingDateRange"
+              name="bookingDateRange"
+              placeholder="Válasz időpontot!"
+            >
+              <small
+                *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
+                class="text-danger">
+                <br>
+                Kérlek válasz időpontot!
+              </small>
+            </ng2-flatpickr>
+          </div>
+          <br>
+          <hr>
+
+          <div>
+            <button (click)="filterHotelList()" class="btn btn-primary btn-block">
+              Keresés a Hotelek között
+            </button>
+            <br>
+
+            <button (click)="goToHotelList()" class="btn btn-outline-primary btn-block">
+              Megnézem a teljes listát
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -117,7 +112,7 @@
 
     <div class="d-flex flex-wrap justify-content-between">
       <div (click)="goToHotelDetails(bestPriceHotel?.id)" *ngFor="let bestPriceHotel of bestPriceHotelList"
-           class="card mb-3 shadow" style="width: 16rem; cursor: pointer">
+           class="card mb-3 shadow " style="width: 16rem; cursor: pointer">
 
         <cl-image [public-id]="getPublicId(bestPriceHotel?.hotelImageUrl)" class="card-img-top" width="100%">
           <cl-transformation
@@ -185,6 +180,7 @@
     </div>
     <br>
     <br>
+
   </div>
 </div>
 

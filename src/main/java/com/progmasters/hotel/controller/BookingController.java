@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/booking")
 public class BookingController {
 
-    private static final int NUM_OF_ELEMENTS_PER_PAGE = 10;
+    private static final int NUM_OF_ELEMENTS_PER_PAGE = 20;
 
     private BookingService bookingService;
 

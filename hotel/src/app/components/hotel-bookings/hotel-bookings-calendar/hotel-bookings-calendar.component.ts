@@ -9,8 +9,8 @@ import {RoomService} from "../../../services/room.service";
 import {Router} from "@angular/router";
 
 const START_DAY_BEFORE_TODAY = 5;
-const END_DAY_AFTER_TODAY = 24;
-const DAY_STEP = 25;
+const END_DAY_AFTER_TODAY = 23;
+const DAY_STEP = 24;
 const BACKGROUND_LIGHTESTGREY = 'hsl(0, 0%, 92%)';
 const BACKGROUND_LIGHTGREY = 'hsl(0, 0%, 86%)';
 
