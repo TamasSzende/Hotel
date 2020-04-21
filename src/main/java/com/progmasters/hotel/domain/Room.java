@@ -52,7 +52,7 @@ public class Room {
     private String roomImageUrl;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = RoomFeatureType.class) //, fetch = FetchType.EAGER
+    @ElementCollection(targetClass = RoomFeatureType.class)
     @CollectionTable(name = "room_room_features")
     @Column(name = "room_room_features")
     private List<RoomFeatureType> roomFeatures = new ArrayList<>();

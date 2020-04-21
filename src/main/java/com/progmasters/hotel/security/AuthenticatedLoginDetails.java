@@ -1,5 +1,6 @@
 package com.progmasters.hotel.security;
 
+import com.progmasters.hotel.domain.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,9 +21,19 @@ public class AuthenticatedLoginDetails {
     public AuthenticatedLoginDetails(UserDetails user) {
         this.name = user.getUsername();
         this.role = findRole(user);
+
         this.hotelId = 0L;
         this.id = 0L;
         this.lastname = null;
+    }
+
+    public AuthenticatedLoginDetails(Account account) {
+        this.id = account.getId();
+        this.name = account.getEmail();
+        this.hotelId = account.getHotelId();
+        this.role = account.getRole().toString();
+        this.lastname = account.getLastname();
+
     }
 
     private String findRole(UserDetails user) {

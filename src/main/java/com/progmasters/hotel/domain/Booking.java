@@ -26,7 +26,7 @@ public class Booking {
     @Column(name = "date_of_booking")
     private LocalDateTime dateOfBooking;
 
-    @OneToMany(mappedBy = "booking") //, fetch = FetchType.EAGER
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "booking")
     private List<RoomReservation> roomReservations = new ArrayList<>();
 
     @Column(name = "number_of_guests")
