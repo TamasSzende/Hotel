@@ -4,7 +4,6 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {AuthenticatedLoginDetailsModel} from "../models/authenticatedLoginDetails.model";
 import {AccountDetailsForMyProfileModel} from "../models/accountDetailsForMyProfile.model";
-import {error} from "util";
 
 @Injectable({
   providedIn: 'root'

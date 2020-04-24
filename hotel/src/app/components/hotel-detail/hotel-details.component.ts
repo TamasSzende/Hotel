@@ -81,7 +81,7 @@ export class HotelDetailsComponent implements OnInit {
                 this.account = response;
               }
               this.showHotel();
-            }, error1 => this.showHotel())
+            })
           }
         }
       }
