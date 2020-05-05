@@ -30,12 +30,12 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Transactional(isolation = Isolation.READ_COMMITTED)
 public class BookingService {
 
-    private BookingRepository bookingRepository;
-    private RoomReservationRepository roomReservationRepository;
-    private RoomRepository roomRepository;
-    private AccountRepository accountRepository;
+    private final BookingRepository bookingRepository;
+    private final RoomReservationRepository roomReservationRepository;
+    private final RoomRepository roomRepository;
+    private final AccountRepository accountRepository;
     private static final ZoneId HOTELS_ZONEID = ZoneId.of("Europe/Budapest");
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @Autowired
     public BookingService(RoomReservationRepository roomReservationRepository, BookingRepository bookingRepository, RoomRepository roomRepository, AccountRepository accountRepository, EmailService emailService) {
