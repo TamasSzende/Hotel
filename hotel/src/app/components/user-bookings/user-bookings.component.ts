@@ -33,5 +33,4 @@ export class UserBookingsComponent implements OnInit {
     }
   }
 
-
 }

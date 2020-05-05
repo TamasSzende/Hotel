@@ -8,8 +8,6 @@ import com.progmasters.hotel.dto.RegistrationDetails;
 import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.ConfirmationTokenRepository;
 import com.progmasters.hotel.security.AuthenticatedLoginDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,10 +20,6 @@ import java.time.LocalDateTime;
 @Transactional
 public class AccountService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
-    private static final String ADMINMAIL = "hotel.team.five.a@gmail.com";
-    private static final String USERMAIL = "hotel.team.five.u@gmail.com";
-    private static final String HOTELOWNERMAIL = "hotel.team.five.h@gmail.com";
     private BCryptPasswordEncoder passwordEncoder;
     private AccountRepository accountRepository;
     private ConfirmationTokenRepository confirmationTokenRepository;
@@ -42,18 +36,11 @@ public class AccountService {
     //----------REGISTRATION  -> SAVE A USER----------
 
     public void saveUserRegistration(RegistrationDetails registrationDetails) throws Exception {
-        Account otherAccount = accountRepository.findByEmail(registrationDetails.getEmail());
-        if (otherAccount == null) {
-            registrationDetails.setPassword(passwordEncoder.encode(registrationDetails.getPassword()));
-            Account account = new Account(registrationDetails);
-            account.setRole(Role.ROLE_USER);
-            accountRepository.save(account);
-
-            emailService.sendConfirmationMail(account);
-
-        } else {
-            throw new Exception("Mail already taken!");
-        }
+        registrationDetails.setPassword(passwordEncoder.encode(registrationDetails.getPassword()));
+        Account account = new Account(registrationDetails);
+        account.setRole(Role.ROLE_USER);
+        accountRepository.save(account);
+        emailService.sendConfirmationMail(account);
     }
 
     public void saveHotelOwnerRegistration(RegistrationDetails registrationDetails) throws Exception {
@@ -81,34 +68,16 @@ public class AccountService {
 
     //----------CHECK THE MAIL----------
 
-    public boolean checkIfEmailIsTaken(String id, String email) {
-        boolean result = false;
-        if (!id.equalsIgnoreCase("undefined")) {
-            Long longId;
-            try {
-                longId = Long.valueOf(id);
-            } catch (NumberFormatException nfe) {
-                logger.info("Invalid id provided for name check");
-                return false;
-            }
-            Account accountToCheck = accountRepository.findById(longId).orElse(null);
 
-            if (accountToCheck != null && !accountToCheck.getEmail().equalsIgnoreCase(email)) {
-                result = !accountRepository.findAllByEmail(email).isEmpty();
-            }
-        } else {
-            result = !accountRepository.findAllByEmail(email).isEmpty();
-        }
-        return result;
-    }
 
     //----------CREATE DEFAULT ADMIN----------
 
     public void checkAdmin() {
-        Account adminAccount = accountRepository.findByEmail(ADMINMAIL);
+        String adminMail = "hotel.team.five.a@gmail.com";
+        Account adminAccount = accountRepository.findByEmail(adminMail);
         if (adminAccount == null) {
             Account newAdmin = new Account();
-            newAdmin.setEmail(ADMINMAIL);
+            newAdmin.setEmail(adminMail);
             newAdmin.setPassword(passwordEncoder.encode("Admin"));
             newAdmin.setRole(Role.ROLE_ADMIN);
             newAdmin.setEnabled(true);
@@ -126,10 +95,11 @@ public class AccountService {
     //----------CREATE DEFAULT USER----------
 
     public void checkUser() {
-        Account userAccount = accountRepository.findByEmail(USERMAIL);
+        String userMail = "hotel.team.five.u@gmail.com";
+        Account userAccount = accountRepository.findByEmail(userMail);
         if (userAccount == null) {
             Account newUser = new Account();
-            newUser.setEmail(USERMAIL);
+            newUser.setEmail(userMail);
             newUser.setPassword(passwordEncoder.encode("User"));
             newUser.setRole(Role.ROLE_USER);
             newUser.setEnabled(true);
@@ -147,10 +117,11 @@ public class AccountService {
     //----------CREATE DEFAULT HOTELOWNER----------
 
     public void checkHotelOwner() {
-        Account hotelOwnerAccount = accountRepository.findByEmail(HOTELOWNERMAIL);
+        String hotelOwnerEmail = "hotel.team.five.h@gmail.com";
+        Account hotelOwnerAccount = accountRepository.findByEmail(hotelOwnerEmail);
         if (hotelOwnerAccount == null) {
             Account newHotelOwner = new Account();
-            newHotelOwner.setEmail(HOTELOWNERMAIL);
+            newHotelOwner.setEmail(hotelOwnerEmail);
             newHotelOwner.setPassword(passwordEncoder.encode("Hotelowner"));
             newHotelOwner.setRole(Role.ROLE_HOTELOWNER);
             newHotelOwner.setEnabled(true);
@@ -180,7 +151,6 @@ public class AccountService {
 
     public boolean accountIsActive(String email) {
         Account account = accountRepository.findByEmail(email);
-
         return account.isEnabled();
     }
 
@@ -201,16 +171,8 @@ public class AccountService {
     }
 
     public AuthenticatedLoginDetails getAuthenticatedLoginDetails(UserDetails user) {
-        AuthenticatedLoginDetails authenticatedLoginDetails = new AuthenticatedLoginDetails(user);
-
-        String username = authenticatedLoginDetails.getName();
-        Long userId = findByUsername(username).getId();
-        Long hotelId = findByUsername(username).getHotelId();
-        String lastname = findByUsername(username).getLastname();
-
-        authenticatedLoginDetails.setId(userId);
-        authenticatedLoginDetails.setHotelId(hotelId);
-        authenticatedLoginDetails.setLastname(lastname);
-        return authenticatedLoginDetails;
+        String username = user.getUsername();
+        Account userAccount = findByUsername(username);
+        return new AuthenticatedLoginDetails(userAccount);
     }
 }

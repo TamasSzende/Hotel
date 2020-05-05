@@ -1,9 +1,6 @@
 package com.progmasters.hotel.service;
 
-import com.progmasters.hotel.domain.Account;
-import com.progmasters.hotel.domain.Booking;
-import com.progmasters.hotel.domain.Room;
-import com.progmasters.hotel.domain.RoomReservation;
+import com.progmasters.hotel.domain.*;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.BookingRepository;
@@ -65,9 +62,8 @@ public class BookingService {
         double priceOfBooking = getPriceOfBooking(numberOfNights, bookingCreateItem);
         booking.setPriceOfBooking(priceOfBooking);
 
-        //TODO check account is exist and user role
         Account guestAccount = this.accountRepository.findByUsername(bookingCreateItem.getGuestAccountName());
-        if (guestAccount == null) return null;
+        if (guestAccount == null || !guestAccount.getRole().equals(Role.ROLE_USER)) return null;
         booking.setGuest(guestAccount);
 
         roomReservations.forEach(this.roomReservationRepository::save);
@@ -82,14 +78,8 @@ public class BookingService {
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
         if (bookingOptional.isPresent()) {
             Booking booking = bookingOptional.get();
-            List<RoomReservation> deletedRoomReservations = booking.getRoomReservations();
-            for (RoomReservation deletedRoomReservation : deletedRoomReservations) {
-                this.roomReservationRepository.delete(deletedRoomReservation);
-            }
             bookingRepository.delete(booking);
-
             emailService.sendMailAtDeleteBooking(booking.getGuest());
-
             return true;
         } else {
             return false;
@@ -148,11 +138,7 @@ public class BookingService {
             (Long hotelId, Integer listPageNumber, Integer numOfElementsPerPage) {
         Pageable pageable = PageRequest.of(listPageNumber, numOfElementsPerPage);
         Page<Booking> bookingPage = bookingRepository.findFutureByHotelId(hotelId, LocalDate.now(HOTELS_ZONEID), pageable);
-//        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
-        List<BookingListItemForHotel> bookingList = new ArrayList<>();
-        for (Booking booking : bookingPage) {
-            bookingList.add(new BookingListItemForHotel(booking));
-        }
+        List<BookingListItemForHotel> bookingList = bookingPage.stream().map(BookingListItemForHotel::new).collect(Collectors.toList());
         return new BookingSubListForHotel(bookingList, bookingPage.getNumber(), bookingPage.getTotalPages());
     }
 

@@ -56,13 +56,6 @@ public class RegistrationController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //----------CHECK THE MAIL----------
-
-    @GetMapping("/checkIfEmailIsTaken/{id}/{email}")
-    public ResponseEntity<Boolean> checkIfEmailIsTaken(@PathVariable String id, @PathVariable String email) {
-        boolean result = accountService.checkIfEmailIsTaken(id, email);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
 
     //TODO  folyamatban
     @PutMapping
@@ -78,26 +71,5 @@ public class RegistrationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-//    //TODO  folyamatban
-//    @GetMapping("/registrationConfirm")
-//    public RedirectView confirmAccount(@RequestParam("token") String confirmationToken) {
-//        ConfirmationToken token = accountService.findToken(confirmationToken);
-//        if (token != null) {
-//            Account account = accountService.findAccountByEmail(token.getAccount().getEmail());
-//            account.setEnabled(true);
-//            accountService.deleteToken(token);
-//
-//            //TODO save this new account
-//            accountService.saveConfirmedAccount(account);
-//
-//            return new RedirectView(this.frontendUrl);
-//        } else {
-//
-//            //TODO create page-not-found webPage
-//            return new RedirectView(this.backendUrl + " /not-found");
-//        }
-//    }
-
 
 }

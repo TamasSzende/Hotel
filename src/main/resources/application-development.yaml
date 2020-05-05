@@ -5,4 +5,4 @@ spring:
   mail:
     url: http://hotels-demo.progmasters.hu
 
-cors-policies: http://52.215.188.12, http://hotels-demo.progmasters.hu
+cors-policies: http://52.215.188.12, http://hotels-demo.progmasters.hu, https://52.215.188.12, https://hotels-demo.progmasters.hu

@@ -1,8 +1,8 @@
 
 <div class="content-container">
   <button type=button (click)="fileInput.click()" class="btn btn-primary btn-sm">Add Image</button>
-  <hr>
   <input style="display: none" type="file" accept="image/*" (change)="onFileChange($event)" #fileInput>
+  <hr>
   <ul class="container" style="display: flex">
     <li *ngFor="let image of imageURLs" style="display: block; margin: 10px">
       <div>
@@ -15,7 +15,7 @@
           </cl-transformation>
         </cl-image>
       </div>
-      <div style="display: block">
+      <div style=" margin-left: auto; margin-right: auto; margin-top: 5px">
         <button (click)="deleteImage(image)" class="btn btn-danger btn-sm">Delete</button>
       </div>
     </li>

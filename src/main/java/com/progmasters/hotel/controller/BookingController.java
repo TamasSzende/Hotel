@@ -25,9 +25,9 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Long> saveBooking(@RequestBody BookingCreateItem bookingCreateItem) {
         Long bookingId = bookingService.saveBooking(bookingCreateItem);
-        return bookingId != null ?
-                new ResponseEntity<>(bookingId, HttpStatus.CREATED) :
-                new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
+        return bookingId == null ?
+                new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT) :
+                new ResponseEntity<>(bookingId, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -37,8 +37,11 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public BookingDetails bookingDetail(@PathVariable("id") Long id) {
-        return bookingService.getBookingDetails(id);
+    public ResponseEntity<BookingDetails> bookingDetail(@PathVariable("id") Long id) {
+        BookingDetails bookingDetails = bookingService.getBookingDetails(id);
+        return bookingDetails == null ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(bookingDetails, HttpStatus.OK);
     }
 
     @GetMapping("room/{id}")

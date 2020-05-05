@@ -38,7 +38,7 @@ public class Hotel {
     @Column(name = "hotel_type")
     private HotelType hotelType;
 
-    @OneToMany(mappedBy = "hotel")//, fetch = FetchType.EAGER
+    @OneToMany(mappedBy = "hotel")
     private List<Room> rooms = new ArrayList<>();
 
     @Column(name = "hotel_image_urls")
@@ -49,7 +49,7 @@ public class Hotel {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = HotelFeatureType.class) //, fetch = FetchType.EAGER
+    @ElementCollection(targetClass = HotelFeatureType.class)
     @CollectionTable(name = "hotel_features")
     @Column(name = "hotel_features")
     private List<HotelFeatureType> hotelFeatures = new ArrayList<>();
