@@ -1,7 +1,7 @@
 package com.progmasters.hotel.domain;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -11,8 +11,8 @@ public class ConfirmationToken {
     @Column(name = "token_id")
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+
+    private LocalDateTime createdDate;
 
     @Column(name = "confirmation_token")
     private String confirmationToken;
@@ -26,7 +26,7 @@ public class ConfirmationToken {
 
     public ConfirmationToken(Account account) {
         this.account = account;
-        createdDate = new Date();
+        createdDate = LocalDateTime.now();
         confirmationToken = UUID.randomUUID().toString();
     }
 
@@ -38,12 +38,8 @@ public class ConfirmationToken {
         this.id = id;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
 
     public String getConfirmationToken() {

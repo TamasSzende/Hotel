@@ -9,6 +9,7 @@ import com.progmasters.hotel.repository.AccountRepository;
 import com.progmasters.hotel.repository.ConfirmationTokenRepository;
 import com.progmasters.hotel.security.AuthenticatedLoginDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,13 @@ import java.time.LocalDateTime;
 @Transactional
 public class AccountService {
 
-    private BCryptPasswordEncoder passwordEncoder;
-    private AccountRepository accountRepository;
-    private ConfirmationTokenRepository confirmationTokenRepository;
-    private EmailService emailService;
+    private static final int TOKEN_EXPIRATION_CHECK_INTERVAL_MIL = (24 * 60 * 60 * 1000);
+    private static final int TOKEN_EXPIRATION_IN_DAY = 1;
+
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final EmailService emailService;
 
     @Autowired
     public AccountService(AccountRepository accountRepository, ConfirmationTokenRepository confirmationTokenRepository, EmailService emailService) {
@@ -40,7 +44,9 @@ public class AccountService {
         Account account = new Account(registrationDetails);
         account.setRole(Role.ROLE_USER);
         accountRepository.save(account);
-        emailService.sendConfirmationMail(account);
+        ConfirmationToken confirmationToken = new ConfirmationToken(account);
+        confirmationTokenRepository.save(confirmationToken);
+        emailService.sendConfirmationMail(account, confirmationToken);
     }
 
     public void saveHotelOwnerRegistration(RegistrationDetails registrationDetails) throws Exception {
@@ -50,8 +56,10 @@ public class AccountService {
             Account account = new Account(registrationDetails);
             account.setRole(Role.ROLE_HOTELOWNER);
             accountRepository.save(account);
+            ConfirmationToken confirmationToken = new ConfirmationToken(account);
+            confirmationTokenRepository.save(confirmationToken);
 
-            emailService.sendConfirmationMail(account);
+            emailService.sendConfirmationMail(account, confirmationToken);
 
         } else {
             throw new Exception("Mail already taken!");
@@ -134,6 +142,20 @@ public class AccountService {
             accountRepository.save(newHotelOwner);
         } else if (hotelOwnerAccount.getRole() != Role.ROLE_HOTELOWNER) {
             hotelOwnerAccount.setRole(Role.ROLE_HOTELOWNER);
+        }
+    }
+
+    //----------DELETE UNUSED CONFIRMATION TOKEN----------
+
+    @Scheduled(fixedDelay = TOKEN_EXPIRATION_CHECK_INTERVAL_MIL)
+    public void deleteUnusedConfirmationToken() {
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(TOKEN_EXPIRATION_IN_DAY);
+        Iterable<ConfirmationToken> confirmationTokens = this.confirmationTokenRepository.findAll();
+        for (ConfirmationToken confirmationToken : confirmationTokens) {
+            if (confirmationToken.getCreatedDate().isBefore(yesterday)) {
+                this.accountRepository.delete(confirmationToken.getAccount());
+                this.confirmationTokenRepository.delete(confirmationToken);
+            }
         }
     }
 

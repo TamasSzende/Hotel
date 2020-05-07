@@ -6,15 +6,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
+@EnableAsync
+@EnableScheduling
 public class AngularHotelApplication {
     //----- GENERATE DEFAULT ADMIN, USER, HOTELOWNER ------
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     @Autowired
     public AngularHotelApplication(AccountService accountService) {

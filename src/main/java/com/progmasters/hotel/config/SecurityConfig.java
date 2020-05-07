@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${cors-policies}")
     private String[] corsPolicies;
-    private JPAUserDetailsService userDetailsService;
+    private final JPAUserDetailsService userDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/accounts/registrationConfirm").permitAll()
+                .antMatchers("/api/registrations").permitAll()
                 .antMatchers("/api/accounts/sessionCheck").permitAll()
                 .antMatchers("/api/accounts/**").hasAnyRole("ADMIN", "USER", "HOTELOWNER")
                 .antMatchers("/api/accounts").hasAnyRole("ADMIN", "USER", "HOTELOWNER")

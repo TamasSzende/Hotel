@@ -20,8 +20,8 @@ import javax.validation.Valid;
 @RequestMapping("/api/registrations")
 public class RegistrationController {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
-    private AccountService accountService;
-    private RegistrationValidator registrationValidator;
+    private final AccountService accountService;
+    private final RegistrationValidator registrationValidator;
 
     @Value("${page.frontend.url")
     private String frontendUrl;
@@ -43,8 +43,10 @@ public class RegistrationController {
     //----------SEND MAIL AND CREATE USER AT REGISTRATION----------
 
     @PostMapping("/user")
-    public ResponseEntity<Void> createNewUser(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
+    public ResponseEntity<Void> createNewUser(@RequestHeader @Valid RegistrationDetails registrationDetails) throws Exception {
         logger.info("New mail added");
+        System.out.println(registrationDetails);
+
         accountService.saveUserRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

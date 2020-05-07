@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +19,8 @@ public class EmailService {
     @Value("${spring.mail.url}")
     private String mailSenderAddress;
 
-    private JavaMailSender javaMailSender;
-    private ConfirmationTokenRepository confirmationTokenRepository;
+    private final JavaMailSender javaMailSender;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     @Autowired
     public EmailService(JavaMailSender javaMailSender, ConfirmationTokenRepository confirmationTokenRepository) {
@@ -27,37 +28,36 @@ public class EmailService {
         this.confirmationTokenRepository = confirmationTokenRepository;
     }
 
-
-    public void sendConfirmationMail(Account account) {
-        ConfirmationToken confirmationToken = new ConfirmationToken(account);
-        confirmationTokenRepository.save(confirmationToken);
-
+    //    @Async
+    public void sendMail(Account account, String emailSubject, String emailText) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(MESSAGE_FROM);
         message.setTo(account.getEmail());
-        message.setSubject("Sikeres Regisztráció!");
-        message.setText("Regisztrációd megerősítéséhez kérlek kattints a linkre: "
-                + this.mailSenderAddress + "/login/" + confirmationToken.getConfirmationToken());
+        message.setSubject(emailSubject);
+        message.setText(emailText);
         javaMailSender.send(message);
     }
 
+    @Async
+    public void sendConfirmationMail(Account account, ConfirmationToken confirmationToken) {
+        String emailSubject = "Sikeres Regisztráció!";
+        String emailText = "Regisztrációd megerősítéséhez kérlek kattints a linkre: "
+                + this.mailSenderAddress + "/login/" + confirmationToken.getConfirmationToken();
+        sendMail(account, emailSubject, emailText);
+    }
+
+    @Async
     public void sendMailAtBooking(Account account) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(MESSAGE_FROM);
-        message.setTo(account.getEmail());
-        message.setSubject("Sikeres Foglalás!");
-        message.setText("Tisztelt " + account.getUsername() + "!\n\n" + "Foglalásod elmentettük, részletei megtalálhatóak a honlapon");
-        javaMailSender.send(message);
-
+        String emailSubject = "Sikeres Foglalás!";
+        String emailText = "Tisztelt " + account.getUsername() + "!\n\n" + "Foglalásod elmentettük, részletei megtalálhatóak a honlapon";
+        sendMail(account, emailSubject, emailText);
     }
 
+    @Async
     public void sendMailAtDeleteBooking(Account account) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(MESSAGE_FROM);
-        message.setTo(account.getEmail());
-        message.setSubject("Foglalás Törölve!");
-        message.setText("Tisztelt " + account.getUsername() + "!\n\n" + "Foglalásod töröltük az adatbázisból!");
-        javaMailSender.send(message);
+        String emailSubject = "Foglalás Törölve!";
+        String emailText = "Tisztelt " + account.getUsername() + "!\n\n" + "Foglalásod töröltük az adatbázisból!";
+        sendMail(account, emailSubject, emailText);
     }
 
 }
