@@ -33,8 +33,8 @@ export class HotelListComponent implements OnInit {
   constructor(private hotelService: HotelService, private route: ActivatedRoute, private router: Router, private popupService: PopupService, private loginService: LoginService) {
     this.flatpickrOptions = {
       mode: "range",
-      minDate: "today",
       dateFormat: "Y-m-d",
+      minDate: "today",
     };
     this.filterForm = new FormGroup({
       'numberOfGuests': new FormControl(null,
@@ -94,6 +94,10 @@ export class HotelListComponent implements OnInit {
             filterData.hotelFeatures = '';
           }
           this.listPageNumber = queryParams['listPageNumber'];
+
+          this.filterForm.controls['numberOfGuests'].setValue(filterData.numberOfGuests);
+
+
           this.hotelService.getFilteredHotelList(filterData, this.listPageNumber).subscribe(
             (response: HotelListItemSubListModel) => {
               this.hotelList = response.hotelSubList;

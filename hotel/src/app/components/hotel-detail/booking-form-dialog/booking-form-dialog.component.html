@@ -95,7 +95,7 @@
 
     <div class="modal-header">
       <h3 class="modal-title">Foglalás visszaigazolása</h3>
-      <button [mat-dialog-close]="false" aria-label="Close" class="close" data-dismiss="modal" type="button">
+      <button [mat-dialog-close]="true" aria-label="Close" class="close" data-dismiss="modal" type="button">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -150,7 +150,7 @@
     </div>
 
     <div class="modal-footer">
-      <button (click)="closeDialog()" [mat-dialog-close]="true" cdkFocusInitial class="btn btn-primary mr-4"
+      <button (click)="closeDialog(true)" [mat-dialog-close]="true" cdkFocusInitial class="btn btn-primary mr-4"
               type="button">
         OK
       </button>

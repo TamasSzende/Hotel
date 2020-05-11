@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {RegistrationService} from "../../../services/registration.service";
@@ -9,7 +9,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  styleUrls: ['./registration.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RegistrationComponent implements OnInit {
   registerForm: FormGroup;

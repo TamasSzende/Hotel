@@ -53,8 +53,8 @@ export class BookingFormDialogComponent implements OnInit {
     );
   }
 
-  closeDialog() {
-    this.dialogRef.close(true);
+  closeDialog(dialogResult) {
+    this.dialogRef.close(dialogResult);
   }
 
   onSubmit() {

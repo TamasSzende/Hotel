@@ -47,8 +47,8 @@ export class HotelDetailsComponent implements OnInit {
               private popupService: PopupService, private dialog: MatDialog) {
     this.flatpickrOptions = {
       mode: "range",
-      minDate: "today",
       dateFormat: "Y-m-d",
+      minDate: "today",
     };
     this.bookingForm = new FormGroup({
       'numberOfGuests': new FormControl(null,
@@ -209,13 +209,29 @@ export class HotelDetailsComponent implements OnInit {
   makeBooking() {
     if (this.isLoggedIn == false) {
       this.notificationService.unsuccessful("Foglaláshoz jelentkezz be kérlek!");
-      this.dialog.open(LoginComponent, {
-        height: '600px',
+      let loginDialogRef = this.dialog.open(LoginComponent, {
+        height: '400px',
         width: '400px',
         data: {
           openedBy: "BookingButton"
         }
       });
+      loginDialogRef.afterClosed().subscribe(
+        response => {
+          if (response) {
+            this.loginService.authenticatedLoginDetailsModel.subscribe(
+              (account) => {
+                if (account && account.role === "ROLE_HOTELOWNER") {
+                  this.router.navigate(['admin/hotel'])
+                } else if (account && account.role === "ROLE_USER") {
+                  this.account = account;
+                  this.isLoggedIn = true;
+                }
+              }
+            )
+          }
+        }
+      )
     } else {
       let dialogRef = this.dialog.open(BookingFormDialogComponent, {
         height: '600px',
@@ -224,11 +240,12 @@ export class HotelDetailsComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(
         response => {
+          console.log(response);
           if (response) {
             this.router.navigate(['/hotel']);
           }
         }
-      )
+      );
     }
   }
 

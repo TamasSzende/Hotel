@@ -42,7 +42,9 @@
 
             <td *ngFor="let partOfDay of day.roomDay" style="border: 0px; margin: 0; padding: 0">
               <div (dblclick)="bookingDetails(partOfDay.bookingId)" *ngIf="partOfDay !== null"
-                   [style.background-color]="partOfDay.colour" data-placement="top" data-toggle="tooltip"
+                   [style.background-color]="partOfDay.color"
+                   [style.cursor]="partOfDay.cursor"
+                   data-placement="top" data-toggle="tooltip"
                    style="height: 18px; width: 100%;" title="{{partOfDay.guestName}} - {{partOfDay.numberOfGuests}} fő">
               </div>
             </td>

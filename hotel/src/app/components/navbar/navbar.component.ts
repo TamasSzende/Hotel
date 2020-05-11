@@ -71,7 +71,7 @@ export class NavbarComponent implements OnInit {
     }
     this.isWindowOpen = true;
     const dialogRef = this.dialog.open(LoginComponent, {
-      height: '600px',
+      height: '400px',
       width: '400px',
       data: {
         openedBy: 'navbar'

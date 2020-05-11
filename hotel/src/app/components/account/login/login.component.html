@@ -1,15 +1,20 @@
 <div class="modal-dialog modal-lg modal-dialog-scrollable"
-     style="margin:0; padding:0; width: 100%; height: 100%; max-width: 110%; max-height: 110%">
+     style="margin:0; padding:0; width: 100%; height: 100%; max-width: 100%; max-height: 100%">
   <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Bejelentkezés</h3>
+      <button [mat-dialog-close]="false" aria-label="Close" class="close" data-dismiss="modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
     <div class="modal-body">
-      <div class="login-popup-heading text-center"><br><br>
-        <h3><i aria-hidden="true" class="fa fa-lock"></i> Bejelentkezés </h3>
-      </div>
-      <br><br>
+
       <form [formGroup]="loginForm" action="" id="loginMember" method="post" role="form">
         <div class="form-group">
           <label class="form-control-label" for="email">
-            <strong>Email cím <a id="redstar"> *</a></strong>
+            <strong>Email cím</strong>
           </label>
           <input [ngClass]="{'is-invalid': loginForm.get('email').touched && loginForm.get('email').invalid
                     || loginForm.get('email').errors?.serverError}" class="form-control" formControlName="email"
@@ -28,7 +33,7 @@
 
         <div class="form-group">
           <label class="form-control-label" for="password">
-            <strong>Jelszó <a id="redstars"> *</a></strong>
+            <strong>Jelszó</strong>
           </label>
           <input [ngClass]="{'is-invalid': loginForm.get('password').invalid && loginForm.get('password').touched
                     || loginForm.get('password').errors?.serverError}" class="form-control" formControlName="password"
@@ -43,28 +48,31 @@
           <small *ngIf="loginForm.get('password').errors?.serverError" class="text-danger">
             {{loginForm.get('password').errors['serverError']}}
           </small>
-          <br>
-          <div class="col-md-offset-4" id="required">* - kitöltése kötelező!</div>
-        </div>
-        <div class="text-center">
-          <div class="btn-group mr-4">
-            <button (click)="doLogin()" [disabled]="loginForm.invalid" [mat-dialog-close]="true"
-                    class="btn btn-success "
-                    name="submit" type="submit" value="1">Belépés
-            </button>
+          <div class="float-right">
+            <a class="pwd-forget pr-0 mr-0 text-right" href="javascript:void(0)" id="open_forgotPassword">Elfelejtetted
+              jelszavad?</a>
           </div>
         </div>
         <br>
+
+        <div class="text-center">
+
+          <button (click)="doLogin()" [disabled]="loginForm.invalid" [mat-dialog-close]="true"
+                  cdkFocusInitial class="btn btn-success pr-5 pl-5"
+                  name="submit" type="submit" value="1">Belépés
+          </button>
+
+        </div>
+
       </form>
 
-      <div class="form-group text-center">
-        <a class="pwd-forget" href="javascript:void(0)" id="open_forgotPassword">Elfelejtetted jelszavad?</a>
+
+      <div *ngIf="data.openedBy==='BookingButton'" class="col-form-label-sm text-center">
+        <p style="font-size: 1rem; margin-bottom: 0">Ha még nem regisztráltál:
+          <a (click)="doRegistration()" style="cursor: pointer; color: #007bff; font-weight: 400">Regisztráció</a></p>
       </div>
 
-      <div *ngIf="data.openedBy==='BookingButton'" class="col-form-label-sm text-center"><Strong>Ha még nem
-        regisztráltál:</Strong>
-        <div (click)="doRegistration()" class="mat-form-field btn btn-link"><Strong>Regisztráció</Strong></div>
-      </div>
+
     </div>
   </div>
 </div>

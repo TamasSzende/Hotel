@@ -154,18 +154,20 @@ export class HotelBookingsCalendarComponent implements OnInit {
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
-      let cellBackground = '';
-      let isToday = false;
+
+      let cellBackground = 'transparent';
+
       if (actualDate.getDay() === 0 || actualDate.getDay() === 6) {
         cellBackground = BACKGROUND_LIGHTGREY;
       } else if (actualDate.getTime() < today.getTime()) {
         cellBackground = BACKGROUND_LIGHTESTGREY;
-      } else {
-        cellBackground = 'transparent';
       }
+
+      let isToday = false;
       if (actualDate.getTime() === today.getTime()) {
         isToday = true;
       }
+
       let roomDay = [null, null, null];
       actualDate.setHours(0, 0, 0, 0);
       for (let roomReservationData of roomBookingData.roomReservationDataList) {
@@ -173,21 +175,25 @@ export class HotelBookingsCalendarComponent implements OnInit {
           bookingId: roomReservationData.bookingId,
           guestName: roomReservationData.guestLastName + ' ' + roomReservationData.guestFirstName,
           numberOfGuests: roomReservationData.numberOfGuests,
-          colour: 'hsl(' + (roomReservationData.bookingId * 21) % 360 + ', 50%, 50%)',
+          color: 'hsl(' + (roomReservationData.bookingId * 21) % 360 + ', 50%, 50%)',
+          cursor: 'default',
         };
         let roomReservationStartDate = new Date(roomReservationData.startDate);
-        let roomReservationEndDate = new Date(roomReservationData.endDate);
         roomReservationStartDate.setHours(0, 0, 0, 0);
+        let roomReservationEndDate = new Date(roomReservationData.endDate);
         roomReservationEndDate.setHours(0, 0, 0, 0);
 
         if (actualDate.getTime() === roomReservationStartDate.getTime()) {
+          roomDayData.cursor = 'e-resize'
           roomDay[2] = roomDayData;
         } else if (actualDate.getTime() > roomReservationStartDate.getTime() &&
           actualDate.getTime() < roomReservationEndDate.getTime()) {
+          roomDayData.cursor = 'move'
           roomDay[0] = roomDayData;
           roomDay[1] = roomDayData;
           roomDay[2] = roomDayData;
         } else if (actualDate.getTime() === roomReservationEndDate.getTime()) {
+          roomDayData.cursor = 'e-resize'
           roomDay[0] = roomDayData;
         }
       }
