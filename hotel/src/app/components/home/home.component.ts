@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, HostListener, OnInit} from "@angular/core";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {FlatpickrOptions} from "ng2-flatpickr";
 import {HotelService} from "../../services/hotel.service";
@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit {
 
   filterForm: FormGroup;
   flatpickrOptions: FlatpickrOptions;
+
+  backgroundPosition: string = ' 0px 0px';
 
   constructor(private hotelService: HotelService, private router: Router, private popupService: PopupService, private loginService: LoginService) {
     this.flatpickrOptions = {
@@ -74,6 +76,11 @@ export class HomeComponent implements OnInit {
 
   getPublicId(imgURL: string) {
     return getPublicId(imgURL);
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  backgroundMoving(event) {
+    this.backgroundPosition = ' 0px ' + window.pageYOffset / 1.8 + 'px';
   }
 
 }

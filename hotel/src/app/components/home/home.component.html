@@ -1,4 +1,4 @@
-<div class="bg">
+<div class="bg" [style.background-position]="backgroundPosition" >
 
   <div class="container" style="padding-top: 30px;  margin-left: auto;
   margin-right: auto;">
@@ -145,7 +145,7 @@
     </div>
     <br>
 
-    <h5>Aktuális ajánlataink:</h5>
+    <h5 style="color: white">Aktuális ajánlataink:</h5>
 
     <div class="d-flex flex-wrap justify-content-between">
       <div (click)="goToHotelDetails(randomHotel?.id)" *ngFor="let randomHotel of randomHotelList"
