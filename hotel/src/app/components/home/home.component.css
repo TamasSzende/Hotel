@@ -5,14 +5,14 @@ body, html {
 .bg {
   background-image: url("https://res.cloudinary.com/doaywchwk/image/upload/v1589268435/background.jpg");
   background-position: top;
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
   /*overflow: hidden;*/
   /*height: 800px;*/
 }
 
 /*.parallax {*/
 /*  perspective: 1px;*/
-/*  height: 80vh;*/
+/*  height: 100vh;*/
 /*  overflow-x: hidden;*/
 /*  overflow-y: auto;*/
 /*}*/

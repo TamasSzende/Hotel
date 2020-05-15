@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelDetailsModel} from "../../models/hotelDetails.model";
@@ -87,7 +87,6 @@ export class HotelDetailsComponent implements OnInit {
       }
     )
   }
-
 
   showHotel() {
     if (this.account && this.account.role === "ROLE_HOTELOWNER") {
@@ -221,9 +220,7 @@ export class HotelDetailsComponent implements OnInit {
           if (response) {
             this.loginService.authenticatedLoginDetailsModel.subscribe(
               (account) => {
-                if (account && account.role === "ROLE_HOTELOWNER") {
-                  this.router.navigate(['admin/hotel'])
-                } else if (account && account.role === "ROLE_USER") {
+               if (account && account.role === "ROLE_USER") {
                   this.account = account;
                   this.isLoggedIn = true;
                 }

@@ -35,17 +35,19 @@
         <td *ngFor="let day of room?.roomDayList"
             [ngStyle]="{'border-left':day.isToday === true ? '3px solid hsl(0, 100%, 50%)' : '0px'}"
             [style.background-color]="day.backgroundColor"
+            (mouseenter)="actionMouseEnter(room.roomId, day.cellDate)"
             style="margin: 0; padding: 0;">
 
           <table style="border: 0px; margin: 0; padding: 0; height: 100%; width: 100%; table-layout: fixed"
                  width="100%">
 
             <td *ngFor="let partOfDay of day.roomDay" style="border: 0px; margin: 0; padding: 0">
-              <div (dblclick)="bookingDetails(partOfDay.bookingId)" *ngIf="partOfDay !== null"
+              <div (dblclick)="bookingDetails(partOfDay.bookingId)"
+                   (click)="actionMouseDown(room.roomId, partOfDay.roomReservationId, partOfDay.actualDate)"
                    [style.background-color]="partOfDay.color"
                    [style.cursor]="partOfDay.cursor"
                    data-placement="top" data-toggle="tooltip"
-                   style="height: 18px; width: 100%;" title="{{partOfDay.guestName}} - {{partOfDay.numberOfGuests}} fő">
+                   style="height: 18px; width: 100%;" title="{{partOfDay.tooltip}}">
               </div>
             </td>
 

@@ -7,16 +7,16 @@ import java.time.LocalDate;
 
 public class RoomReservationData {
 
+    private Long roomReservationId;
+
     private Long bookingId;
 
     private String guestFirstName;
 
     private String guestLastName;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     private Integer numberOfGuests;
@@ -25,6 +25,7 @@ public class RoomReservationData {
     }
 
     public RoomReservationData(RoomReservation roomReservation) {
+        this.roomReservationId = roomReservation.getId();
         this.bookingId = roomReservation.getBooking().getId();
         this.guestFirstName = roomReservation.getBooking().getGuest().getFirstname();
         this.guestLastName = roomReservation.getBooking().getGuest().getLastname();
@@ -33,48 +34,56 @@ public class RoomReservationData {
         this.numberOfGuests = roomReservation.getBooking().getNumberOfGuests();
     }
 
-    public Long getBookingId() {
-        return bookingId;
+    public Long getRoomReservationId() {
+        return roomReservationId;
     }
 
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
+    public Long getBookingId() {
+        return bookingId;
     }
 
     public String getGuestFirstName() {
         return guestFirstName;
     }
 
-    public void setGuestFirstName(String guestFirstName) {
-        this.guestFirstName = guestFirstName;
-    }
-
     public String getGuestLastName() {
         return guestLastName;
-    }
-
-    public void setGuestLastName(String guestLastName) {
-        this.guestLastName = guestLastName;
     }
 
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
     public Integer getNumberOfGuests() {
         return numberOfGuests;
+    }
+
+    public void setRoomReservationId(Long roomReservationId) {
+        this.roomReservationId = roomReservationId;
+    }
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public void setGuestFirstName(String guestFirstName) {
+        this.guestFirstName = guestFirstName;
+    }
+
+    public void setGuestLastName(String guestLastName) {
+        this.guestLastName = guestLastName;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public void setNumberOfGuests(Integer numberOfGuests) {
