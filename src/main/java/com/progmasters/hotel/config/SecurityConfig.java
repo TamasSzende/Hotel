@@ -57,10 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/hotel/{id}").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/hotel").hasAnyRole("ADMIN,HOTELOWNER")
                 .antMatchers("/api").authenticated()
-
-                //TODO Ezzel a konfiggal jelenleg, csak az éri el az API bármely funkcióját, aki be van lépve
-                // Ezt biztos, hogy igy akarjátok? Mármint pl egy szoba listát el kéne hogy érjen bárki, nem?
-                // Ezt beszéljétek meg, irjátok át!
                 .and().logout()
                 .deleteCookies("JSESSIONID")
                 .logoutUrl("/api/accounts/logout")

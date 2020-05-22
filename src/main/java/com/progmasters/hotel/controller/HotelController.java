@@ -134,7 +134,7 @@ public class HotelController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<HotelCreateItem> updateHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem, @PathVariable Long id) {
+	public ResponseEntity<Void> updateHotel(@Valid @RequestBody HotelCreateItem hotelCreateItem, @PathVariable Long id) {
 		boolean hotelIsUpdated = hotelService.updateHotel(hotelCreateItem, id);
 		return hotelIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}

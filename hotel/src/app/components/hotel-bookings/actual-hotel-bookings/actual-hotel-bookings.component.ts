@@ -15,10 +15,10 @@ export class ActualHotelBookingsComponent implements OnInit {
 
   @Input() hotelId: BehaviorSubject<number>;
   currentBookingList: BookingListItemForHotelModel[];
-  private id: number;
+  id: number;
   fullNumberOfPages: number;
-  private listPageNumber: number = 0;
-  private pageNumbers: number[];
+  listPageNumber: number = 0;
+  pageNumbers: number[];
 
   constructor(private bookingService: BookingService,
               private popupService: PopupService,

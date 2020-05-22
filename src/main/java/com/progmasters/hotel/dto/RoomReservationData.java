@@ -15,8 +15,10 @@ public class RoomReservationData {
 
     private String guestLastName;
 
+    @JsonFormat(pattern = "yyyy. MM. dd.")
     private LocalDate startDate;
 
+    @JsonFormat(pattern = "yyyy. MM. dd.")
     private LocalDate endDate;
 
     private Integer numberOfGuests;
