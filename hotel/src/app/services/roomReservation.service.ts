@@ -21,6 +21,15 @@ export class RoomReservationService {
     return this.http.put(BASE_URL + '/' + roomReservationId, parsedDate);
   }
 
+  updateAllRoomReservationInBooking(modifiedRoomReservations: RoomReservationDataModel[]): Observable<any>  {
+    let parseDataList = [];
+    modifiedRoomReservations.forEach(modifiedRoomReservation => {
+      let parseDate = this.parseRoomReservationData(modifiedRoomReservation);
+      parseDataList.push(parseDate);
+    });
+    return this.http.put(BASE_URL, parseDataList);
+  }
+
   private parseRoomReservationData(data: RoomReservationDataModel) {
     return {
       roomReservationId: data.roomReservationId,

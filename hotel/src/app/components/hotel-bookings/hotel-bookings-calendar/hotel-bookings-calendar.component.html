@@ -44,7 +44,7 @@
             <td *ngFor="let partOfDay of day.roomDay" style="border: 0; margin: 0; padding: 0">
               <div (dblclick)="bookingDetails(partOfDay.bookingId)"
                    (mousedown)="actionMouseDown(room.roomId, partOfDay.roomReservationId, day.cellDate)"
-                   (mouseup)="actionMouseUp()"
+                   (mouseup)="actionMouseUp(day.cellDate)"
 
                    [style.background-color]="partOfDay.color"
                    [style.cursor]="partOfDay.cursor"

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/roomReservation")
 public class RoomReservationController {
@@ -21,6 +23,14 @@ public class RoomReservationController {
         boolean roomReservationIsUpdated = roomReservationService.updateRoomReservation(modifiedRoomReservationData, roomReservationId);
         return roomReservationIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @PutMapping()
+    public ResponseEntity<Void> updateAllRoomReservationInBooking(@RequestBody List<RoomReservationData> modifiedRoomReservations) {
+        boolean roomReservationIsUpdated = roomReservationService.updateAllRoomReservationInBooking(modifiedRoomReservations);
+        return roomReservationIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
 
 
 

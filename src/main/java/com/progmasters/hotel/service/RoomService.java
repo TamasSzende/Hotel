@@ -112,7 +112,6 @@ public class RoomService {
         Optional<Room> roomOptional = roomRepository.findById(id);
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
-            //TODO megnézni máshol is van-e.... pl.RoomReservation
             roomRepository.delete(room);
             return true;
         } else {
