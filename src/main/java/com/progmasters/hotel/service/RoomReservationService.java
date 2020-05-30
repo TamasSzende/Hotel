@@ -89,4 +89,14 @@ public class RoomReservationService {
     }
 
 
+    public boolean deleteRoomReservation(Long roomReservationId) {
+        Optional<RoomReservation> optionalRoomReservation = this.roomReservationRepository.findById(roomReservationId);
+        if (optionalRoomReservation.isPresent()) {
+            RoomReservation roomReservation = optionalRoomReservation.get();
+            roomReservationRepository.delete(roomReservation);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

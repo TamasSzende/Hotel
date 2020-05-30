@@ -10,11 +10,7 @@ public class BookingCreateItem {
     private String guestAccountName;
     private String remark;
     private Integer numberOfGuests;
-    @JsonFormat(pattern = "yyyy. MM. dd.")
-    private LocalDate startDate;
-    @JsonFormat(pattern = "yyyy. MM. dd.")
-    private LocalDate endDate;
-    private List<Long> roomIdList;
+    private List<RoomReservationShortItem> roomReservationList;
 
     public BookingCreateItem() {
     }
@@ -23,47 +19,31 @@ public class BookingCreateItem {
         return guestAccountName;
     }
 
-    public void setGuestAccountName(String guestAccountName) {
-        this.guestAccountName = guestAccountName;
-    }
-
     public String getRemark() {
         return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public Integer getNumberOfGuests() {
         return numberOfGuests;
     }
 
+    public List<RoomReservationShortItem> getRoomReservationList() {
+        return roomReservationList;
+    }
+
+    public void setGuestAccountName(String guestAccountName) {
+        this.guestAccountName = guestAccountName;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public void setNumberOfGuests(Integer numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public List<Long> getRoomIdList() {
-        return roomIdList;
-    }
-
-    public void setRoomIdList(List<Long> roomIdList) {
-        this.roomIdList = roomIdList;
+    public void setRoomReservationList(List<RoomReservationShortItem> roomReservationList) {
+        this.roomReservationList = roomReservationList;
     }
 }

@@ -13,9 +13,8 @@
 
       <h4>{{data.hotel.name}} - {{data.hotel.hotelType}}</h4>
       cím: {{data.hotel.postalCode}} {{data.hotel.city}}, {{data.hotel.streetAddress}}<br>
-      foglalás kezdete: {{data.startDate | date:'y. MMM d. EEEE'}}<br>
-      foglalás vége: {{data.endDate | date:'y. MMM d. EEEE'}}<br>
-      éjszakák száma: {{this.numberOfNights}}<br>
+      foglalás kezdete: {{data.firstStartDate.toLocaleDateString('hu-HU',  { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}}<br>
+      foglalás vége: {{data.lastEndDate.toLocaleDateString('hu-HU',{ year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}}<br>
       vendégek száma: {{data.numberOfGuests}} fő<br>
       foglalás ára: {{this.priceOfBooking.toLocaleString('hu-HU')}} Ft<br>
       <br>
@@ -28,19 +27,26 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let room of data.roomList">
+        <tr *ngFor="let roomReservation of data.roomReservationList">
           <td>
-            <h6 style="display: inline;">{{ room.roomName }} - {{ room.roomType }}</h6>
-            (Férőhelyek: {{ room.numberOfBeds }})
+            <h6 style="display: inline;">{{ roomReservation.room.roomName }} - {{ roomReservation.room.roomType }}</h6>
+            (Férőhelyek: {{ roomReservation.room.numberOfBeds }})
+            <br>
+            foglalás kezdete: {{roomReservation.startDate.toLocaleDateString('hu-HU')}}
+            vége: {{roomReservation.endDate.toLocaleDateString('hu-HU')}}
+            éjszakák száma: {{roomReservation.numberOfNights}}
           </td>
           <td class="text-right">
-            ár/éjszaka: {{ room.pricePerNight.toLocaleString('hu-HU') }} Ft
+            ár/éjszaka: {{ roomReservation.room.pricePerNight.toLocaleString('hu-HU') }} Ft
+            <br>
+            teljes ár: {{ (roomReservation.numberOfNights * roomReservation.room.pricePerNight).toLocaleString('hu-HU')}} Ft
           </td>
         </tr>
         <tr>
           <td><h6>Fizetendő összesen:</h6></td>
-          <td class="text-right"><h6> {{this.numberOfNights}} éjszaka : {{this.priceOfBooking.toLocaleString('hu-HU')}}
-            Ft</h6></td>
+          <td class="text-right">
+            <h6> {{this.priceOfBooking.toLocaleString('hu-HU')}} Ft</h6>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -104,7 +110,7 @@
 
       <h5> Gratulálunk! Sikeres foglalás!</h5>
       <h5> Vendég adtai:</h5>
-      Felhasználó név: {{this.bookingDetails.guest.username}}<br>
+      Email cím: {{this.bookingDetails.guest.username}}<br>
       Vezetéknév: {{this.bookingDetails.guest.lastname}}<br>
       Keresztnév: {{this.bookingDetails.guest.firstname}}<br>
       Lakcím: {{this.bookingDetails.guest.address}}<br>
@@ -115,9 +121,6 @@
       szállás: {{this.bookingDetails.hotel.name}} - {{this.bookingDetails.hotel.hotelType}}<br>
       cím: {{this.bookingDetails.hotel.postalCode}} {{this.bookingDetails.hotel.city}}
       , {{this.bookingDetails.hotel.streetAddress}}<br>
-      foglalás kezdete: {{this.bookingDetails.startDate | date:'y. MMM d. EEEE'}}<br>
-      foglalás vége: {{this.bookingDetails.endDate | date:'y. MMM d. EEEE'}}<br>
-      éjszakák száma: {{this.numberOfNights}}<br>
       vendégek száma: {{this.bookingDetails.numberOfGuests}} fő<br>
       foglalás ára: {{this.bookingDetails.priceOfBooking.toLocaleString('hu-HU')}} Ft<br>
       <br>
@@ -130,18 +133,24 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let room of this.bookingDetails?.reservedRooms">
+        <tr *ngFor="let roomReservation of this.bookingDetails?.roomReservationList">
           <td>
-            <h6 style="display: inline;">{{ room.roomName }} - {{ room.roomType }}</h6>
-            (Férőhelyek: {{ room.numberOfBeds }})
+            <h6 style="display: inline;">{{ roomReservation.room.roomName }} - {{ roomReservation.room.roomType }}</h6>
+            (Férőhelyek: {{ roomReservation.room.numberOfBeds }})
+            <br>
+            foglalás kezdete: {{roomReservation.startDate.toLocaleDateString('hu-HU')}}
+            vége: {{roomReservation.endDate.toLocaleDateString('hu-HU')}}
+            éjszakák száma: {{roomReservation.numberOfNights}}
           </td>
           <td class="text-right">
-            ár/éjszaka: {{ room.pricePerNight.toLocaleString('hu-HU') }} Ft
+            ár/éjszaka: {{ roomReservation.room.pricePerNight.toLocaleString('hu-HU') }} Ft
+            <br>
+            szoba teljes ár: {{ (roomReservation.numberOfNights * roomReservation.room.pricePerNight).toLocaleString('hu-HU')}} Ft
           </td>
         </tr>
         <tr>
           <td><h6>Végösszeg:</h6></td>
-          <td class="text-right"><h6> {{this.numberOfNights}} éjszaka : {{this.priceOfBooking.toLocaleString('hu-HU')}}
+          <td class="text-right"><h6> {{this.priceOfBooking.toLocaleString('hu-HU')}}
             Ft</h6></td>
         </tr>
         </tbody>

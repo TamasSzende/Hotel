@@ -43,6 +43,7 @@ import {HomeComponent} from "./components/home/home.component";
 import {FooterComponent} from "./components/footer/footer.component";
 import {HotelBookingsCalendarComponent} from "./components/hotel-bookings/hotel-bookings-calendar/hotel-bookings-calendar.component";
 import {HotelBookingsStatisticsComponent} from "./components/hotel-bookings/hotel-bookings-statistics/hotel-bookings-statistics.component";
+import {NotfoundComponent} from "./components/notfound/notfound.component";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -80,6 +81,7 @@ export const cloudinary = {
     AccountEditComponent,
     HomeComponent,
     FooterComponent,
+    NotfoundComponent,
   ],
     imports: [
       HttpClientModule,

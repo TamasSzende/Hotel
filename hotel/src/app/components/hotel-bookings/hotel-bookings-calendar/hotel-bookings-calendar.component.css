@@ -49,3 +49,16 @@ table, th, td {
   visibility: visible;
   opacity: 1;
 }
+
+.blinking {
+  animation-name: blinker;
+  animation-duration: 0.6s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes blinker {
+  0%{opacity: 1.0}
+  50%{opacity: 0.2}
+  100%{opacity: 1.0}
+}

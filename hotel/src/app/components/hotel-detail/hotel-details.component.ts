@@ -18,6 +18,8 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 import {LoginComponent} from "../account/login/login.component";
 import {NotificationService} from "../../services/notification.service";
+import {RoomReservationDataModel} from "../../models/roomReservationData.model";
+import {RoomReservationDetailsModel} from "../../models/roomReservationDetails.model";
 
 
 @Component({
@@ -129,16 +131,18 @@ export class HotelDetailsComponent implements OnInit {
       endDate: this.bookingForm.value.bookingDateRange[1],
       roomFeatures: this.createRoomFeaturesFilterArrayToSend(),
     };
-    this.roomService.getFilteredRoomList(this.hotel.id, data).subscribe(
-      (response: RoomListItemModel[]) => {
-        this.hotel.rooms = response;
-        this.clearRoomBookingFormArray();
-        this.createRoomBookingFormArray();
-        this.priceOfBooking = null;
-        this.maxNumberOfGuest = 0;
-      },
-      error => console.warn(error),
-    );
+    if (data.startDate && data.endDate) {
+      this.roomService.getFilteredRoomList(this.hotel.id, data).subscribe(
+        (response: RoomListItemModel[]) => {
+          this.hotel.rooms = response;
+          this.clearRoomBookingFormArray();
+          this.createRoomBookingFormArray();
+          this.priceOfBooking = null;
+          this.maxNumberOfGuest = 0;
+        },
+        error => console.warn(error),
+      );
+    }
   };
 
   resetFilters() {
@@ -164,7 +168,6 @@ export class HotelDetailsComponent implements OnInit {
         Math.round((this.bookingForm.value.bookingDateRange[1].getTime() - this.bookingForm.value.bookingDateRange[0].getTime()) / 86400000);
     }
     this.maxNumberOfGuest = maxCapacity;
-    console.log('max number of guest: ' + this.maxNumberOfGuest);
     this.priceOfBooking = numberOfNights * roomsPricePerNight;
   }
 
@@ -220,7 +223,7 @@ export class HotelDetailsComponent implements OnInit {
           if (response) {
             this.loginService.authenticatedLoginDetailsModel.subscribe(
               (account) => {
-               if (account && account.role === "ROLE_USER") {
+                if (account && account.role === "ROLE_USER") {
                   this.account = account;
                   this.isLoggedIn = true;
                 }
@@ -232,7 +235,7 @@ export class HotelDetailsComponent implements OnInit {
     } else {
       let dialogRef = this.dialog.open(BookingFormDialogComponent, {
         height: '600px',
-        width: '800px',
+        width: '850px',
         data: this.createBookingFormDialogData(),
       });
       dialogRef.afterClosed().subscribe(
@@ -248,12 +251,13 @@ export class HotelDetailsComponent implements OnInit {
 
   createBookingFormDialogData() {
     const input = {...this.bookingForm.value};
+    let roomReservationList = this.createRoomReservationList(input);
     return {
       hotel: this.createHotelDataToSend(),
       numberOfGuests: input.numberOfGuests,
-      startDate: input.bookingDateRange[0],
-      endDate: input.bookingDateRange[1],
-      roomList: this.createReservedRoomArrayToSend(),
+      firstStartDate: this.getFirstStartDate(roomReservationList),
+      lastEndDate: this.getLastEndDate(roomReservationList),
+      roomReservationList: roomReservationList,
     }
   }
 
@@ -267,22 +271,48 @@ export class HotelDetailsComponent implements OnInit {
     }
   }
 
-  createReservedRoomArrayToSend(): RoomShortListItemModel[] {
-    const result: RoomShortListItemModel[] = [];
+  createRoomReservationList(input) {
+    let roomReservationList = [];
+    const startDate: Date = input.bookingDateRange[0];
+    const endDate: Date = input.bookingDateRange[1];
+    const numberOfNights =  Math.round((endDate.getTime() - startDate.getTime()) / 86400000);
     this.bookingForm.value.roomIdList.forEach((value, index) => {
         if (value) {
-          const room = {
+          const room: RoomShortListItemModel = {
             id: this.hotel.rooms[index].id,
             roomName: this.hotel.rooms[index].roomName,
             roomType: this.hotel.rooms[index].roomType,
             numberOfBeds: this.hotel.rooms[index].numberOfBeds,
             pricePerNight: this.hotel.rooms[index].pricePerNight,
-          };
-          result.push(room)
+          }
+          const roomReservation: RoomReservationDetailsModel = {
+            startDate, endDate, numberOfNights, room};
+          roomReservationList.push(roomReservation)
         }
       }
     );
-    return result;
+    return roomReservationList;
+  }
+
+  private getFirstStartDate(preRoomReservationList) {
+    let firstStartDate = preRoomReservationList[0].startDate;
+    preRoomReservationList.forEach(preRoomReservation => {
+        if (preRoomReservation.startDate.getTime() < firstStartDate.getTime()) {
+          firstStartDate = preRoomReservation.startDate;
+        }
+      });
+    return firstStartDate;
+  }
+
+  private getLastEndDate(preRoomReservationList) {
+    let lastEndDate = preRoomReservationList[0].endDate;
+    preRoomReservationList.forEach(preRoomReservation => {
+      if (preRoomReservation.endDate.getTime() > lastEndDate.getTime()) {
+        lastEndDate = preRoomReservation.endDate;
+      }
+    });
+    return lastEndDate;
+
   }
 
   private createRoomBookingFormArray() {
@@ -322,5 +352,4 @@ export class HotelDetailsComponent implements OnInit {
     array.getRawValue().forEach(value => value ? counter++ : counter);
     return counter < 1 ? {required: true} : null;
   }
-
 }

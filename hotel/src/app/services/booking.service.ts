@@ -8,6 +8,7 @@ import {BookingListItemForUserModel} from "../models/bookingListItemForUser.mode
 import {BookingListItemForHotelModel} from "../models/bookingListItemForHotel.model";
 import {dateToJsonDateString} from '../utils/dateUtils';
 import {BookingSublistForHotelModel} from "../models/bookingSublistForHotel.model";
+import {RoomReservationShortItemModel} from "../models/roomReservationShortItem.model";
 
 const BASE_URL = environment.BASE_URL + '/api/booking';
 
@@ -91,10 +92,19 @@ export class BookingService {
       guestAccountName: data.guestAccountName,
       remark: data.remark,
       numberOfGuests: data.numberOfGuests,
-      startDate: dateToJsonDateString(data.startDate),
-      endDate: dateToJsonDateString(data.endDate),
-      roomIdList: data.roomIdList,
+      roomReservationList: this.parseRoomReservationData(data.roomReservationList),
     }
   }
 
+  parseRoomReservationData(roomReservationList: RoomReservationShortItemModel[]) {
+    let parsedRoomReservationList = []
+    roomReservationList.forEach(roomReservation => {
+      parsedRoomReservationList.push({
+        startDate: dateToJsonDateString(roomReservation.startDate),
+        endDate: dateToJsonDateString(roomReservation.endDate),
+        roomId: roomReservation.roomId,
+      })
+    });
+    return parsedRoomReservationList;
+  }
 }

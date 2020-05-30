@@ -10,6 +10,7 @@ import com.progmasters.hotel.service.RoomReservationService;
 import com.progmasters.hotel.service.RoomService;
 import com.progmasters.hotel.validator.HotelCreateItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -83,8 +84,8 @@ public class HotelController {
 
 	@GetMapping("/filter")
 	public ResponseEntity<HotelListItemSubList> getFilteredHotelList(
-			@RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
-			@RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate,
+			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
 			@RequestParam("numberOfGuests") long numberOfGuests,
 			@RequestParam(required = false) List<String> hotelFeatures,
 			@RequestParam(required = false) Integer listPageNumber) {

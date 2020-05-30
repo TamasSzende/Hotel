@@ -19,7 +19,7 @@
         </td>
         <td *ngFor="let day of this?.dayList"
             [ngStyle]="{'border-left':day.isToday === true ? '3px solid hsl(0, 100%, 50%)' : '0px'}"
-            [style.background-color]="day.backgroundColor"
+            [style.background-color]="day.cellBackground"
             style="text-align: center; font-size: 14px"> {{day.weekDayName}} <br> {{day.dayDateString}}
         </td>
       </tr>
@@ -34,7 +34,7 @@
 
         <td *ngFor="let day of room?.roomDayList"
             [ngStyle]="{'border-left':day.isToday === true ? '3px solid hsl(0, 100%, 50%)' : '0px'}"
-            [style.background-color]="day.backgroundColor"
+            [style.background-color]="day.cellBackground"
             (mouseenter)="actionMouseEnter(room.roomId, day.cellDate)"
             style="margin: 0; padding: 0;">
 
@@ -46,6 +46,8 @@
                    (mousedown)="actionMouseDown(room.roomId, partOfDay.roomReservationId, day.cellDate)"
                    (mouseup)="actionMouseUp(day.cellDate)"
 
+
+                   [ngClass]="{'blinking': partOfDay.blinking}"
                    [style.background-color]="partOfDay.color"
                    [style.cursor]="partOfDay.cursor"
                    data-placement="top" data-toggle="tooltip"

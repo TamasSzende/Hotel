@@ -38,9 +38,10 @@ export class HotelBookingsCalendarComponent implements OnInit {
   actionType = '';
   actionStartDate: Date;
   modifiedRoomBookingData: RoomBookingDataModel;
-  modifiedRoomReservationData: RoomReservationDataModel
-  modifiedRoomReservationBaseStartDate: Date
-  modifiedRoomReservationBaseEndDate: Date
+  modifiedRoomReservationData: RoomReservationDataModel;
+  modifiedRoomReservationBaseStartDate: Date;
+  modifiedRoomReservationBaseEndDate: Date;
+  addedRoomReservationDataList: RoomReservationDataModel[] = [];
 
 
   constructor(private bookingService: BookingService,
@@ -97,16 +98,19 @@ export class HotelBookingsCalendarComponent implements OnInit {
   goBack() {
     this.baseDate.setDate(this.baseDate.getDate() - DAY_STEP);
     this.initializeTable();
+    this.resetModifiedData();
   }
 
   goActual() {
     this.setBaseDateToday();
     this.initializeTable();
+    this.resetModifiedData();
   }
 
   goNext() {
     this.baseDate.setDate(this.baseDate.getDate() + DAY_STEP);
     this.initializeTable();
+    this.resetModifiedData();
   }
 
   roomDetail(id: number): void {
@@ -138,15 +142,13 @@ export class HotelBookingsCalendarComponent implements OnInit {
   private createDayList() {
     this.dayList = [];
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
-
       let dayData = {
         date: actualDate.getTime(),
-        weekDayName: this.createWeekDayName(actualDate),
+        weekDayName: actualDate.toLocaleDateString('hu-HU', {weekday: 'short'}),
         dayDateString: this.createDayDateString(actualDate),
-        backgroundColor: this.setDayListBackground(actualDate),
+        cellBackground: this.setDayListBackground(actualDate),
         isToday: (actualDate.getTime() === this.today.getTime()),
       };
-
       this.dayList.push(dayData);
     }
   }
@@ -166,23 +168,18 @@ export class HotelBookingsCalendarComponent implements OnInit {
   private createRoomDayList(roomBookingData: RoomBookingDataModel) {
     let roomDayList = [];
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
-
       let isToday = (actualDate.getTime() === this.today.getTime());
       let cellDate = new Date(actualDate.getTime());
       let cellBackground = this.setCellBackground(actualDate);
       let roomDay = this.createRoomDayData(roomBookingData.roomReservationDataList, actualDate);
-
-      roomDayList.push({isToday: isToday, cellDate: cellDate, backgroundColor: cellBackground, roomDay: roomDay});
+      roomDayList.push({isToday, cellDate, cellBackground, roomDay});
     }
     return roomDayList;
   }
 
   private createRoomDayData(roomReservationDataList: RoomReservationDataModel[], actualDate: Date) {
-
     let roomDay = [this.setBaseRoomDayData(), this.setBaseRoomDayData(), this.setBaseRoomDayData()];
-
     for (let roomReservationData of roomReservationDataList) {
-
       if (actualDate.getTime() === roomReservationData.startDate.getTime()) {
         roomDay[2] = this.setReservedRoomDayData(roomReservationData, actualDate);
         roomDay[2].cursor = 'e-resize'
@@ -199,6 +196,17 @@ export class HotelBookingsCalendarComponent implements OnInit {
     return roomDay;
   }
 
+  private setBaseRoomDayData() {
+    return {
+      bookingId: null,
+      roomReservationId: null,
+      tooltip: '',
+      color: 'transparent',
+      cursor: 'cell',
+      blinking: false,
+    }
+  }
+
   private setReservedRoomDayData(roomReservationData: RoomReservationDataModel, actualDate: Date) {
     return {
       bookingId: roomReservationData.bookingId,
@@ -206,6 +214,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
       tooltip: this.getTooltipText(roomReservationData),
       color: this.setReservationColor(roomReservationData.bookingId),
       cursor: 'move',
+      blinking: false,
     };
   }
 
@@ -214,17 +223,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
   }
 
   private setReservationColor(bookingId: number) {
-    return 'hsl(' + (bookingId * 21) % 360 + ', 50%, 50%)'
-  }
-
-  private setBaseRoomDayData() {
-    return {
-      bookingId: null,
-      roomReservationId: null,
-      tooltip: '',
-      color: 'transparent',
-      cursor: 'cell',
-    }
+    return 'hsl(' + (bookingId * 21) % 360 + ', 30%, 55%)'
   }
 
   private setCellBackground(actualDate: Date) {
@@ -238,7 +237,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
   }
 
   private setDayListBackground(actualDate: Date) {
-    let cellBackground = 'transparent';
+    let cellBackground;
     if (actualDate.getDay() === 0 || actualDate.getDay() === 6) {
       cellBackground = WEEKEND_BACKGROUND;
     } else {
@@ -254,7 +253,33 @@ export class HotelBookingsCalendarComponent implements OnInit {
       this.roomBookingDataList.forEach(roomBookingData => {
         if (roomBookingData.roomId === roomId) {
           this.modifiedRoomBookingData = roomBookingData;
-          if (roomReservationId) {
+          if (this.addedRoomReservationDataList.length > 0) {
+            if (!roomReservationId) {
+              this.actionType = 'add';
+              this.modifiedRoomReservationData = {
+                roomReservationId: -1,
+                bookingId: null,
+                guestFirstName: '',
+                guestLastName: '',
+                startDate: null,
+                endDate: null,
+                numberOfGuests: null,
+              };
+              this.modifiedRoomBookingData.roomReservationDataList.push(this.modifiedRoomReservationData);
+            }
+          } else if (!roomReservationId) {
+            this.actionType = 'add';
+            this.modifiedRoomReservationData = {
+              roomReservationId: -1,
+              bookingId: null,
+              guestFirstName: '',
+              guestLastName: '',
+              startDate: null,
+              endDate: null,
+              numberOfGuests: null,
+            };
+            this.modifiedRoomBookingData.roomReservationDataList.push(this.modifiedRoomReservationData);
+          } else {
             this.modifiedRoomBookingData.roomReservationDataList.forEach(roomReservationData => {
               if (roomReservationData.roomReservationId === roomReservationId) {
                 this.modifiedRoomReservationData = roomReservationData;
@@ -269,18 +294,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
                 }
               }
             });
-          } else {
-            this.actionType = 'add';
-            this.modifiedRoomReservationData = {
-              roomReservationId: -1,
-              bookingId: null,
-              guestFirstName: '',
-              guestLastName: '',
-              startDate: null,
-              endDate: null,
-              numberOfGuests: null,
-            }
-            this.modifiedRoomBookingData.roomReservationDataList.push(this.modifiedRoomReservationData);
+            this.moveModifiedRoomReservationToBackInList();
           }
         }
       });
@@ -289,7 +303,14 @@ export class HotelBookingsCalendarComponent implements OnInit {
     }
   }
 
+  moveModifiedRoomReservationToBackInList() {
+    const index = this.modifiedRoomBookingData.roomReservationDataList.indexOf(this.modifiedRoomReservationData);
+    const removedItem = this.modifiedRoomBookingData.roomReservationDataList.splice(index, 1);
+    this.modifiedRoomBookingData.roomReservationDataList.push(removedItem[0]);
+  }
+
   actionMouseEnter(roomId: number, actionActualDate: Date) {
+
     if (this.actionType) {
       let actionDifference = actionActualDate.getTime() - this.actionStartDate.getTime();
       if (this.actionType === 'move') {
@@ -316,10 +337,31 @@ export class HotelBookingsCalendarComponent implements OnInit {
   }
 
   actionMouseUp(actionDate: Date) {
+    console.log('now is up')
     if (this.actionType && this.actionStartDate.getTime() !== actionDate.getTime()) {
-      this.updateRoomReservation();
+      if (this.actionType === 'add') {
+        this.addedRoomReservationDataList.push(this.modifiedRoomReservationData);
+        this.popupService.openConfirmPopup("Szeretnél még foglalást hozzáadni?")
+          .afterClosed().subscribe(res => {
+          if (res) {
+            this.modifiedRoomReservationData.roomReservationId = -2;
+            this.actionType = ''
+            this.actualizeRoomBookingTableRow();
+
+          } else {
+
+
+
+            this.actionType = '';
+          }
+        });
+      } else {
+        this.updateRoomReservation();
+        this.actionType = '';
+      }
+    } else {
+      this.actionType = '';
     }
-    this.actionType = '';
     this.actionStartDate = null;
   }
 
@@ -328,6 +370,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
     this.modifiedRoomReservationData = null;
     this.modifiedRoomReservationBaseStartDate = null;
     this.modifiedRoomReservationBaseEndDate = null;
+    this.addedRoomReservationDataList = [];
   }
 
   private actualizeRoomBookingTableRow() {
@@ -343,16 +386,20 @@ export class HotelBookingsCalendarComponent implements OnInit {
           }
 
           for (let roomReservationData of this.modifiedRoomBookingData.roomReservationDataList) {
-            if (roomReservationData.roomReservationId === -1) {
+
+            if (roomReservationData.roomReservationId < 0) {
               if (actualDate.getTime() === roomReservationData.startDate.getTime()) {
                 roomDayData.roomDay[2].color = ADDED_ROOM_RESERVATION;
+                if (roomReservationData.roomReservationId === -2) roomDayData.roomDay[2].blinking = true;
               } else if (actualDate.getTime() > roomReservationData.startDate.getTime() &&
                 actualDate.getTime() < roomReservationData.endDate.getTime()) {
                 for (let i = 0; i < 3; i++) {
                   roomDayData.roomDay[i].color = ADDED_ROOM_RESERVATION;
+                  if (roomReservationData.roomReservationId === -2) roomDayData.roomDay[i].blinking = true;
                 }
               } else if (actualDate.getTime() === roomReservationData.endDate.getTime()) {
                 roomDayData.roomDay[0].color = ADDED_ROOM_RESERVATION;
+                if (roomReservationData.roomReservationId === -2) roomDayData.roomDay[0].blinking = true;
               }
             } else {
               if (actualDate.getTime() === roomReservationData.startDate.getTime()) {
@@ -443,25 +490,6 @@ export class HotelBookingsCalendarComponent implements OnInit {
       });
     });
     return roomReservationsToModifiedBooking;
-  }
-
-  private createWeekDayName(date: Date) {
-    switch (date.getDay()) {
-      case 0:
-        return "Vas";
-      case 1:
-        return "Hé";
-      case 2:
-        return "Ke";
-      case 3:
-        return "Sze";
-      case 4:
-        return "Csü";
-      case 5:
-        return "Pé";
-      case 6:
-        return "Szo";
-    }
   }
 
   private createDayDateString(date: Date) {

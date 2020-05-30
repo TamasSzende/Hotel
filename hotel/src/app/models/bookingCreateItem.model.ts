@@ -1,8 +1,8 @@
+import {RoomReservationShortItemModel} from "./roomReservationShortItem.model";
+
 export interface BookingCreateItemModel {
   guestAccountName: string;
   remark: string;
   numberOfGuests: number;
-  startDate: Date;
-  endDate: Date;
-  roomIdList: number[];
+  roomReservationList: RoomReservationShortItemModel[];
 }

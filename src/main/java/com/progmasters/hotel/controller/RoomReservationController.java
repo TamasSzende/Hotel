@@ -30,6 +30,12 @@ public class RoomReservationController {
         return roomReservationIsUpdated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable("id") Long roomReservationId) {
+        boolean isDeleteSuccessful = roomReservationService.deleteRoomReservation(roomReservationId);
+        return isDeleteSuccessful ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
 
 

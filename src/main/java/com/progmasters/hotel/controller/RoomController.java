@@ -6,6 +6,7 @@ import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.service.RoomService;
 import com.progmasters.hotel.validator.RoomCreateItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
@@ -46,8 +47,8 @@ public class RoomController {
     @GetMapping("/filter/{id}")
     public List<RoomListItem> getFilteredFreeRoomList(
             @PathVariable("id") Long hotelId,
-            @RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
-            @RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate,
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam List<String> roomFeatures) {
         if (roomFeatures.isEmpty()) {
             return roomService.getFreeRoomList(hotelId, startDate, endDate);
@@ -60,8 +61,8 @@ public class RoomController {
     @GetMapping("/data/{id}")
     public List<RoomBookingData> getRoomBookingDataByDateRange(
             @PathVariable("id") Long hotelId,
-            @RequestParam("startDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate startDate,
-            @RequestParam("endDate") @JsonFormat(pattern = "yyyy. MM. dd.") LocalDate endDate) {
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return roomService.getRoomBookingDataByDateRange(hotelId, startDate, endDate);
     }
 

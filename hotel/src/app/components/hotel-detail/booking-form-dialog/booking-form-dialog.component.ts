@@ -6,6 +6,8 @@ import {BookingService} from "../../../services/booking.service";
 import {BookingDetailsModel} from "../../../models/bookingDetails.model";
 import {LoginService} from "../../../services/login.service";
 import {Router} from "@angular/router";
+import {RoomReservationDetailsModel} from "../../../models/roomReservationDetails.model";
+import {RoomReservationShortItemModel} from "../../../models/roomReservationShortItem.model";
 
 @Component({
   selector: 'app-booking-form-dialog',
@@ -16,7 +18,6 @@ import {Router} from "@angular/router";
 export class BookingFormDialogComponent implements OnInit {
 
   bookingForm: FormGroup;
-  numberOfNights: number;
   priceOfBooking: number;
   bookingDetails: BookingDetailsModel;
   bookingStatus: string = 'booking';
@@ -45,10 +46,9 @@ export class BookingFormDialogComponent implements OnInit {
         }
       });
 
-    this.numberOfNights = Math.round((this.data.endDate.getTime() - this.data.startDate.getTime()) / 86400000);
     this.priceOfBooking = 0;
-    this.data.roomList.forEach((room) => {
-        this.priceOfBooking += this.numberOfNights * room.pricePerNight;
+    this.data.roomReservationList.forEach((roomReservation: RoomReservationDetailsModel) => {
+        this.priceOfBooking += roomReservation.numberOfNights * roomReservation.room.pricePerNight;
       }
     );
   }
@@ -65,8 +65,7 @@ export class BookingFormDialogComponent implements OnInit {
         this.bookingService.bookingDetail(bookingId).subscribe(
           (response: BookingDetailsModel) => {
             this.bookingStatus = 'created';
-            this.bookingDetails = response;
-            this.numberOfNights = Math.round((response.endDate.getTime() - response.startDate.getTime()) / 86400000);
+            this.bookingDetails = this.parseDate(response);
           }, error => {
             this.bookingStatus = 'failed';
           }
@@ -82,10 +81,29 @@ export class BookingFormDialogComponent implements OnInit {
       guestAccountName: this.username,
       remark: input.remark,
       numberOfGuests: this.data.numberOfGuests,
-      startDate: this.data.startDate,
-      endDate: this.data.endDate,
-      roomIdList: this.data.roomList.map(room => room.id)
+      roomReservationList: this.createRoomReservationShortItemList(),
     }
   };
 
+  createRoomReservationShortItemList() {
+    let roomReservationList: RoomReservationShortItemModel[] = [];
+    this.data.roomReservationList.forEach(roomReservation => {
+      roomReservationList.push({
+        startDate: roomReservation.startDate,
+        endDate: roomReservation.endDate,
+        roomId: roomReservation.room.id,
+      });
+    });
+    return roomReservationList;
+  }
+
+  private parseDate(response: BookingDetailsModel): BookingDetailsModel {
+    response.roomReservationList.forEach(roomReservation => {
+      roomReservation.startDate = new Date(roomReservation.startDate);
+      roomReservation.startDate.setHours(0, 0, 0, 0);
+      roomReservation.endDate = new Date(roomReservation.endDate);
+      roomReservation.endDate.setHours(0, 0, 0, 0);
+    });
+    return response;
+  }
 }

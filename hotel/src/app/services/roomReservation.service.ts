@@ -30,6 +30,11 @@ export class RoomReservationService {
     return this.http.put(BASE_URL, parseDataList);
   }
 
+
+  deleteRoomReservation(roomReservationId: number): Observable<any> {
+    return this.http.delete(BASE_URL + '/' + roomReservationId);
+  }
+
   private parseRoomReservationData(data: RoomReservationDataModel) {
     return {
       roomReservationId: data.roomReservationId,

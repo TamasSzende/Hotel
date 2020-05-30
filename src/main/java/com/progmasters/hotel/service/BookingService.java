@@ -51,15 +51,13 @@ public class BookingService {
         if (hotelId == null) return null;
 
         //Check the time: later than now, end is later then start (and not equal)
-        Long numberOfNights = DAYS.between(bookingCreateItem.getStartDate(), bookingCreateItem.getEndDate());
-        if (numberOfNights < 1) return null;
-        if (bookingCreateItem.getStartDate().isBefore(LocalDate.now())) return null;
+        if (!validateReservationTime(bookingCreateItem)) return null;
 
         //Check the rooms are free and exist (and create RoomReservation List)
         List<RoomReservation> roomReservations = getRoomReservationsAndValidate(bookingCreateItem, booking);
         if (roomReservations.isEmpty()) return null;
 
-        double priceOfBooking = getPriceOfBooking(numberOfNights, bookingCreateItem);
+        double priceOfBooking = getPriceOfBooking(bookingCreateItem);
         booking.setPriceOfBooking(priceOfBooking);
 
         Account guestAccount = this.accountRepository.findByUsername(bookingCreateItem.getGuestAccountName());
@@ -171,11 +169,11 @@ public class BookingService {
 
     private List<RoomReservation> getRoomReservationsAndValidate(BookingCreateItem bookingCreateItem, Booking booking) {
         List<RoomReservation> roomReservations = new ArrayList<>();
-        for (Long roomId : bookingCreateItem.getRoomIdList()) {
-            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
+        for (RoomReservationShortItem roomReservationShortItem : bookingCreateItem.getRoomReservationList()) {
+            Optional<Room> optionalRoom = this.roomRepository.findById(roomReservationShortItem.getRoomId());
             if (optionalRoom.isPresent()
-                    && isRoomFree(roomId, bookingCreateItem.getStartDate(), bookingCreateItem.getEndDate())) {
-                RoomReservation roomReservation = new RoomReservation(bookingCreateItem);
+                    && isRoomFree(roomReservationShortItem.getRoomId(), roomReservationShortItem.getStartDate(), roomReservationShortItem.getEndDate())) {
+                RoomReservation roomReservation = new RoomReservation(roomReservationShortItem);
                 roomReservation.setRoom(optionalRoom.get());
                 roomReservation.setBooking(booking);
                 roomReservations.add(roomReservation);
@@ -192,10 +190,20 @@ public class BookingService {
         return roomReservations.isEmpty();
     }
 
+    private boolean validateReservationTime(BookingCreateItem bookingCreateItem) {
+        boolean reservationTimeIsValid = true;
+        for (RoomReservationShortItem roomReservation : bookingCreateItem.getRoomReservationList()) {
+            Long numberOfNights = DAYS.between(roomReservation.getStartDate(), roomReservation.getEndDate());
+            if (numberOfNights < 1) reservationTimeIsValid = false;
+            if (roomReservation.getStartDate().isBefore(LocalDate.now())) reservationTimeIsValid = false;
+        }
+        return reservationTimeIsValid;
+    }
+
     private Long getHotelIdAndValidate(BookingCreateItem bookingCreateItem) {
         Long hotelId = null;
-        for (Long roomId : bookingCreateItem.getRoomIdList()) {
-            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
+        for (RoomReservationShortItem roomReservation : bookingCreateItem.getRoomReservationList()) {
+            Optional<Room> optionalRoom = this.roomRepository.findById(roomReservation.getRoomId());
             if (optionalRoom.isPresent()) {
                 Room room = optionalRoom.get();
                 Long actualHotelId = room.getHotel().getId();
@@ -209,10 +217,11 @@ public class BookingService {
         return hotelId;
     }
 
-    private double getPriceOfBooking(Long numberOfNights, BookingCreateItem bookingCreateItem) {
+    private double getPriceOfBooking(BookingCreateItem bookingCreateItem) {
         double priceOfBooking = 0.0;
-        for (Long roomId : bookingCreateItem.getRoomIdList()) {
-            Optional<Room> optionalRoom = this.roomRepository.findById(roomId);
+        for (RoomReservationShortItem roomReservation : bookingCreateItem.getRoomReservationList()) {
+            Long numberOfNights = DAYS.between(roomReservation.getStartDate(), roomReservation.getEndDate());
+            Optional<Room> optionalRoom = this.roomRepository.findById(roomReservation.getRoomId());
             if (optionalRoom.isPresent()) {
                 Room room = optionalRoom.get();
                 priceOfBooking += room.getPricePerNight() * numberOfNights;

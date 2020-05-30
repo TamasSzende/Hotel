@@ -50,7 +50,7 @@ export class ActualRoomBookingsComponent implements OnInit {
   bookingDetails(bookingId: number) {
     let dialogRef = this.dialog.open(BookingDetailDialogComponent, {
       height: '600px',
-      width: '800px',
+      width: '850px',
       data: bookingId,
     });
     dialogRef.afterClosed().subscribe(

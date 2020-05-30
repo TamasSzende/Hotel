@@ -2,6 +2,7 @@ package com.progmasters.hotel.domain;
 
 
 import com.progmasters.hotel.dto.BookingCreateItem;
+import com.progmasters.hotel.dto.RoomReservationShortItem;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -39,9 +40,9 @@ public class RoomReservation {
         this.booking = booking;
     }
 
-    public RoomReservation(BookingCreateItem bookingCreateItem) {
-        this.startDate = bookingCreateItem.getStartDate();
-        this.endDate = bookingCreateItem.getEndDate();
+    public RoomReservation(RoomReservationShortItem roomReservationShortItem) {
+        this.startDate = roomReservationShortItem.getStartDate();
+        this.endDate = roomReservationShortItem.getEndDate();
     }
 
     public Long getId() {

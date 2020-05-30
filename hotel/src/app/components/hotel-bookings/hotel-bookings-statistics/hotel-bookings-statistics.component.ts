@@ -20,15 +20,17 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   canvas: ElementRef<HTMLCanvasElement>;
   startDate: Date = new Date();
   endDate: Date = new Date();
-  chartType: string = 'line';
+  chartType: string = 'bar';
   chartColors: Array<any> = [
     {
-      backgroundColor: 'rgba(105, 0, 132, .2)',
+      cellBackground: 'rgba(200, 99, 132, .7)',
+      backgroundColor: 'rgba(200, 99, 132, .4)',
       borderColor: 'rgba(200, 99, 132, .7)',
       borderWidth: 2,
     },
     {
-      backgroundColor: 'rgba(0, 137, 132, .2)',
+      cellBackground: 'rgba(0, 10, 130, .7)',
+      backgroundColor: 'rgba(0, 10, 130, .4)',
       borderColor: 'rgba(0, 10, 130, .7)',
       borderWidth: 2,
     }
@@ -46,7 +48,6 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   };
 
   public chartDatasets: Array<any>;
-
 
   chartLabels: Array<string> = [];
 
