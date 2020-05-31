@@ -17,7 +17,6 @@ export class PastHotelBookingsComponent implements OnInit {
   id: number;
   pastBookingList: BookingListItemForHotelModel[];
   fullNumberOfPages: number;
-  pageNumbers: number[] = [];
   listPageNumber: number = 0;
 
   constructor(private bookingService: BookingService,
@@ -39,7 +38,6 @@ export class PastHotelBookingsComponent implements OnInit {
       (response) => {
         this.pastBookingList = response.bookingSubList;
         this.fullNumberOfPages = response.fullNumberOfPages;
-        this.pageNumbers = this.generatePageNumberArray(this.fullNumberOfPages);
       },
       error => console.warn(error)
     );
@@ -74,16 +72,8 @@ export class PastHotelBookingsComponent implements OnInit {
     })
   }
 
-  onPageNumClick(number: number) {
-    this.listPageNumber = number;
+  setListPageNumber(emittedListPageNumber: number) {
+    this.listPageNumber = emittedListPageNumber;
     this.getPastBookingList(this.id);
-  }
-
-  generatePageNumberArray(numOfHotels: number) {
-    let numArray = new Array<number>();
-    for (let i = 0; i < numOfHotels; i++) {
-      numArray.push(i);
-    }
-    return numArray;
   }
 }
