@@ -52,7 +52,7 @@ table, th, td {
 
 .blinking {
   animation-name: blinker;
-  animation-duration: 0.6s;
+  animation-duration: 0.8s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }

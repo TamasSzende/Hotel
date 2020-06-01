@@ -22,7 +22,7 @@ const DAY_STEP = 24;
 const PAST_BACKGROUND = 'hsl(0, 0%, 92%)';
 const WEEKEND_BACKGROUND = 'hsl(0, 0%, 86%)';
 const DAY_LIST_BACKGROUND = 'hsl(0, 0%, 95%)';
-const ADDED_ROOM_RESERVATION = 'hsl(0, 0%, 65%)';
+const ADDED_ROOM_RESERVATION = 'hsl(0, 0%, 40%, 0.7)';
 
 @Component({
   selector: 'hotel-bookings-calendar',
@@ -149,8 +149,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
           if (response) {
             this.initializeTable();
           }
-        }
-      )
+        });
     }
   }
 
@@ -201,16 +200,19 @@ export class HotelBookingsCalendarComponent implements OnInit {
     let roomDay = [this.setBaseRoomDayData(), this.setBaseRoomDayData(), this.setBaseRoomDayData()];
     for (let roomReservationData of roomReservationDataList) {
       if (actualDate.getTime() === roomReservationData.startDate.getTime()) {
-        roomDay[2] = this.setReservedRoomDayData(roomReservationData, actualDate);
-        roomDay[2].cursor = 'e-resize'
+        roomDay[2] = this.setReservedRoomDayData(roomReservationData);
+        roomDay[2].reservationText = this.getReservationText(roomReservationData);
+        roomDay[2].borderRadius = '0.25rem 0 0 0.25rem';
+        roomDay[2].cursor = 'e-resize';
       } else if (actualDate.getTime() > roomReservationData.startDate.getTime() &&
         actualDate.getTime() < roomReservationData.endDate.getTime()) {
-        roomDay[0] = this.setReservedRoomDayData(roomReservationData, actualDate);
-        roomDay[1] = this.setReservedRoomDayData(roomReservationData, actualDate);
-        roomDay[2] = this.setReservedRoomDayData(roomReservationData, actualDate);
+        roomDay[0] = this.setReservedRoomDayData(roomReservationData);
+        roomDay[1] = this.setReservedRoomDayData(roomReservationData);
+        roomDay[2] = this.setReservedRoomDayData(roomReservationData);
       } else if (actualDate.getTime() === roomReservationData.endDate.getTime()) {
-        roomDay[0] = this.setReservedRoomDayData(roomReservationData, actualDate);
-        roomDay[0].cursor = 'e-resize'
+        roomDay[0] = this.setReservedRoomDayData(roomReservationData);
+        roomDay[0].borderRadius = '0 0.25rem 0.25rem 0';
+        roomDay[0].cursor = 'e-resize';
       }
     }
     return roomDay;
@@ -220,30 +222,52 @@ export class HotelBookingsCalendarComponent implements OnInit {
     return {
       bookingId: null,
       roomReservationId: null,
+      reservationText: '',
       tooltip: '',
       color: 'transparent',
+      borderRadius: '0',
       cursor: 'cell',
       blinking: false,
     }
   }
 
-  private setReservedRoomDayData(roomReservationData: RoomReservationDataModel, actualDate: Date) {
+  private setReservedRoomDayData(roomReservationData: RoomReservationDataModel) {
     return {
       bookingId: roomReservationData.bookingId,
       roomReservationId: roomReservationData.roomReservationId,
+      reservationText: '',
       tooltip: this.getTooltipText(roomReservationData),
       color: this.setReservationColor(roomReservationData.bookingId),
+      borderRadius: '0',
       cursor: 'move',
       blinking: false,
     };
   }
 
   private getTooltipText(roomReservationData: RoomReservationDataModel) {
-    return roomReservationData.guestLastName + ' ' + roomReservationData.guestFirstName + ' - ' + roomReservationData.numberOfGuests + " fő";
+    return roomReservationData.guestLastName + ' ' + roomReservationData.guestFirstName + ' - ' + roomReservationData.numberOfGuests + " fő\n" +
+      "foglalás kezdete:  " + roomReservationData.startDate.toLocaleDateString() + "\n" +
+      "foglalás vége: " + roomReservationData.endDate.toLocaleDateString();
+  }
+
+  private getReservationText(roomReservationData: RoomReservationDataModel) {
+    let reservationText = '';
+    const reservationDuration = roomReservationData.endDate.getTime() - roomReservationData.startDate.getTime();
+    const spaceToTableBorder = this.endDate.getTime() - roomReservationData.startDate.getTime();
+    const spaceForText = Math.min(reservationDuration, spaceToTableBorder) / (24 * 60 * 60 * 1000);
+    if (spaceForText === 1) {
+      reservationText = roomReservationData.guestFirstName.slice(0, 1) + "." + roomReservationData.guestLastName.slice(0, 1) + ".";
+    } else if (spaceForText === 2) {
+      reservationText = roomReservationData.guestFirstName.slice(0, 1) + ". " + roomReservationData.guestLastName.slice(0, 6);
+      if (roomReservationData.guestLastName.length > 6) reservationText += ".";
+    } else {
+      reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName;
+    }
+    return reservationText;
   }
 
   private setReservationColor(bookingId: number) {
-    return 'hsl(' + (bookingId * 21) % 360 + ', 30%, 55%)'
+    return 'hsl(' + (bookingId * 21) % 360 + ', 70%, 50%, 0.6)'
   }
 
   private setCellBackground(actualDate: Date) {
@@ -476,7 +500,9 @@ export class HotelBookingsCalendarComponent implements OnInit {
           let actualDate = roomDayData.cellDate;
 
           for (let i = 0; i < 3; i++) {
+            roomDayData.roomDay[i].reservationText = '';
             roomDayData.roomDay[i].color = 'transparent';
+            roomDayData.roomDay[i].borderRadius = '0';
             roomDayData.roomDay[i].cursor = 'cell';
           }
 
@@ -499,6 +525,8 @@ export class HotelBookingsCalendarComponent implements OnInit {
             } else {
               if (actualDate.getTime() === roomReservationData.startDate.getTime()) {
                 roomDayData.roomDay[2].color = this.setReservationColor(roomReservationData.bookingId);
+                roomDayData.roomDay[2].reservationText = this.getReservationText(roomReservationData);
+                roomDayData.roomDay[2].borderRadius = '0.25rem 0 0 0.25rem';
                 roomDayData.roomDay[2].cursor = 'e-resize';
               } else if (actualDate.getTime() > roomReservationData.startDate.getTime() &&
                 actualDate.getTime() < roomReservationData.endDate.getTime()) {
@@ -508,6 +536,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
                 }
               } else if (actualDate.getTime() === roomReservationData.endDate.getTime()) {
                 roomDayData.roomDay[0].color = this.setReservationColor(roomReservationData.bookingId);
+                roomDayData.roomDay[0].borderRadius = '0 0.25rem 0.25rem 0';
                 roomDayData.roomDay[0].cursor = 'e-resize';
               }
             }

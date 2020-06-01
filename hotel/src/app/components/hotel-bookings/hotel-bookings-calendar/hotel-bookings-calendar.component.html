@@ -47,9 +47,11 @@
                    (mousedown)="actionMouseDown(room.roomId, partOfDay.roomReservationId, day.cellDate)"
                    [ngClass]="{'blinking': partOfDay.blinking}"
                    [style.background-color]="partOfDay.color"
+                   [style.border-radius]="partOfDay.borderRadius"
                    [style.cursor]="partOfDay.cursor"
                    data-placement="top" data-toggle="tooltip"
-                   style="height: 18px; width: 100%;" title="{{partOfDay.tooltip}}">
+                   style="height: 20px; width: 100%;" title="{{partOfDay.tooltip}}">
+                <div style="float: left; z-index: 1; font-size: 0.8rem; margin-left: 0.25rem;">{{partOfDay.reservationText}}</div>
               </div>
             </td>
 
