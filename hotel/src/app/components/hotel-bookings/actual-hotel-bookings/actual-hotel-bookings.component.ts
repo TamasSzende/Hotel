@@ -39,7 +39,6 @@ export class ActualHotelBookingsComponent implements OnInit {
       (response) => {
         this.currentBookingList = response.bookingSubList;
         this.fullNumberOfPages = response.fullNumberOfPages;
-        this.pageNumbers = this.generatePageNumberArray(this.fullNumberOfPages);
       },
       error => console.warn(error)
     );
@@ -74,18 +73,9 @@ export class ActualHotelBookingsComponent implements OnInit {
     })
   }
 
-  onPageNumClick(number: number) {
-    this.listPageNumber = number;
+  setListPageNumber(emittedListPageNumber: number) {
+    this.listPageNumber = emittedListPageNumber;
     this.getCurrentBookingList(this.id);
-  }
-
-
-  generatePageNumberArray(numOfHotels: number) {
-    let numArray = new Array<number>();
-    for (let i = 0; i < numOfHotels; i++) {
-      numArray.push(i);
-    }
-    return numArray;
   }
 
 }

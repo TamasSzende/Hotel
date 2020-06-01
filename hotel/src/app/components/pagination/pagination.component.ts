@@ -22,6 +22,7 @@ export class PaginationComponent implements AfterViewChecked{
   }
 
   generatePageNumberArray() {
+    //TODO write so that always 7 blocks are visible
     let numArray = new Array<number>();
     if (this.listPageNumber === this.fullNumberOfPages - 1 && this.listPageNumber > 2) {
       numArray.push(this.listPageNumber - 2);
