@@ -27,7 +27,15 @@ public class BookingDetails {
     public BookingDetails(Booking booking) {
         this.id = booking.getId();
         this.hotel = new HotelShortItem(booking.getRoomReservations().get(0).getRoom().getHotel());
-        this.guest = new AccountDetails(booking.getGuest());
+        if (booking.getGuest() != null) {
+            this.guest = new AccountDetails(booking.getGuest());
+        } else {
+            this.guest = new AccountDetails();
+            this.guest.setFirstname(booking.getFirstName());
+            this.guest.setLastname(booking.getLastName());
+            this.guest.setAddress(booking.getAddress());
+            this.guest.setUsername(booking.getEmail());
+        }
         this.remark = booking.getRemark();
         for (RoomReservation roomReservation : booking.getRoomReservations()) {
             this.roomReservationList.add(new RoomReservationDetails(roomReservation));

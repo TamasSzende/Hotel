@@ -8,6 +8,10 @@ import java.util.List;
 public class BookingCreateItem {
 
     private String guestAccountName;
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String email;
     private String remark;
     private Integer numberOfGuests;
     private List<RoomReservationShortItem> roomReservationList;
@@ -31,6 +35,22 @@ public class BookingCreateItem {
         return roomReservationList;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     public void setGuestAccountName(String guestAccountName) {
         this.guestAccountName = guestAccountName;
     }
@@ -45,5 +65,21 @@ public class BookingCreateItem {
 
     public void setRoomReservationList(List<RoomReservationShortItem> roomReservationList) {
         this.roomReservationList = roomReservationList;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

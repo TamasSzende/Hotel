@@ -90,6 +90,10 @@ export class BookingService {
   parseBookingCreateData(data: BookingCreateItemModel) {
     return {
       guestAccountName: data.guestAccountName,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      address: data.address,
+      email: data.email,
       remark: data.remark,
       numberOfGuests: data.numberOfGuests,
       roomReservationList: this.parseRoomReservationData(data.roomReservationList),

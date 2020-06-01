@@ -29,10 +29,10 @@ public class EmailService {
     }
 
     //    @Async
-    public void sendMail(Account account, String emailSubject, String emailText) {
+    public void sendMail(String email, String emailSubject, String emailText) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(MESSAGE_FROM);
-        message.setTo(account.getEmail());
+        message.setTo(email);
         message.setSubject(emailSubject);
         message.setText(emailText);
         javaMailSender.send(message);
@@ -43,21 +43,28 @@ public class EmailService {
         String emailSubject = "Sikeres Regisztráció!";
         String emailText = "Regisztrációd megerősítéséhez kérlek kattints a linkre: "
                 + this.mailSenderAddress + "/login/" + confirmationToken.getConfirmationToken();
-        sendMail(account, emailSubject, emailText);
+        sendMail(account.getEmail(), emailSubject, emailText);
     }
 
     @Async
     public void sendMailAtBooking(Account account) {
         String emailSubject = "Sikeres Foglalás!";
         String emailText = "Tisztelt " + account.getUsername() + "!\n\n" + "Foglalásod elmentettük, részletei megtalálhatóak a honlapon";
-        sendMail(account, emailSubject, emailText);
+        sendMail(account.getEmail(), emailSubject, emailText);
     }
 
     @Async
     public void sendMailAtDeleteBooking(Account account) {
         String emailSubject = "Foglalás Törölve!";
         String emailText = "Tisztelt " + account.getUsername() + "!\n\n" + "Foglalásod töröltük az adatbázisból!";
-        sendMail(account, emailSubject, emailText);
+        sendMail(account.getEmail(), emailSubject, emailText);
+    }
+
+    @Async
+    public void sendMailAtBookingByHotelOwner(String email, String firstName, String lastName) {
+        String emailSubject = "Sikeres Foglalás!";
+        String emailText = "Tisztelt " + firstName + " " + lastName + "!\n\n" + "Foglalásod elmentettük, részletei megtalálhatóak a honlapon";
+        sendMail(email, emailSubject, emailText);
     }
 
 }

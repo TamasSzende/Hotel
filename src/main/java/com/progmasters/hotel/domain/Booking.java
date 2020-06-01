@@ -20,6 +20,18 @@ public class Booking {
     @JoinColumn(name = "guest")
     private Account guest;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "remark", columnDefinition = "TEXT")
     private String remark;
 
@@ -72,6 +84,22 @@ public class Booking {
         return priceOfBooking;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     public void setDateOfBooking(LocalDateTime dateOfBooking) {
         this.dateOfBooking = dateOfBooking;
     }
@@ -98,5 +126,21 @@ public class Booking {
 
     public void setPriceOfBooking(Double priceOfBooking) {
         this.priceOfBooking = priceOfBooking;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

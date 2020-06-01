@@ -61,16 +61,38 @@ public class BookingService {
         double priceOfBooking = getPriceOfBooking(bookingCreateItem);
         booking.setPriceOfBooking(priceOfBooking);
 
-        Account guestAccount = this.accountRepository.findByUsername(bookingCreateItem.getGuestAccountName());
-        if (guestAccount == null || !guestAccount.getRole().equals(Role.ROLE_USER)) return null;
-        booking.setGuest(guestAccount);
+        //Check and set guest or guest data
+        if (!setGuestOrGuestDataToBooking(bookingCreateItem, booking)) return null;
 
         roomReservations.forEach(this.roomReservationRepository::save);
         this.bookingRepository.save(booking);
 
-        emailService.sendMailAtBooking(guestAccount);
+        if (booking.getGuest() != null) {
+            emailService.sendMailAtBooking(booking.getGuest());
+        } else {
+            emailService.sendMailAtBookingByHotelOwner(booking.getEmail(), booking.getFirstName(), booking.getLastName());
+        }
+
 
         return booking.getId();
+    }
+
+    private boolean setGuestOrGuestDataToBooking(BookingCreateItem bookingCreateItem, Booking booking) {
+        if (bookingCreateItem.getGuestAccountName() != null) {
+            Account guestAccount = this.accountRepository.findByUsername(bookingCreateItem.getGuestAccountName());
+            if (guestAccount == null || !guestAccount.getRole().equals(Role.ROLE_USER)) return false;
+            booking.setGuest(guestAccount);
+        } else {
+            if (bookingCreateItem.getFirstName() != null) booking.setFirstName(bookingCreateItem.getFirstName());
+            else return false;
+            if (bookingCreateItem.getLastName() != null) booking.setLastName(bookingCreateItem.getLastName());
+            else return false;
+            if (bookingCreateItem.getAddress() != null) booking.setAddress(bookingCreateItem.getAddress());
+            else return false;
+            if (bookingCreateItem.getEmail() != null) booking.setEmail(bookingCreateItem.getEmail());
+            else return false;
+        }
+        return true;
     }
 
     public boolean deleteBooking(Long bookingId) {

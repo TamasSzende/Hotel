@@ -35,10 +35,10 @@ export class BookingFormDialogComponent implements OnInit {
       }
     );
     this.hotelOwnerBookingForm = new FormGroup({
-      'firstname': new FormControl('', Validators.requiredTrue),
-      'lastname': new FormControl('', Validators.requiredTrue),
-      'address': new FormControl('', Validators.requiredTrue),
-      'email': new FormControl('', [Validators.requiredTrue, Validators.email]),
+      'firstname': new FormControl('', Validators.required),
+      'lastname': new FormControl('', Validators.required),
+      'address': new FormControl('', Validators.required),
+      'email': new FormControl('', [Validators.required, Validators.email]),
       'numberOfGuests': new FormControl('', Validators.min(1)),
       'hotelOwnerRemark': new FormControl(''),
     });
@@ -69,7 +69,7 @@ export class BookingFormDialogComponent implements OnInit {
 
   onSubmitByUser() {
     const input = {...this.userBookingForm.value};
-    const bookingData: BookingCreateItemModel = this.createBookingData(input);
+    const bookingData: BookingCreateItemModel = this.createBookingDataForUser(input);
     this.bookingService.createBooking(bookingData).subscribe(
       (bookingId: number) => {
         this.bookingService.bookingDetail(bookingId).subscribe(
@@ -87,10 +87,37 @@ export class BookingFormDialogComponent implements OnInit {
   }
 
   onSubmitByHotelOwner() {
-
+    const input = {...this.hotelOwnerBookingForm.value};
+    const bookingData: BookingCreateItemModel = this.createBookingDataForHotelOwner(input);
+    this.bookingService.createBooking(bookingData).subscribe(
+      (bookingId: number) => {
+        this.bookingService.bookingDetail(bookingId).subscribe(
+          (response: BookingDetailsModel) => {
+            this.bookingStatus = 'created';
+            this.bookingDetails = this.parseDate(response);
+          }, error => {
+            this.bookingStatus = 'failed';
+          }
+        )
+      }, error => {
+        this.bookingStatus = 'failed';
+      },
+    );
   }
 
-  createBookingData = (input): BookingCreateItemModel => {
+  createBookingDataForHotelOwner = (input): BookingCreateItemModel => {
+    return {
+      firstName: input.firstname,
+      lastName: input.lastname,
+      address: input.address,
+      email: input.email,
+      remark: input.hotelOwnerRemark,
+      numberOfGuests: input.numberOfGuests,
+      roomReservationList: this.createRoomReservationShortItemList(),
+    }
+  }
+
+  createBookingDataForUser = (input): BookingCreateItemModel => {
     return {
       guestAccountName: this.username,
       remark: input.remark,
@@ -110,6 +137,7 @@ export class BookingFormDialogComponent implements OnInit {
     });
     return roomReservationList;
   }
+
   private parseDate(response: BookingDetailsModel): BookingDetailsModel {
     response.roomReservationList.forEach(roomReservation => {
       roomReservation.startDate = new Date(roomReservation.startDate);

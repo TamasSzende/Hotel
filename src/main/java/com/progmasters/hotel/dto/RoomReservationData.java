@@ -29,8 +29,13 @@ public class RoomReservationData {
     public RoomReservationData(RoomReservation roomReservation) {
         this.roomReservationId = roomReservation.getId();
         this.bookingId = roomReservation.getBooking().getId();
-        this.guestFirstName = roomReservation.getBooking().getGuest().getFirstname();
-        this.guestLastName = roomReservation.getBooking().getGuest().getLastname();
+        if (roomReservation.getBooking().getGuest() != null) {
+            this.guestFirstName = roomReservation.getBooking().getGuest().getFirstname();
+            this.guestLastName = roomReservation.getBooking().getGuest().getLastname();
+        } else {
+            this.guestFirstName = roomReservation.getBooking().getFirstName();
+            this.guestLastName = roomReservation.getBooking().getLastName();
+        }
         this.startDate = roomReservation.getStartDate();
         this.endDate = roomReservation.getEndDate();
         this.numberOfGuests = roomReservation.getBooking().getNumberOfGuests();

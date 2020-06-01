@@ -29,7 +29,15 @@ public class BookingListItemForHotel {
 
     public BookingListItemForHotel(Booking booking) {
         this.id = booking.getId();
-        this.guest = new AccountListItem(booking.getGuest());
+        if (booking.getGuest() != null) {
+            this.guest = new AccountListItem(booking.getGuest());
+        } else {
+            this.guest = new AccountListItem();
+            this.guest.setFirstname(booking.getFirstName());
+            this.guest.setLastname(booking.getLastName());
+            this.guest.setAddress(booking.getAddress());
+            this.guest.setUsername(booking.getEmail());
+        }
         this.startDate = booking.getRoomReservations().get(0).getStartDate();
         this.endDate = booking.getRoomReservations().get(0).getEndDate();
         for (RoomReservation roomReservation : booking.getRoomReservations()) {
