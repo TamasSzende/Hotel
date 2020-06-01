@@ -82,6 +82,11 @@ public class HotelController {
 		return new ResponseEntity<>(hotelService.getHotelDetailItem(id), HttpStatus.OK);
 	}
 
+	@GetMapping("/short/{id}")
+	public ResponseEntity<HotelShortItem> getHotelShortItem(@PathVariable Long id) {
+		return new ResponseEntity<>(hotelService.getHotelShortItem(id), HttpStatus.OK);
+	}
+
 	@GetMapping("/filter")
 	public ResponseEntity<HotelListItemSubList> getFilteredHotelList(
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

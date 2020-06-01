@@ -1,13 +1,13 @@
 import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {BookingCreateItemModel} from "../../../models/bookingCreateItem.model";
+import {BookingCreateItemModel} from "../../models/bookingCreateItem.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {BookingService} from "../../../services/booking.service";
-import {BookingDetailsModel} from "../../../models/bookingDetails.model";
-import {LoginService} from "../../../services/login.service";
+import {BookingService} from "../../services/booking.service";
+import {BookingDetailsModel} from "../../models/bookingDetails.model";
+import {LoginService} from "../../services/login.service";
 import {Router} from "@angular/router";
-import {RoomReservationDetailsModel} from "../../../models/roomReservationDetails.model";
-import {RoomReservationShortItemModel} from "../../../models/roomReservationShortItem.model";
+import {RoomReservationDetailsModel} from "../../models/roomReservationDetails.model";
+import {RoomReservationShortItemModel} from "../../models/roomReservationShortItem.model";
 
 @Component({
   selector: 'app-booking-form-dialog',
@@ -17,10 +17,11 @@ import {RoomReservationShortItemModel} from "../../../models/roomReservationShor
 })
 export class BookingFormDialogComponent implements OnInit {
 
-  bookingForm: FormGroup;
+  userBookingForm: FormGroup;
+  hotelOwnerBookingForm: FormGroup;
   priceOfBooking: number;
   bookingDetails: BookingDetailsModel;
-  bookingStatus: string = 'booking';
+  bookingStatus: string = 'userBooking';
   username: string;
 
   constructor(public dialogRef: MatDialogRef<BookingFormDialogComponent>,
@@ -28,19 +29,28 @@ export class BookingFormDialogComponent implements OnInit {
               private loginService: LoginService,
               private router: Router,
               @Inject(MAT_DIALOG_DATA) public data) {
-    this.bookingForm = new FormGroup({
+    this.userBookingForm = new FormGroup({
         'remark': new FormControl(''),
       'aSZF': new FormControl(false, Validators.requiredTrue),
       }
     );
+    this.hotelOwnerBookingForm = new FormGroup({
+      'firstname': new FormControl('', Validators.requiredTrue),
+      'lastname': new FormControl('', Validators.requiredTrue),
+      'address': new FormControl('', Validators.requiredTrue),
+      'email': new FormControl('', [Validators.requiredTrue, Validators.email]),
+      'numberOfGuests': new FormControl('', Validators.min(1)),
+      'hotelOwnerRemark': new FormControl(''),
+    });
   }
 
   ngOnInit(): void {
-
     this.loginService.authenticatedLoginDetailsModel.subscribe(
       (response) => {
-        if (response !== null) {
+        if (response !== null && response.role === "ROLE_USER") {
           this.username = response.name;
+        }if (response !== null && response.role === "ROLE_HOTELOWNER") {
+          this.bookingStatus = 'hotelOwnerBooking';
         } else {
           this.router.navigate([''])
         }
@@ -57,8 +67,8 @@ export class BookingFormDialogComponent implements OnInit {
     this.dialogRef.close(dialogResult);
   }
 
-  onSubmit() {
-    const input = {...this.bookingForm.value};
+  onSubmitByUser() {
+    const input = {...this.userBookingForm.value};
     const bookingData: BookingCreateItemModel = this.createBookingData(input);
     this.bookingService.createBooking(bookingData).subscribe(
       (bookingId: number) => {
@@ -74,6 +84,10 @@ export class BookingFormDialogComponent implements OnInit {
         this.bookingStatus = 'failed';
       },
     );
+  }
+
+  onSubmitByHotelOwner() {
+
   }
 
   createBookingData = (input): BookingCreateItemModel => {
@@ -96,7 +110,6 @@ export class BookingFormDialogComponent implements OnInit {
     });
     return roomReservationList;
   }
-
   private parseDate(response: BookingDetailsModel): BookingDetailsModel {
     response.roomReservationList.forEach(roomReservation => {
       roomReservation.startDate = new Date(roomReservation.startDate);

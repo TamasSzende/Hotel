@@ -9,6 +9,11 @@ import {RoomService} from "../../../services/room.service";
 import {Router} from "@angular/router";
 import {RoomReservationDataModel} from "../../../models/roomReservationData.model";
 import {RoomReservationService} from "../../../services/roomReservation.service";
+import {BookingFormDialogComponent} from "../../booking-form-dialog/booking-form-dialog.component";
+import {HotelShortItemModel} from "../../../models/hotelShortItem.model";
+import {HotelService} from "../../../services/hotel.service";
+import {RoomShortListItemModel} from "../../../models/roomShortListItem.model";
+import {RoomReservationDetailsModel} from "../../../models/roomReservationDetails.model";
 
 const START_DAY_BEFORE_TODAY = 5;
 const END_DAY_AFTER_TODAY = 23;
@@ -27,6 +32,7 @@ const ADDED_ROOM_RESERVATION = 'hsl(0, 0%, 65%)';
 export class HotelBookingsCalendarComponent implements OnInit {
 
   @Input() hotelId: BehaviorSubject<number>;
+  hotel: HotelShortItemModel;
   roomBookingDataList: RoomBookingDataModel[];
   baseDate: Date;
   startDate: Date;
@@ -41,10 +47,11 @@ export class HotelBookingsCalendarComponent implements OnInit {
   modifiedRoomReservationData: RoomReservationDataModel;
   modifiedRoomReservationBaseStartDate: Date;
   modifiedRoomReservationBaseEndDate: Date;
-  addedRoomReservationDataList: RoomReservationDataModel[] = [];
+  addedRoomReservationDataList = [];
 
 
   constructor(private bookingService: BookingService,
+              private hotelService: HotelService,
               private roomService: RoomService,
               private roomReservationService: RoomReservationService,
               private popupService: PopupService,
@@ -56,6 +63,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
     this.setToday();
     this.setBaseDateToday();
     this.initializeTable();
+    this.getHotelShortItem();
   }
 
 
@@ -73,6 +81,18 @@ export class HotelBookingsCalendarComponent implements OnInit {
     this.hotelId.subscribe((id) => {
       if (id != 0) {
         this.getRoomBookingDataList(id, this.startDate, this.endDate);
+      }
+    });
+  }
+
+  getHotelShortItem() {
+    this.hotelId.subscribe((id) => {
+      if (id != 0) {
+        this.hotelService.getHotelShortItem(id).subscribe(
+          (response: HotelShortItemModel) => {
+            this.hotel = response;
+          }
+        );
       }
     });
   }
@@ -340,19 +360,33 @@ export class HotelBookingsCalendarComponent implements OnInit {
     console.log('now is up')
     if (this.actionType && this.actionStartDate.getTime() !== actionDate.getTime()) {
       if (this.actionType === 'add') {
-        this.addedRoomReservationDataList.push(this.modifiedRoomReservationData);
+        this.addedRoomReservationDataList.push({
+          roomId: this.modifiedRoomBookingData.roomId,
+          roomName: this.modifiedRoomBookingData.roomName,
+          roomType: this.modifiedRoomBookingData.roomType,
+          numberOfBeds: this.modifiedRoomBookingData.numberOfBeds,
+          pricePerNight: this. modifiedRoomBookingData.pricePerNight,
+          modifiedRoomReservationData: this.modifiedRoomReservationData});
         this.popupService.openConfirmPopup("Szeretnél még foglalást hozzáadni?")
           .afterClosed().subscribe(res => {
           if (res) {
             this.modifiedRoomReservationData.roomReservationId = -2;
             this.actionType = ''
             this.actualizeRoomBookingTableRow();
-
           } else {
-
-
-
-            this.actionType = '';
+            console.log('IM HERE');
+            let dialogRef = this.dialog.open(BookingFormDialogComponent, {
+              height: '600px',
+              width: '850px',
+              data: this.createBookingFormDialogData(),
+            });
+            dialogRef.afterClosed().subscribe(
+              response => {
+                this.actionType = '';
+                this.initializeTable();
+                this.resetModifiedData();
+              }
+            );
           }
         });
       } else {
@@ -371,6 +405,67 @@ export class HotelBookingsCalendarComponent implements OnInit {
     this.modifiedRoomReservationBaseStartDate = null;
     this.modifiedRoomReservationBaseEndDate = null;
     this.addedRoomReservationDataList = [];
+  }
+
+  createBookingFormDialogData() {
+    let roomReservationList = this.createRoomReservationList();
+    return {
+      hotel: this.createHotelDataToSend(),
+      numberOfGuests: null,
+      firstStartDate: this.getFirstStartDate(roomReservationList),
+      lastEndDate: this.getLastEndDate(roomReservationList),
+      roomReservationList: roomReservationList,
+    }
+  }
+
+  createHotelDataToSend() {
+    return {
+      name: this.hotel.name,
+      hotelType: this.hotel.hotelType,
+      postalCode: this.hotel.postalCode,
+      city: this.hotel.city,
+      streetAddress: this.hotel.streetAddress,
+    }
+  }
+
+  createRoomReservationList() {
+    let roomReservationList = [];
+    this.addedRoomReservationDataList.forEach(addedRoomReservationData => {
+      const startDate = addedRoomReservationData.modifiedRoomReservationData.startDate;
+      const endDate = addedRoomReservationData.modifiedRoomReservationData.endDate;
+      const numberOfNights = Math.round((endDate.getTime() - startDate.getTime()) / 86400000);
+      const room: RoomShortListItemModel = {
+        id: addedRoomReservationData.roomId,
+        roomName: addedRoomReservationData.roomName,
+        roomType: addedRoomReservationData.roomType,
+        numberOfBeds: addedRoomReservationData.numberOfBeds,
+        pricePerNight: addedRoomReservationData.pricePerNight,
+      }
+      const roomReservation: RoomReservationDetailsModel = {
+        startDate, endDate, numberOfNights, room};
+      roomReservationList.push(roomReservation);
+    });
+    return roomReservationList;
+  }
+
+  private getFirstStartDate(preRoomReservationList) {
+    let firstStartDate = preRoomReservationList[0].startDate;
+    preRoomReservationList.forEach(preRoomReservation => {
+      if (preRoomReservation.startDate.getTime() < firstStartDate.getTime()) {
+        firstStartDate = preRoomReservation.startDate;
+      }
+    });
+    return firstStartDate;
+  }
+
+  private getLastEndDate(preRoomReservationList) {
+    let lastEndDate = preRoomReservationList[0].endDate;
+    preRoomReservationList.forEach(preRoomReservation => {
+      if (preRoomReservation.endDate.getTime() > lastEndDate.getTime()) {
+        lastEndDate = preRoomReservation.endDate;
+      }
+    });
+    return lastEndDate;
   }
 
   private actualizeRoomBookingTableRow() {

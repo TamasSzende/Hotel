@@ -8,6 +8,7 @@ import {HotelDetailsModel} from "../models/hotelDetails.model";
 import {environment} from "../../environments/environment";
 import {HotelListItemSubListModel} from "../models/hotelListItemSubList.model";
 import {HotelItemForHomePageModel} from "../models/hotelItemForHomePage.model";
+import {HotelShortItemModel} from "../models/hotelShortItem.model";
 
 const BASE_URL = environment.BASE_URL + '/api/hotel';
 
@@ -56,7 +57,6 @@ export class HotelService {
     return this.http.get<Array<HotelItemForHomePageModel>>(BASE_URL + '/random');
   }
 
-
   deleteHotel(id: number): Observable<Array<HotelListItemModel>> {
     return this.http.delete<Array<HotelListItemModel>>(BASE_URL + '/' + id);
   }
@@ -82,18 +82,20 @@ export class HotelService {
     return this.http.get<HotelDetailsModel>(BASE_URL + '/' + id);
   }
 
+  getHotelShortItem(id: number): Observable<HotelShortItemModel> {
+    return this.http.get<HotelShortItemModel>(BASE_URL + '/short/' + id);
+  }
+
   uploadImage(formData: FormData, id: number): Observable<string> {
     return this.http.post<string>(BASE_URL + '/uploadImage/' + id, formData);
   }
-
   deleteImage(image: string, hotelIdFromLogin: number) {
     const formData = new FormData();
     formData.append('imageURL', image);
     return this.http.post(BASE_URL + "/deleteImage/" + hotelIdFromLogin, formData);
   }
+
   getHotelImages(hotelId: number): Observable<Array<string>> {
     return this.http.get<Array<string>>(BASE_URL + "/images/" + hotelId);
   }
-
-
 }

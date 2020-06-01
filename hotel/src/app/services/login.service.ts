@@ -13,10 +13,8 @@ export class LoginService {
 
   authenticatedLoginDetailsModel = new BehaviorSubject<AuthenticatedLoginDetailsModel>(null);
 
-
   constructor(private http: HttpClient) {
   }
-
 
   authenticate(credentials): Observable<AuthenticatedLoginDetailsModel> {
     const headers = new HttpHeaders(credentials ? {

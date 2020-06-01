@@ -9,7 +9,7 @@ import {PopupService} from "../../services/popup.service";
 import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BookingService} from "../../services/booking.service";
-import {BookingFormDialogComponent} from "./booking-form-dialog/booking-form-dialog.component";
+import {BookingFormDialogComponent} from "../booking-form-dialog/booking-form-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RoomShortListItemModel} from "../../models/roomShortListItem.model";
 import {RoomFormDataModel} from "../../models/roomFormData.model";
@@ -240,7 +240,6 @@ export class HotelDetailsComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(
         response => {
-          console.log(response);
           if (response) {
             this.router.navigate(['/hotel']);
           }
@@ -312,7 +311,6 @@ export class HotelDetailsComponent implements OnInit {
       }
     });
     return lastEndDate;
-
   }
 
   private createRoomBookingFormArray() {

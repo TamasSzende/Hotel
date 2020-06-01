@@ -21,7 +21,7 @@ import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {Cloudinary} from 'cloudinary-core/cloudinary-core-shrinkwrap';
 import {CloudinaryModule} from "@cloudinary/angular-5.x";
 import {Ng2FlatpickrModule} from "ng2-flatpickr";
-import {BookingFormDialogComponent} from "./components/hotel-detail/booking-form-dialog/booking-form-dialog.component";
+import {BookingFormDialogComponent} from "./components/booking-form-dialog/booking-form-dialog.component";
 import {LoginComponent} from "./components/account/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
 import {FileUploadModule} from "ng2-file-upload";
