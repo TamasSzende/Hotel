@@ -4,6 +4,8 @@ export interface HotelListItemModel {
 	postalCode: string;
 	city: string;
 	streetAddress: string;
+  longitude: number;
+  latitude: number;
 	hotelType: string;
 	hotelImageUrl: string;
   shortDescription: string;

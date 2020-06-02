@@ -37,9 +37,11 @@
             [style.background-color]="day.cellBackground"
             (mouseenter)="actionMouseEnter(room.roomId, day.cellDate)"
             (mouseup)="actionMouseUp(day.cellDate)"
-            style="margin: 0; padding: 0;">
+            style="margin: 0; padding: 0; font-size: 0.75rem; text-align: right; color: #b6bece">
 
-          <table style="border: 0px; margin: 0; padding: 0; height: 100%; width: 100%; table-layout: fixed"
+          <a class="noselect">{{day.cellDate.toLocaleDateString('hu-HU',{day: 'numeric'})}}</a>
+
+          <table style="border: 0px; margin: 0; padding: 0; height: 100%; width: 100%; table-layout: fixed; z-index: 1"
                  width="100%">
 
             <td *ngFor="let partOfDay of day.roomDay" style="border: 0; margin: 0; padding: 0">
@@ -51,7 +53,7 @@
                    [style.cursor]="partOfDay.cursor"
                    data-placement="top" data-toggle="tooltip"
                    style="height: 20px; width: 100%;" title="{{partOfDay.tooltip}}">
-                <div style="float: left; z-index: 1; font-size: 0.8rem; margin-left: 0.25rem;">{{partOfDay.reservationText}}</div>
+                <div class="noselect" style="float: left; z-index: 2; font-size: 0.8rem; margin-left: 0.25rem; color: black">{{partOfDay.reservationText}}</div>
               </div>
             </td>
 

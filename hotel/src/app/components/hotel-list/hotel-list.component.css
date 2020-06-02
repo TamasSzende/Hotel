@@ -5,3 +5,8 @@
 #myButton {
   margin-right: 20px;
 }
+
+agm-map {
+  height: 400px;
+  width: 1108px;
+}

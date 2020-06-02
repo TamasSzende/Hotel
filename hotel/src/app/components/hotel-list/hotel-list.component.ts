@@ -21,7 +21,6 @@ import {scrollToTheTop} from "../../utils/smoothScroller";
 })
 export class HotelListComponent implements OnInit {
 
-
   hotelList: HotelListItemModel[] = [];
   account: AuthenticatedLoginDetailsModel;
   filterForm: FormGroup;
@@ -29,6 +28,10 @@ export class HotelListComponent implements OnInit {
   flatpickrOptions: FlatpickrOptions;
   listPageNumber: number = 0;
   pageNumbers: number[];
+  mapCenter = {
+    latitude: 47.497913,
+    longitude: 19.040236,
+  }
 
   constructor(private hotelService: HotelService, private route: ActivatedRoute, private router: Router, private popupService: PopupService, private loginService: LoginService) {
     this.flatpickrOptions = {

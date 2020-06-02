@@ -11,6 +11,8 @@ public class HotelListItem {
     private String postalCode;
     private String city;
     private String streetAddress;
+    private Double longitude;
+    private Double latitude;
     private String hotelType;
     private String hotelImageUrl;
     private String shortDescription;
@@ -26,6 +28,8 @@ public class HotelListItem {
         this.postalCode = hotel.getPostalCode();
         this.city = hotel.getCity();
         this.streetAddress = hotel.getStreetAddress();
+        this.longitude = hotel.getLongitude();
+        this.latitude = hotel.getLatitude();
         this.hotelType = hotel.getHotelType().getDisplayName();
         if (!hotel.getHotelImageUrls().isEmpty()) {
             this.hotelImageUrl = hotel.getHotelImageUrls().get(0);
@@ -81,6 +85,14 @@ public class HotelListItem {
         return bestPricePerNightPerPerson;
     }
 
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
     public void setBestPricePerNightPerPerson(Integer bestPricePerNightPerPerson) {
         this.bestPricePerNightPerPerson = bestPricePerNightPerPerson;
     }
@@ -123,6 +135,14 @@ public class HotelListItem {
 
     public void setAvgRate(Double avgRate) {
         this.avgRate = avgRate;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 }
 

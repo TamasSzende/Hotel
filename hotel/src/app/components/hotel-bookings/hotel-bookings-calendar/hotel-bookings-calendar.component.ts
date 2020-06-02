@@ -260,8 +260,10 @@ export class HotelBookingsCalendarComponent implements OnInit {
     } else if (spaceForText === 2) {
       reservationText = roomReservationData.guestFirstName.slice(0, 1) + ". " + roomReservationData.guestLastName.slice(0, 6);
       if (roomReservationData.guestLastName.length > 6) reservationText += ".";
-    } else {
+    } else if (spaceForText === 3 && (roomReservationData.guestFirstName.length + roomReservationData.guestLastName.length) > 10) {
       reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName;
+    } else {
+      reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName + " " + roomReservationData.numberOfGuests + "fő" ;
     }
     return reservationText;
   }

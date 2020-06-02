@@ -56,7 +56,6 @@
                 Teljes lista
               </button>
 
-
           </div>
         </div>
 
@@ -83,6 +82,12 @@
     </div>
   </form>
 
+  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [zoom]="11">
+    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude" [title]="hotel.name">
+    </agm-marker>
+  </agm-map>
+
+  <br>
 
   <div *ngFor="let hotel of hotelList" class="card mb-3 border-right-0 border-bottom-0 border-left-0">
     <div class="row no-gutters">

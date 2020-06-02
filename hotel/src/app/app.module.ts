@@ -45,6 +45,7 @@ import {HotelBookingsCalendarComponent} from "./components/hotel-bookings/hotel-
 import {HotelBookingsStatisticsComponent} from "./components/hotel-bookings/hotel-bookings-statistics/hotel-bookings-statistics.component";
 import {NotfoundComponent} from "./components/notfound/notfound.component";
 import {PaginationComponent} from "./components/pagination/pagination.component";
+import {AgmCoreModule} from "@agm/core";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -97,7 +98,8 @@ export const cloudinary = {
       MDBBootstrapModule.forRoot(),
       CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
       Ng2FlatpickrModule,
-      FileUploadModule
+      FileUploadModule,
+      AgmCoreModule.forRoot({apiKey: 'AIzaSyAVS5hNJXgq4uTvWGtWC7WNflBriAtyjSQ'}),
     ],
   providers: [[
     {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
