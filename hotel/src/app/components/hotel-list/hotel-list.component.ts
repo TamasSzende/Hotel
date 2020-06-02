@@ -46,9 +46,8 @@ export class HotelListComponent implements OnInit {
       'numberOfGuests': new FormControl(null,
         [Validators.required,
           Validators.min(1)]),
-      'bookingDateRange': new FormControl([],
-        [Validators.required,
-          Validators.minLength(2)]),
+      'bookingDateRange': new FormControl(null,
+        [Validators.required]),
       'hotelFeatures': new FormArray([]),
     })
   }
@@ -102,6 +101,13 @@ export class HotelListComponent implements OnInit {
           this.listPageNumber = queryParams['listPageNumber'];
 
           this.filterForm.controls['numberOfGuests'].setValue(filterData.numberOfGuests);
+
+          let filterBookingDateRange = {
+            begin: new Date(filterData.startDate),
+            end: new Date(filterData.endDate),
+          };
+          this.filterForm.controls['bookingDateRange'].setValue(filterBookingDateRange);
+
 
 
           this.hotelService.getFilteredHotelList(filterData, this.listPageNumber).subscribe(
@@ -158,10 +164,11 @@ export class HotelListComponent implements OnInit {
   }
 
   filterHotelList() {
+    console.log(this.filterForm.value.bookingDateRange);
     const queryParams = {
       'numberOfGuests': this.filterForm.value.numberOfGuests,
-      'startDate': dateToJsonDateString(this.filterForm.value.bookingDateRange[0]),
-      'endDate': dateToJsonDateString(this.filterForm.value.bookingDateRange[1]),
+      'startDate': dateToJsonDateString(this.filterForm.value.bookingDateRange.begin),
+      'endDate': dateToJsonDateString(this.filterForm.value.bookingDateRange.end),
       'hotelFeatures': this.createHotelFeaturesFilterArrayToSend().join(', '),
     };
     this.router.navigate(['/hotel/filter'], {queryParams})

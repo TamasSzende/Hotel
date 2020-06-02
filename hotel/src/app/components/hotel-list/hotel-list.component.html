@@ -24,37 +24,39 @@
           </div>
 
           <div class="col-md-4 mb-3">
+
             <div class="input-group">
+
               <label>
                 Utazás időpontja:&nbsp;&nbsp;
               </label>
+              <div>
 
-              <ng2-flatpickr
-                [config]="flatpickrOptions"
-                formControlName="bookingDateRange"
-                id="bookingDateRange"
-                name="bookingDateRange"
-                placeholder="Válasz időpontot!"
-              >
-                <small
-                  *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
-                  class="text-danger">
-                  <br>
-                  Kérlek válasz időpontot!
-                </small>
-              </ng2-flatpickr>
+                <input
+                  placeholder="Válasz időpontot"
+                  [satDatepicker]="bookingDateRange"
+                  formControlName="bookingDateRange"
+                  id="bookingDateRange"
+                  name="bookingDateRange"/>
+                <sat-datepicker #bookingDateRange [rangeMode]="true">
+                </sat-datepicker>
+                <sat-datepicker-toggle matCardImageSmall [for]="bookingDateRange"
+                                       style="float: right; "></sat-datepicker-toggle>
+              </div>
 
             </div>
+
+
           </div>
 
           <div class="col-md-4 mb-3 text-right">
 
             <button (click)="filterHotelList()" class="btn btn-primary mr-4">
-                Keresés
-              </button>
-              <button (click)="backToHotelList()" class="btn btn-outline-primary mr-4">
-                Teljes lista
-              </button>
+              Keresés
+            </button>
+            <button (click)="backToHotelList()" class="btn btn-outline-primary mr-4">
+              Teljes lista
+            </button>
 
           </div>
         </div>
@@ -82,15 +84,17 @@
     </div>
   </form>
 
-  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [fitBounds]="hotelList.length > 1" [zoom]="11">
-    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude" [agmFitBounds]="true"
+  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [fitBounds]="hotelList.length > 1"
+           [zoom]="11">
+    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude"
+                [agmFitBounds]="true"
                 (markerClick)="goToHotel(hotel.id)" [title]="hotel.name">
     </agm-marker>
   </agm-map>
 
   <br>
 
-  <div id={{hotel.id}}  *ngFor="let hotel of hotelList" class="card mb-3 border-right-0 border-bottom-0 border-left-0">
+  <div id={{hotel.id}} *ngFor="let hotel of hotelList" class="card mb-3 border-right-0 border-bottom-0 border-left-0">
     <div class="row no-gutters">
       <div class="col-md-4">
         <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%" (click)="hotelDetail(hotel.id)"

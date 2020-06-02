@@ -46,6 +46,16 @@ import {HotelBookingsStatisticsComponent} from "./components/hotel-bookings/hote
 import {NotfoundComponent} from "./components/notfound/notfound.component";
 import {PaginationComponent} from "./components/pagination/pagination.component";
 import {AgmCoreModule} from "@agm/core";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  SatDatepickerModule,
+  SatNativeDateModule
+} from "saturn-datepicker";
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from "@angular/material-moment-adapter";
+import {APP_DATE_FORMATS, MyDateAdapter} from "./utils/myDateAdapter";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -100,10 +110,18 @@ export const cloudinary = {
       Ng2FlatpickrModule,
       FileUploadModule,
       AgmCoreModule.forRoot({apiKey: 'AIzaSyAVS5hNJXgq4uTvWGtWC7WNflBriAtyjSQ'}),
+      MatDatepickerModule,
+      SatNativeDateModule,
+      SatDatepickerModule,
     ],
-  providers: [[
-    {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}
-  ], [{provide: MatDialogRef}], [{provide: MAT_DIALOG_DATA, multi: true}]],
+  providers: [
+    [{provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true}],
+    [{provide: MatDialogRef}],
+    [{provide: MAT_DIALOG_DATA, multi: true}],
+    [{provide: DateAdapter, useClass: MyDateAdapter}],
+    [{provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}],
+
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     PopupComponent,
