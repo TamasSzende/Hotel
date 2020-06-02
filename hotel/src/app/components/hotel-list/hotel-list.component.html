@@ -82,14 +82,15 @@
     </div>
   </form>
 
-  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [zoom]="11">
-    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude" [title]="hotel.name">
+  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [fitBounds]="hotelList.length > 1" [zoom]="11">
+    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude" [agmFitBounds]="true"
+                (markerClick)="goToHotel(hotel.id)" [title]="hotel.name">
     </agm-marker>
   </agm-map>
 
   <br>
 
-  <div *ngFor="let hotel of hotelList" class="card mb-3 border-right-0 border-bottom-0 border-left-0">
+  <div id={{hotel.id}}  *ngFor="let hotel of hotelList" class="card mb-3 border-right-0 border-bottom-0 border-left-0">
     <div class="row no-gutters">
       <div class="col-md-4">
         <cl-image [public-id]="getPublicId(hotel?.hotelImageUrl)" width="100%" (click)="hotelDetail(hotel.id)"

@@ -255,7 +255,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
     const reservationDuration = roomReservationData.endDate.getTime() - roomReservationData.startDate.getTime();
     const spaceToTableBorder = this.endDate.getTime() - roomReservationData.startDate.getTime();
     const spaceForText = Math.min(reservationDuration, spaceToTableBorder) / (24 * 60 * 60 * 1000);
-    if (spaceForText === 1) {
+    if (spaceForText === 1 || spaceForText === 0) {
       reservationText = roomReservationData.guestFirstName.slice(0, 1) + "." + roomReservationData.guestLastName.slice(0, 1) + ".";
     } else if (spaceForText === 2) {
       reservationText = roomReservationData.guestFirstName.slice(0, 1) + ". " + roomReservationData.guestLastName.slice(0, 6);
@@ -383,7 +383,6 @@ export class HotelBookingsCalendarComponent implements OnInit {
   }
 
   actionMouseUp(actionDate: Date) {
-    console.log('now is up')
     if (this.actionType && this.actionStartDate.getTime() !== actionDate.getTime()) {
       if (this.actionType === 'add') {
         this.addedRoomReservationDataList.push({

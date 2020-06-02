@@ -13,6 +13,7 @@ import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {dateToJsonDateString} from "../../utils/dateUtils";
 import {HotelListItemSubListModel} from "../../models/hotelListItemSubList.model";
 import {scrollToTheTop} from "../../utils/smoothScroller";
+import {ViewportScroller} from "@angular/common";
 
 @Component({
   selector: 'app-hotel-list',
@@ -33,7 +34,9 @@ export class HotelListComponent implements OnInit {
     longitude: 19.040236,
   }
 
-  constructor(private hotelService: HotelService, private route: ActivatedRoute, private router: Router, private popupService: PopupService, private loginService: LoginService) {
+  constructor(private hotelService: HotelService, private route: ActivatedRoute,
+              private router: Router, private popupService: PopupService,
+              private viewportScroller: ViewportScroller, private loginService: LoginService) {
     this.flatpickrOptions = {
       mode: "range",
       dateFormat: "Y-m-d",
@@ -215,8 +218,14 @@ export class HotelListComponent implements OnInit {
       .filter(hotelFeatures => hotelFeatures !== null);
   }
 
-  gotoTop() {
-    scrollToTheTop(100);
-  }
+  // goToHotel(id: number) {
+  //   const hotelDivElement = document.getElementById(String(id));
+  //   hotelDivElement.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  // }
 
+  goToHotel(id: number) {
+    this.viewportScroller.setOffset([0, 80]);
+    this.viewportScroller.scrollToAnchor(String(id));
+
+  }
 }
