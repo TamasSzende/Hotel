@@ -23,16 +23,16 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   chartType: string = 'bar';
   chartColors: Array<any> = [
     {
-      cellBackground: 'rgba(200, 99, 132, .7)',
-      backgroundColor: 'rgba(200, 99, 132, .4)',
-      borderColor: 'rgba(200, 99, 132, .7)',
-      borderWidth: 2,
+      cellBackground: 'hsl(10, 70%, 50%, .6)',
+      backgroundColor: 'hsl(10, 70%, 50%, .6)',
+      borderColor: 'hsl(10, 70%, 50%, .7)',
+      borderWidth: 0,
     },
     {
-      cellBackground: 'rgba(0, 10, 130, .7)',
-      backgroundColor: 'rgba(0, 10, 130, .4)',
-      borderColor: 'rgba(0, 10, 130, .7)',
-      borderWidth: 2,
+      cellBackground: 'hsl(246, 70%, 50%, .6)',
+      backgroundColor: 'hsl(246, 70%, 50%, .6)',
+      borderColor: 'hsl(246, 70%, 50%, .7)',
+      borderWidth: 0,
     }
   ];
   chartOptions: any = {

@@ -12,7 +12,7 @@
     </div>
 
     <div class="card text-center bg-light mb-3" style="margin-top: 1.5rem; width: 16rem;">
-      <div class="card-body">
+      <div class="card-body pr-2 pl-2 pt-4 pb-4">
         <form [formGroup]="filterForm">
           <div class="form-group ">
             <label for="numberOfGuests">
@@ -37,31 +37,38 @@
             <label>
               Utazás időpontja:
             </label>
-            <ng2-flatpickr
-              [config]="flatpickrOptions"
-              formControlName="bookingDateRange"
-              id="bookingDateRange"
-              name="bookingDateRange"
-              placeholder="Válasz időpontot!"
-            >
+            <div style="white-space: nowrap">
+              <input
+                style="display: inline-block"
+                placeholder="Válasz időpontot"
+                [satDatepicker]="bookingDateRange"
+                [matDatepickerFilter]="dateFilter"
+                formControlName="bookingDateRange"
+                id="bookingDateRange"
+                name="bookingDateRange"/>
+              <sat-datepicker #bookingDateRange [rangeMode]="true" style="display: inline-block">
+              </sat-datepicker>
+              <sat-datepicker-toggle matSuffix [for]="bookingDateRange"
+                                     style="margin-top: -5px; display: inline-block">
+              </sat-datepicker-toggle>
+            </div>
               <small
                 *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
                 class="text-danger">
                 <br>
                 Kérlek válasz időpontot!
               </small>
-            </ng2-flatpickr>
           </div>
-          <br>
+
           <hr>
 
           <div>
-            <button (click)="filterHotelList()" class="btn btn-primary btn-block">
+            <button (click)="filterHotelList()" class="btn btn-primary btn-block mr-auto ml-auto" style="width: 90%">
               Keresés a Hotelek között
             </button>
             <br>
 
-            <button (click)="goToHotelList()" class="btn btn-outline-primary btn-block">
+            <button (click)="goToHotelList()" class="btn btn-outline-primary btn-block mr-auto ml-auto" style="width: 90%">
               Megnézem a teljes listát
             </button>
           </div>

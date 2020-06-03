@@ -177,11 +177,25 @@ export class HotelBookingsCalendarComponent implements OnInit {
     for (let roomBookingData of this.roomBookingDataList) {
       let roomBookingTableRow = {
         roomId: roomBookingData.roomId,
-        roomName: roomBookingData.roomName,
+        roomName: this.getTwoRowsRoomName(roomBookingData.roomName),
         roomDayList: this.createRoomDayList(roomBookingData),
       };
       this.roomBookingTable.push(roomBookingTableRow);
     }
+  }
+
+  private getTwoRowsRoomName(roomName: string) {
+    let roomNameWords = roomName.split(" ");
+    let roomNameFirstLine = '';
+    let roomNameSecondLine = '';
+    roomNameWords.forEach(roomNameWord => {
+      if (roomName.length / 2 - roomNameFirstLine.length > roomNameFirstLine.length + roomNameWord.length + 1 - roomName.length / 2) {
+        roomNameFirstLine += roomNameWord + " ";
+      } else {
+        roomNameSecondLine += roomNameWord + " ";
+      }
+    });
+    return roomNameFirstLine.slice(0, -1) + "\n" + roomNameSecondLine.slice(0, -1);
   }
 
   private createRoomDayList(roomBookingData: RoomBookingDataModel) {
@@ -256,14 +270,18 @@ export class HotelBookingsCalendarComponent implements OnInit {
     const spaceToTableBorder = this.endDate.getTime() - roomReservationData.startDate.getTime();
     const spaceForText = Math.min(reservationDuration, spaceToTableBorder) / (24 * 60 * 60 * 1000);
     if (spaceForText === 1 || spaceForText === 0) {
-      reservationText = roomReservationData.guestFirstName.slice(0, 1) + "." + roomReservationData.guestLastName.slice(0, 1) + ".";
+      reservationText = roomReservationData.guestFirstName.slice(0, 1) + "." + roomReservationData.guestLastName.slice(0, 1) + "."
+        + "\n" + roomReservationData.numberOfGuests + "fő";
     } else if (spaceForText === 2) {
-      reservationText = roomReservationData.guestFirstName.slice(0, 1) + ". " + roomReservationData.guestLastName.slice(0, 6);
+      reservationText = roomReservationData.guestFirstName.slice(0, 1) + ". " + roomReservationData.guestLastName.slice(0, 8);
       if (roomReservationData.guestLastName.length > 6) reservationText += ".";
+      reservationText += "\n" + roomReservationData.numberOfGuests + "fő"
     } else if (spaceForText === 3 && (roomReservationData.guestFirstName.length + roomReservationData.guestLastName.length) > 10) {
-      reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName;
+      reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName
+        + "\n" + roomReservationData.numberOfGuests + "fő";
     } else {
-      reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName + " " + roomReservationData.numberOfGuests + "fő" ;
+      reservationText = roomReservationData.guestFirstName + " " + roomReservationData.guestLastName
+        + "\n" + roomReservationData.numberOfGuests + "fő";
     }
     return reservationText;
   }
@@ -617,6 +635,7 @@ export class HotelBookingsCalendarComponent implements OnInit {
     return roomReservationsToModifiedBooking;
   }
 
+
   private createDayDateString(date: Date) {
     let result: string = '';
     let month = date.getMonth() + 1;
@@ -630,8 +649,6 @@ export class HotelBookingsCalendarComponent implements OnInit {
     result += date.getDate();
     return result;
   }
-
-
   private convertDateStringToDateInRoomBookingDataList() {
     this.roomBookingDataList.forEach(roomBookingData => {
       roomBookingData.roomReservationDataList.forEach(roomReservationData => {

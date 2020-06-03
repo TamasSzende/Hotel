@@ -2,13 +2,11 @@ package com.progmasters.hotel.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.progmasters.hotel.domain.Hotel;
-import com.progmasters.hotel.domain.HotelFeatureType;
-import com.progmasters.hotel.domain.HotelType;
-import com.progmasters.hotel.domain.Room;
+import com.progmasters.hotel.domain.*;
 import com.progmasters.hotel.dto.*;
 import com.progmasters.hotel.repository.HotelRepository;
 import com.progmasters.hotel.repository.RoomRepository;
+import com.progmasters.hotel.repository.RoomReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,11 +32,13 @@ public class HotelService {
 
     private HotelRepository hotelRepository;
     private RoomRepository roomRepository;
+    private RoomReservationRepository roomReservationRepository;
 
     @Autowired
-    public HotelService(RoomRepository roomRepository, HotelRepository hotelRepository) {
+    public HotelService(RoomRepository roomRepository, HotelRepository hotelRepository, RoomReservationRepository roomReservationRepository) {
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
+        this.roomReservationRepository = roomReservationRepository;
     }
 
     public List<Hotel> findAllHotel() {
@@ -130,6 +130,21 @@ public class HotelService {
             hotelDetailItem = new HotelDetailItem(hotelOptional.get());
             List<RoomListItem> rooms = roomRepository.findAllByHotelId(hotelId)
                     .stream()
+                    .map(RoomListItem::new)
+                    .collect(Collectors.toList());
+            hotelDetailItem.setRooms(rooms);
+        }
+        return hotelDetailItem;
+    }
+
+    public HotelDetailItem getFilteredHotelDetailItem(Long hotelId, LocalDate startDate, LocalDate endDate) {
+        HotelDetailItem hotelDetailItem = null;
+        Optional<Hotel> hotelOptional = hotelRepository.findById(hotelId);
+        if (hotelOptional.isPresent()) {
+            hotelDetailItem = new HotelDetailItem(hotelOptional.get());
+            List<RoomListItem> rooms = roomRepository.findAllByHotelId(hotelId)
+                    .stream()
+                    .filter(room -> isRoomFree(room, startDate, endDate))
                     .map(RoomListItem::new)
                     .collect(Collectors.toList());
             hotelDetailItem.setRooms(rooms);
@@ -229,4 +244,9 @@ public class HotelService {
         return hotelImageUrls;
     }
 
+    private boolean isRoomFree(Room room, LocalDate startDate, LocalDate enDate) {
+        List<RoomReservation> roomReservations =
+                this.roomReservationRepository.findAllByRoomAndEndDateAfterAndStartDateBefore(room, startDate, enDate);
+        return roomReservations.isEmpty();
+    }
 }

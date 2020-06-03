@@ -6,7 +6,7 @@
       <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between">
           <div class="col-md-4 mb-3">
-            <label for="numberOfGuests" lass="form-control-label">
+            <label for="numberOfGuests" class="form-control-label">
               Vendégek száma:&nbsp;&nbsp;
             </label>
             <input
@@ -27,25 +27,29 @@
 
             <div class="input-group">
 
-              <label>
+              <label for="bookingDateRange" class="form-control-label">
                 Utazás időpontja:&nbsp;&nbsp;
               </label>
               <div>
-
                 <input
                   placeholder="Válasz időpontot"
                   [satDatepicker]="bookingDateRange"
+                  [matDatepickerFilter]="dateFilter"
                   formControlName="bookingDateRange"
                   id="bookingDateRange"
                   name="bookingDateRange"/>
                 <sat-datepicker #bookingDateRange [rangeMode]="true">
                 </sat-datepicker>
-                <sat-datepicker-toggle matCardImageSmall [for]="bookingDateRange"
-                                       style="float: right; "></sat-datepicker-toggle>
+                <sat-datepicker-toggle [for]="bookingDateRange"
+                                       style="float: right; margin-top: -5px "></sat-datepicker-toggle>
               </div>
+              <small
+                *ngIf="filterForm.get('bookingDateRange').invalid && filterForm.get('bookingDateRange').touched && !filterForm.get('bookingDateRange').errors?.serverError"
+                class="text-danger">
+                Kérlek válasz időpontot!
+              </small>
 
             </div>
-
 
           </div>
 

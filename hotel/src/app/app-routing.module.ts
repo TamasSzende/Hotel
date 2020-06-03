@@ -15,6 +15,7 @@ import {NotfoundComponent} from "./components/notfound/notfound.component";
 
 
 const routes: Routes = [
+  {path: 'hotel/:id/filter', component: HotelDetailsComponent},
   {path: 'hotel/filter', component: HotelListComponent},
   {path: 'hotel/:id', component: HotelDetailsComponent},
   {path: 'hotel', component: HotelListComponent},

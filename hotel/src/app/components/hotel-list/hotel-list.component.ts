@@ -6,7 +6,6 @@ import {PopupService} from "../../services/popup.service";
 import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {LoginService} from "../../services/login.service";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
-import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.model";
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
@@ -25,29 +24,27 @@ export class HotelListComponent implements OnInit {
   hotelList: HotelListItemModel[] = [];
   account: AuthenticatedLoginDetailsModel;
   filterForm: FormGroup;
+  filterData = null;
   hotelFeatureTypeOption: HotelFeatureTypeOptionModel[];
-  flatpickrOptions: FlatpickrOptions;
   listPageNumber: number = 0;
   pageNumbers: number[];
   mapCenter = {
     latitude: 47.497913,
     longitude: 19.040236,
   }
+  dateFilter = (date: Date) =>
+    new Date(date.setHours(0,0,0,0)).getTime() >= new Date().setHours(0,0,0,0);
 
   constructor(private hotelService: HotelService, private route: ActivatedRoute,
               private router: Router, private popupService: PopupService,
               private viewportScroller: ViewportScroller, private loginService: LoginService) {
-    this.flatpickrOptions = {
-      mode: "range",
-      dateFormat: "Y-m-d",
-      minDate: "today",
-    };
+
     this.filterForm = new FormGroup({
       'numberOfGuests': new FormControl(null,
         [Validators.required,
           Validators.min(1)]),
       'bookingDateRange': new FormControl(null,
-        [Validators.required]),
+        Validators.required),
       'hotelFeatures': new FormArray([]),
     })
   }
@@ -89,29 +86,37 @@ export class HotelListComponent implements OnInit {
     if (this.router.url.startsWith('/hotel/filter?')) {
       this.route.queryParams.subscribe(
         queryParams => {
-          let filterData = {
+          this.filterData = {
             numberOfGuests: queryParams['numberOfGuests'],
             startDate: queryParams['startDate'],
             endDate: queryParams['endDate'],
             hotelFeatures: queryParams['hotelFeatures'],
+            listPageNumber: queryParams['listPageNumber'],
           };
-          if (filterData.hotelFeatures == undefined) {
-            filterData.hotelFeatures = '';
+          if (this.filterData.hotelFeatures == undefined) {
+            this.filterData.hotelFeatures = '';
           }
-          this.listPageNumber = queryParams['listPageNumber'];
+          console.log('listpagenumber: ' + this.filterData.listPageNumber);
+          console.log( this.filterData.listPageNumber == undefined);
+          if (this.filterData.listPageNumber == undefined) {
+            this.listPageNumber = 0;
+            console.log('imhere');
+          } else {
+            this.listPageNumber = this.filterData.listPageNumber;
+          }
 
-          this.filterForm.controls['numberOfGuests'].setValue(filterData.numberOfGuests);
+          this.filterForm.controls['numberOfGuests'].setValue(this.filterData.numberOfGuests);
 
           let filterBookingDateRange = {
-            begin: new Date(filterData.startDate),
-            end: new Date(filterData.endDate),
+            begin: new Date(this.filterData.startDate),
+            end: new Date(this.filterData.endDate),
           };
           this.filterForm.controls['bookingDateRange'].setValue(filterBookingDateRange);
 
 
-
-          this.hotelService.getFilteredHotelList(filterData, this.listPageNumber).subscribe(
+          this.hotelService.getFilteredHotelList(this.filterData, this.listPageNumber).subscribe(
             (response: HotelListItemSubListModel) => {
+              console.log('listpagenumber in request: ' + this.listPageNumber);
               this.hotelList = response.hotelSubList;
               this.listPageNumber = response.listPageNumber;
               this.pageNumbers = this.generatePageNumberArray(response.fullNumberOfPages);
@@ -164,7 +169,6 @@ export class HotelListComponent implements OnInit {
   }
 
   filterHotelList() {
-    console.log(this.filterForm.value.bookingDateRange);
     const queryParams = {
       'numberOfGuests': this.filterForm.value.numberOfGuests,
       'startDate': dateToJsonDateString(this.filterForm.value.bookingDateRange.begin),
@@ -204,7 +208,17 @@ export class HotelListComponent implements OnInit {
   }
 
   hotelDetail(id: number): void {
-    this.router.navigate(['/hotel/', id])
+    if (this.filterData) {
+      const queryParams = {
+        'numberOfGuests': this.filterData.numberOfGuests,
+        'startDate': this.filterData.startDate,
+        'endDate': this.filterData.endDate,
+      };
+      this.router.navigate(['/hotel/', id, 'filter'], {queryParams});
+
+    } else {
+      this.router.navigate(['/hotel/', id]);
+    }
   }
 
   getPublicId(imgURL: string) {

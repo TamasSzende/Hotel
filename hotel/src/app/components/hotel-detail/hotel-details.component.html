@@ -133,24 +133,31 @@
           <div class="col-md-4 mb-3">
             <div class="input-group">
               <label>
-                Utazás időpontja:&nbsp;&nbsp;
+                Utazás időpontja:
               </label>
+              <div style="white-space: nowrap">
+                <input
+                  style="display: inline-block"
+                  placeholder="Válasz időpontot"
+                  (dateChange)="getFilteredRoomList()"
+                  [satDatepicker]="bookingDateRange"
+                  [matDatepickerFilter]="dateFilter"
+                  formControlName="bookingDateRange"
+                  id="bookingDateRange"
+                  name="bookingDateRange"/>
+                <sat-datepicker #bookingDateRange [rangeMode]="true" style="display: inline-block">
 
-              <ng2-flatpickr
-                (change)="getFilteredRoomList()"
-                [config]="flatpickrOptions"
-                formControlName="bookingDateRange"
-                id="bookingDateRange"
-                name="bookingDateRange"
-                placeholder="Válasz időpontot!"
-              >
-                <small
-                  *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
-                  class="text-danger">
-                  <br>
-                  Kérlek válasz időpontot!
-                </small>
-              </ng2-flatpickr>
+                </sat-datepicker>
+                <sat-datepicker-toggle matSuffix [for]="bookingDateRange"
+                                       style="margin-top: -5px; display: inline-block">
+                </sat-datepicker-toggle>
+              </div>
+              <small
+                *ngIf="bookingForm.get('bookingDateRange').invalid && bookingForm.get('bookingDateRange').touched && !bookingForm.get('bookingDateRange').errors?.serverError"
+                class="text-danger">
+                <br>
+                Kérlek válasz időpontot!
+              </small>
 
             </div>
           </div>

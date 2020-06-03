@@ -82,13 +82,22 @@ export class HotelService {
     return this.http.get<HotelDetailsModel>(BASE_URL + '/' + id);
   }
 
+  filteredHotelDetail(id: string, filterData: { numberOfGuests: string; startDate: string; endDate: string; roomFeatures?: string }) {
+    let params = new HttpParams()
+      .set('numberOfGuests', filterData.numberOfGuests)
+      .set('startDate', filterData.startDate)
+      .set('endDate', filterData.endDate)
+      .set('roomFeatures', filterData.roomFeatures);
+    return this.http.get<HotelDetailsModel>(BASE_URL + '/' + id + '/filter', {params});
+  }
+
   getHotelShortItem(id: number): Observable<HotelShortItemModel> {
     return this.http.get<HotelShortItemModel>(BASE_URL + '/short/' + id);
   }
-
   uploadImage(formData: FormData, id: number): Observable<string> {
     return this.http.post<string>(BASE_URL + '/uploadImage/' + id, formData);
   }
+
   deleteImage(image: string, hotelIdFromLogin: number) {
     const formData = new FormData();
     formData.append('imageURL', image);

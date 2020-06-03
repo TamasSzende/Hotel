@@ -77,6 +77,14 @@ public class HotelController {
 		return new ResponseEntity<>(hotelService.getPageOfHotelListOrderByBestPrice(listPageNumber, NUM_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
 	}
 
+	@GetMapping("/{id}/filter")
+	public ResponseEntity<HotelDetailItem> getFilteredHotel(
+			@PathVariable Long id,
+			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+		return new ResponseEntity<>(hotelService.getFilteredHotelDetailItem(id, startDate, endDate), HttpStatus.OK);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<HotelDetailItem> getHotel(@PathVariable Long id) {
 		return new ResponseEntity<>(hotelService.getHotelDetailItem(id), HttpStatus.OK);

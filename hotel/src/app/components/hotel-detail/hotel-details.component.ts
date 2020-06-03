@@ -6,7 +6,6 @@ import {RoomService} from "../../services/room.service";
 import {LoginService} from "../../services/login.service";
 import {RoomListItemModel} from "../../models/roomListItem.model";
 import {PopupService} from "../../services/popup.service";
-import {FlatpickrOptions} from "ng2-flatpickr";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BookingService} from "../../services/booking.service";
 import {BookingFormDialogComponent} from "../booking-form-dialog/booking-form-dialog.component";
@@ -18,8 +17,10 @@ import {getPublicId} from "../../utils/cloudinaryPublicIdHandler";
 import {AuthenticatedLoginDetailsModel} from "../../models/authenticatedLoginDetails.model";
 import {LoginComponent} from "../account/login/login.component";
 import {NotificationService} from "../../services/notification.service";
-import {RoomReservationDataModel} from "../../models/roomReservationData.model";
 import {RoomReservationDetailsModel} from "../../models/roomReservationDetails.model";
+import {RouterExtService} from "../../services/routerExtService";
+import {Location} from "@angular/common";
+import {dateToJsonDateString} from "../../utils/dateUtils";
 
 
 @Component({
@@ -37,28 +38,26 @@ export class HotelDetailsComponent implements OnInit {
 
   bookingForm: FormGroup;
   filterForm: FormGroup;
+  dateFilter = (date: Date) =>
+    new Date(date.setHours(0, 0, 0, 0)).getTime() >= new Date().setHours(0, 0, 0, 0);
   roomFeatureTypeOption: RoomFeatureTypeOptionModel[];
-  flatpickrOptions: FlatpickrOptions;
   account: AuthenticatedLoginDetailsModel;
 
   isLoggedIn: boolean = false;
+  filterData = null;
 
   constructor(private  hotelService: HotelService, private roomService: RoomService,
               private bookingService: BookingService, private loginService: LoginService,
               private route: ActivatedRoute, private router: Router, private notificationService: NotificationService,
-              private popupService: PopupService, private dialog: MatDialog) {
-    this.flatpickrOptions = {
-      mode: "range",
-      dateFormat: "Y-m-d",
-      minDate: "today",
-    };
+              private popupService: PopupService, private dialog: MatDialog,
+              private location: Location, private routerExtService: RouterExtService,) {
+
     this.bookingForm = new FormGroup({
       'numberOfGuests': new FormControl(null,
         [Validators.required,
           Validators.min(1)]),
-      'bookingDateRange': new FormControl([],
-        [Validators.required,
-          Validators.minLength(2)]),
+      'bookingDateRange': new FormControl(null,
+        Validators.required),
       'roomIdList': new FormArray([],
         this.checkBoxValidator),
     });
@@ -104,7 +103,33 @@ export class HotelDetailsComponent implements OnInit {
           const paramMapId = paramMap.get('id');
           if (paramMapId) {
             this.hotelIdFromRoute = paramMapId;
-            this.getHotelDetail(this.hotelIdFromRoute);
+
+            console.log('previous url: ' + this.routerExtService.getPreviousUrl());
+
+            if (this.router.url.includes('filter?')) {
+
+              this.route.queryParams.subscribe(
+                queryParams => {
+                  this.filterData = {
+                    numberOfGuests: queryParams['numberOfGuests'],
+                    startDate: queryParams['startDate'],
+                    endDate: queryParams['endDate'],
+                  };
+
+                  this.bookingForm.controls['numberOfGuests'].setValue(this.filterData.numberOfGuests);
+
+                  let filterBookingDateRange = {
+                    begin: new Date(this.filterData.startDate),
+                    end: new Date(this.filterData.endDate),
+                  };
+                  this.bookingForm.controls['bookingDateRange'].setValue(filterBookingDateRange);
+
+                  this.getFilteredHotelDetail(this.hotelIdFromRoute, this.filterData);
+                }
+              );
+            } else {
+              this.getHotelDetail(this.hotelIdFromRoute);
+            }
           }
         });
     }
@@ -125,13 +150,23 @@ export class HotelDetailsComponent implements OnInit {
     );
   };
 
+  private getFilteredHotelDetail(hotelId: string, filterData: any) {
+    this.hotelService.filteredHotelDetail(hotelId, filterData).subscribe(
+      (response: HotelDetailsModel) => {
+        this.hotel = response;
+        this.createRoomBookingFormArray();
+      }
+    );
+  }
+
   getFilteredRoomList = () => {
     const data = {
-      startDate: this.bookingForm.value.bookingDateRange[0],
-      endDate: this.bookingForm.value.bookingDateRange[1],
+      startDate: this.bookingForm.value.bookingDateRange.begin,
+      endDate: this.bookingForm.value.bookingDateRange.end,
       roomFeatures: this.createRoomFeaturesFilterArrayToSend(),
     };
     if (data.startDate && data.endDate) {
+      this.actualizeURL();
       this.roomService.getFilteredRoomList(this.hotel.id, data).subscribe(
         (response: RoomListItemModel[]) => {
           this.hotel.rooms = response;
@@ -145,10 +180,17 @@ export class HotelDetailsComponent implements OnInit {
     }
   };
 
+  actualizeURL() {
+    let numberOfGuests = this.bookingForm.value.numberOfGuests;
+    let startDate = dateToJsonDateString(this.bookingForm.value.bookingDateRange.begin);
+    let endDate = dateToJsonDateString(this.bookingForm.value.bookingDateRange.end);
+    let newURL = 'hotel/' + this.hotelIdFromRoute + '/filter?numberOfGuests=' + numberOfGuests + '&startDate=' + startDate + '&endDate=' + endDate;
+    this.location.replaceState(newURL);
+  }
+
   resetFilters() {
     this.filterForm.reset();
     //TODO resetelni a naptárat!!!
-    // this.flatpickrInstance.clear();
     this.getFilteredRoomList();
   }
 
@@ -163,9 +205,9 @@ export class HotelDetailsComponent implements OnInit {
       }
     });
 
-    if (this.bookingForm.value.bookingDateRange.length > 1) {
+    if (this.bookingForm.value.bookingDateRange) {
       numberOfNights =
-        Math.round((this.bookingForm.value.bookingDateRange[1].getTime() - this.bookingForm.value.bookingDateRange[0].getTime()) / 86400000);
+        Math.round((this.bookingForm.value.bookingDateRange.end.getTime() - this.bookingForm.value.bookingDateRange.begin.getTime()) / 86400000);
     }
     this.maxNumberOfGuest = maxCapacity;
     this.priceOfBooking = numberOfNights * roomsPricePerNight;
@@ -272,9 +314,9 @@ export class HotelDetailsComponent implements OnInit {
 
   createRoomReservationList(input) {
     let roomReservationList = [];
-    const startDate: Date = input.bookingDateRange[0];
-    const endDate: Date = input.bookingDateRange[1];
-    const numberOfNights =  Math.round((endDate.getTime() - startDate.getTime()) / 86400000);
+    const startDate: Date = input.bookingDateRange.begin;
+    const endDate: Date = input.bookingDateRange.end;
+    const numberOfNights = Math.round((endDate.getTime() - startDate.getTime()) / 86400000);
     this.bookingForm.value.roomIdList.forEach((value, index) => {
         if (value) {
           const room: RoomShortListItemModel = {
@@ -285,7 +327,8 @@ export class HotelDetailsComponent implements OnInit {
             pricePerNight: this.hotel.rooms[index].pricePerNight,
           }
           const roomReservation: RoomReservationDetailsModel = {
-            startDate, endDate, numberOfNights, room};
+            startDate, endDate, numberOfNights, room
+          };
           roomReservationList.push(roomReservation)
         }
       }
@@ -296,10 +339,10 @@ export class HotelDetailsComponent implements OnInit {
   private getFirstStartDate(preRoomReservationList) {
     let firstStartDate = preRoomReservationList[0].startDate;
     preRoomReservationList.forEach(preRoomReservation => {
-        if (preRoomReservation.startDate.getTime() < firstStartDate.getTime()) {
-          firstStartDate = preRoomReservation.startDate;
-        }
-      });
+      if (preRoomReservation.startDate.getTime() < firstStartDate.getTime()) {
+        firstStartDate = preRoomReservation.startDate;
+      }
+    });
     return firstStartDate;
   }
 

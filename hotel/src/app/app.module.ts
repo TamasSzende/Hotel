@@ -95,6 +95,7 @@ export const cloudinary = {
     FooterComponent,
     NotfoundComponent,
     PaginationComponent,
+
   ],
     imports: [
       HttpClientModule,
