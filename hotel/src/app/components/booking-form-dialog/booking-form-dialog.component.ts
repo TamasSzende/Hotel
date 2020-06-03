@@ -47,10 +47,12 @@ export class BookingFormDialogComponent implements OnInit {
   ngOnInit(): void {
     this.loginService.authenticatedLoginDetailsModel.subscribe(
       (response) => {
-        if (response !== null && response.role === "ROLE_USER") {
-          this.username = response.name;
-        }if (response !== null && response.role === "ROLE_HOTELOWNER") {
-          this.bookingStatus = 'hotelOwnerBooking';
+        if (response !== null) {
+          if (response.role === "ROLE_USER") {
+            this.username = response.name;
+          } else if (response.role === "ROLE_HOTELOWNER") {
+            this.bookingStatus = 'hotelOwnerBooking';
+          }
         } else {
           this.router.navigate([''])
         }

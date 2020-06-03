@@ -50,7 +50,7 @@ export class HotelDetailsComponent implements OnInit {
               private bookingService: BookingService, private loginService: LoginService,
               private route: ActivatedRoute, private router: Router, private notificationService: NotificationService,
               private popupService: PopupService, private dialog: MatDialog,
-              private location: Location, private routerExtService: RouterExtService,) {
+              private location: Location,) {
 
     this.bookingForm = new FormGroup({
       'numberOfGuests': new FormControl(null,
@@ -103,8 +103,6 @@ export class HotelDetailsComponent implements OnInit {
           const paramMapId = paramMap.get('id');
           if (paramMapId) {
             this.hotelIdFromRoute = paramMapId;
-
-            console.log('previous url: ' + this.routerExtService.getPreviousUrl());
 
             if (this.router.url.includes('filter?')) {
 
@@ -265,7 +263,7 @@ export class HotelDetailsComponent implements OnInit {
           if (response) {
             this.loginService.authenticatedLoginDetailsModel.subscribe(
               (account) => {
-                if (account && account.role === "ROLE_USER") {
+               if (account && account.role === "ROLE_USER") {
                   this.account = account;
                   this.isLoggedIn = true;
                 }

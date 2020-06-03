@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {HotelService} from "../../services/hotel.service";
 import {HotelListItemModel} from "../../models/hotelListItem.model";
@@ -11,7 +11,6 @@ import {HotelFeatureTypeOptionModel} from "../../models/hotelFeatureTypeOption.m
 import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {dateToJsonDateString} from "../../utils/dateUtils";
 import {HotelListItemSubListModel} from "../../models/hotelListItemSubList.model";
-import {scrollToTheTop} from "../../utils/smoothScroller";
 import {ViewportScroller} from "@angular/common";
 
 @Component({
@@ -19,7 +18,7 @@ import {ViewportScroller} from "@angular/common";
   templateUrl: './hotel-list.component.html',
   styleUrls: ['./hotel-list.component.css']
 })
-export class HotelListComponent implements OnInit {
+export class HotelListComponent implements OnInit, OnDestroy {
 
   hotelList: HotelListItemModel[] = [];
   account: AuthenticatedLoginDetailsModel;
@@ -47,6 +46,10 @@ export class HotelListComponent implements OnInit {
         Validators.required),
       'hotelFeatures': new FormArray([]),
     })
+  }
+
+  ngOnDestroy() {
+    this.listPageNumber = 0;
   }
 
   ngOnInit(): void {
@@ -250,3 +253,4 @@ export class HotelListComponent implements OnInit {
 
   }
 }
+

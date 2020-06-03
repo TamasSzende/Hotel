@@ -82,12 +82,11 @@ export class HotelService {
     return this.http.get<HotelDetailsModel>(BASE_URL + '/' + id);
   }
 
-  filteredHotelDetail(id: string, filterData: { numberOfGuests: string; startDate: string; endDate: string; roomFeatures?: string }) {
+  filteredHotelDetail(id: string, filterData: { numberOfGuests: string; startDate: string; endDate: string }) {
     let params = new HttpParams()
       .set('numberOfGuests', filterData.numberOfGuests)
       .set('startDate', filterData.startDate)
-      .set('endDate', filterData.endDate)
-      .set('roomFeatures', filterData.roomFeatures);
+      .set('endDate', filterData.endDate);
     return this.http.get<HotelDetailsModel>(BASE_URL + '/' + id + '/filter', {params});
   }
 

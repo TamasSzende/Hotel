@@ -3,8 +3,9 @@ import {BehaviorSubject} from "rxjs";
 import {RoomBookingDataModel} from "../../../models/roomBookingData.model";
 import {RoomService} from "../../../services/room.service";
 
-const START_DAY_BEFORE_TODAY = 20;
-const END_DAY_AFTER_TODAY = 5;
+const START_DAY_BEFORE_TODAY = 5;
+const END_DAY_AFTER_TODAY = 23;
+const DAY_STEP = 24;
 
 @Component({
   selector: 'hotel-bookings-statistics',
@@ -18,8 +19,10 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   roomBookingDataListPrev: RoomBookingDataModel[];
   @ViewChild('canvas', {static: true})
   canvas: ElementRef<HTMLCanvasElement>;
-  startDate: Date = new Date();
-  endDate: Date = new Date();
+  baseDate: Date;
+  startDate: Date;
+  endDate: Date;
+  today: Date;
   chartType: string = 'bar';
   chartColors: Array<any> = [
     {
@@ -60,13 +63,22 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setToday();
+    this.setBaseDateToday();
     this.hotelId.subscribe((id) => {
       if (id != 0) {
         this.doSomething(id);
       }
     });
   }
+  setToday() {
+    this.today = new Date();
+    this.today.setHours(0, 0, 0, 0);
+  }
 
+  setBaseDateToday() {
+    this.baseDate = new Date(this.today.getTime());
+  }
 
   doSomething(hotelId: number) {
     this.setStartAndEndDate();
@@ -99,12 +111,16 @@ export class HotelBookingsStatisticsComponent implements OnInit {
   }
 
   setStartAndEndDate() {
-    let today = new Date();
-    this.startDate.setDate(today.getDate() - START_DAY_BEFORE_TODAY);
-    this.endDate.setDate(today.getDate() + END_DAY_AFTER_TODAY);
+    this.startDate = new Date(this.baseDate.getTime());
+    this.endDate = new Date(this.baseDate.getTime());
+    this.startDate.setDate(this.startDate.getDate() - START_DAY_BEFORE_TODAY);
+    this.endDate.setDate(this.endDate.getDate() + END_DAY_AFTER_TODAY);
   }
 
   private createDayList() {
+    this.chartLabels = [];
+    this.days = [];
+    this.previousYearsDays = [];
     for (let actualDate = new Date(this.startDate.getTime()); actualDate.getTime() <= this.endDate.getTime(); actualDate.setDate(actualDate.getDate() + 1)) {
       this.days.push(actualDate.getTime());
       let previousYearDay = new Date(actualDate.getTime());
@@ -112,6 +128,39 @@ export class HotelBookingsStatisticsComponent implements OnInit {
       this.previousYearsDays.push(previousYearDay.getTime());
       this.chartLabels.push(this.createDayDateString(actualDate));
     }
+  }
+
+  goBack() {
+    this.baseDate.setDate(this.baseDate.getDate() - DAY_STEP);
+    this.setStartAndEndDate();
+    this.createDayList();
+    this.hotelId.subscribe((id) => {
+      if (id != 0) {
+        this.getRoomBookingDataList(id);
+      }
+    });
+  }
+
+  goActual() {
+    this.setBaseDateToday();
+    this.setStartAndEndDate();
+    this.createDayList();
+    this.hotelId.subscribe((id) => {
+      if (id != 0) {
+        this.getRoomBookingDataList(id);
+      }
+    });
+  }
+
+  goNext() {
+    this.baseDate.setDate(this.baseDate.getDate() + DAY_STEP);
+    this.setStartAndEndDate();
+    this.createDayList();
+    this.hotelId.subscribe((id) => {
+      if (id != 0) {
+        this.getRoomBookingDataList(id);
+      }
+    });
   }
 
   private drawTodayLine(todayXOffset: number) {
@@ -126,6 +175,8 @@ export class HotelBookingsStatisticsComponent implements OnInit {
 
 
   calculateIncomeInInterval() {
+    this.actualYearsIncomes = [];
+    this.previousYearsIncomes = [];
     this.days.forEach((day) => {
       this.actualYearsIncomes.push(this.calculateDailyIncome(new Date(day), this.roomBookingDataList));
     });

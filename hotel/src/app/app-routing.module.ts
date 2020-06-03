@@ -15,6 +15,7 @@ import {NotfoundComponent} from "./components/notfound/notfound.component";
 
 
 const routes: Routes = [
+  {path: '', component: HomeComponent},
   {path: 'hotel/:id/filter', component: HotelDetailsComponent},
   {path: 'hotel/filter', component: HotelListComponent},
   {path: 'hotel/:id', component: HotelDetailsComponent},
@@ -30,7 +31,6 @@ const routes: Routes = [
   {path: 'admin/hotel-update', component: HotelFormComponent},
   {path: 'admin/hotel', component: HotelDetailsComponent},
   {path: 'login/:token', component: ConfirmationComponent},
-  {path: '', component: HomeComponent},
   {path: '**', component: NotfoundComponent},
 ];
 
