@@ -52,7 +52,7 @@ public class BookingService {
         if (hotelId == null) return null;
 
         //Check the time: later than now, end is later then start (and not equal)
-        if (!validateReservationTime(bookingCreateItem)) return null;
+//        if (!validateReservationTime(bookingCreateItem)) return null;
 
         //Check the rooms are free and exist (and create RoomReservation List)
         List<RoomReservation> roomReservations = getRoomReservationsAndValidate(bookingCreateItem, booking);
@@ -67,11 +67,11 @@ public class BookingService {
         roomReservations.forEach(this.roomReservationRepository::save);
         this.bookingRepository.save(booking);
 
-        if (booking.getGuest() != null) {
-            emailService.sendMailAtBooking(booking.getGuest());
-        } else {
-            emailService.sendMailAtBookingByHotelOwner(booking.getEmail(), booking.getFirstName(), booking.getLastName());
-        }
+//        if (booking.getGuest() != null) {
+//            emailService.sendMailAtBooking(booking.getGuest());
+//        } else {
+//            emailService.sendMailAtBookingByHotelOwner(booking.getEmail(), booking.getFirstName(), booking.getLastName());
+//        }
 
 
         return booking.getId();

@@ -43,6 +43,8 @@ public class DataController {
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
 
+    private final static String DUMP_SQL_FILE = "hotel-2020_06_03-dump.sql";
+
     @Value("${spring.datasource.url}")
     private String url;
 
@@ -127,7 +129,7 @@ public class DataController {
     public boolean restoreDatabaseFromBackupWithCommandLine() {
         System.out.println("futok");
         try {
-            File resourceFile = loadFileFromResources("hotel-2020_05_07-dump.sql");
+            File resourceFile = loadFileFromResources(DUMP_SQL_FILE);
             String source = resourceFile.getPath();
             String executableSQL = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysql";
             String dbName = "hotel";
@@ -144,7 +146,7 @@ public class DataController {
 
     @Scheduled(cron = "0 0 0 * * *")
     public boolean restoreDatabaseFromBackupWithJDBC() {
-        File resourceFile = loadFileFromResources("hotel-2020_05_07-dump.sql");
+        File resourceFile = loadFileFromResources(DUMP_SQL_FILE);
         String[] commands = readSQLCommandsFromFile(resourceFile);
         boolean result = false;
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
