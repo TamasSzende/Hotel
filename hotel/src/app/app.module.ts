@@ -54,7 +54,6 @@ import {
   SatDatepickerModule,
   SatNativeDateModule
 } from "saturn-datepicker";
-import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from "@angular/material-moment-adapter";
 import {APP_DATE_FORMATS, MyDateAdapter} from "./utils/myDateAdapter";
 
 export const cloudinary = {

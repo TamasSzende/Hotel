@@ -1,9 +1,22 @@
-<div class="container" style="padding-top: 30px;  margin-left: auto; margin-right: auto;">
+<div class="sidenav">
+  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [fitBounds]="hotelList.length > 1"
+           [zoom]="11">
+    <agm-o
+    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude"
+                [agmFitBounds]="true"
+
+                (markerClick)="goToHotel(hotel.id)" [title]="hotel.name">
+    </agm-marker>
+  </agm-map>
+</div>
+
+<div style="width: 62%">
+<div class="container" style="padding-top: 30px; padding-left: 25px; margin-left: auto; margin-right: auto;">
 
   <form [formGroup]="filterForm">
 
     <div class="card bg-light mb-3">
-      <div class="card-body">
+      <div class="card-body" >
         <div class="d-flex flex-wrap justify-content-between">
           <div class="col-md-4 mb-3">
             <label for="numberOfGuests" class="form-control-label">
@@ -53,12 +66,12 @@
 
           </div>
 
-          <div class="col-md-4 mb-3 text-right">
+          <div class="col-md-4 mb-3 text-right align-text-bottom" style="vertical-align: bottom">
 
-            <button (click)="filterHotelList()" class="btn btn-primary mr-4">
+            <button (click)="filterHotelList()" class="btn btn-primary mr-4" style="vertical-align: bottom">
               Keresés
             </button>
-            <button (click)="backToHotelList()" class="btn btn-outline-primary mr-4">
+            <button (click)="backToHotelList()" class="btn btn-outline-primary mr-4" >
               Teljes lista
             </button>
 
@@ -88,13 +101,6 @@
     </div>
   </form>
 
-  <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude" [fitBounds]="hotelList.length > 1"
-           [zoom]="11">
-    <agm-marker *ngFor="let hotel of hotelList" [latitude]="hotel?.latitude" [longitude]="hotel?.longitude"
-                [agmFitBounds]="true"
-                (markerClick)="goToHotel(hotel.id)" [title]="hotel.name">
-    </agm-marker>
-  </agm-map>
 
   <br>
 
@@ -111,7 +117,7 @@
         </cl-image>
       </div>
       <div class="col-md-8">
-        <div class="card-body">
+        <div class="card-body" style="padding-top: 10px;">
           <div class="card-title">
             <div class="row">
               <div class="col-md-9">
@@ -121,14 +127,14 @@
                   Address: {{hotel?.postalCode}}  {{hotel?.city}}, {{hotel?.streetAddress}}
                 </h6>
               </div>
-              <div class="col-md-3">
+              <div class="float-right">
                 <h4 class="text-right"><span class="badge badge-primary">{{hotel?.avgRate}}</span></h4>
                 <h5 class="text-right">{{hotel?.bestPricePerNightPerPerson.toLocaleString('hu-HU')}} Ft/fő/éj</h5>
               </div>
             </div>
           </div>
 
-          <p class="card-text">
+          <p class="card-text" style="margin-top:-10px">
             {{ hotel?.shortDescription}}
           </p>
 
@@ -173,4 +179,8 @@
 
     </ul>
   </nav>
+</div>
+
+  <br>
+
 </div>
