@@ -20,7 +20,6 @@ import {MaterialModule} from "./material.module";
 import {MDBBootstrapModule} from "angular-bootstrap-md";
 import {Cloudinary} from 'cloudinary-core/cloudinary-core-shrinkwrap';
 import {CloudinaryModule} from "@cloudinary/angular-5.x";
-import {Ng2FlatpickrModule} from "ng2-flatpickr";
 import {BookingFormDialogComponent} from "./components/booking-form-dialog/booking-form-dialog.component";
 import {LoginComponent} from "./components/account/login/login.component";
 import {HttpRequestInterceptor} from "./utils/httpRequestInterceptor";
@@ -50,11 +49,11 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
   SatDatepickerModule,
   SatNativeDateModule
 } from "saturn-datepicker";
 import {APP_DATE_FORMATS, MyDateAdapter} from "./utils/myDateAdapter";
+import {AgmOverlays} from "agm-overlays";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -107,9 +106,9 @@ export const cloudinary = {
       MatDialogModule,
       MDBBootstrapModule.forRoot(),
       CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
-      Ng2FlatpickrModule,
       FileUploadModule,
       AgmCoreModule.forRoot({apiKey: 'AIzaSyAVS5hNJXgq4uTvWGtWC7WNflBriAtyjSQ'}),
+      AgmOverlays,
       MatDatepickerModule,
       SatNativeDateModule,
       SatDatepickerModule,

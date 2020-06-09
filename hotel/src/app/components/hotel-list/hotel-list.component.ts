@@ -12,6 +12,9 @@ import {HotelFormDataModel} from "../../models/hotelFormData.model";
 import {dateToJsonDateString} from "../../utils/dateUtils";
 import {HotelListItemSubListModel} from "../../models/hotelListItemSubList.model";
 import {ViewportScroller} from "@angular/common";
+import {LatLngBounds} from "@agm/core";
+
+declare var google: any;
 
 @Component({
   selector: 'app-hotel-list',
@@ -31,6 +34,8 @@ export class HotelListComponent implements OnInit, OnDestroy {
     latitude: 47.497913,
     longitude: 19.040236,
   }
+  mapBounds: LatLngBounds;
+  hoveredHotelId = -1;
   dateFilter = (date: Date) =>
     new Date(date.setHours(0,0,0,0)).getTime() >= new Date().setHours(0,0,0,0);
 
@@ -99,11 +104,8 @@ export class HotelListComponent implements OnInit, OnDestroy {
           if (this.filterData.hotelFeatures == undefined) {
             this.filterData.hotelFeatures = '';
           }
-          console.log('listpagenumber: ' + this.filterData.listPageNumber);
-          console.log( this.filterData.listPageNumber == undefined);
           if (this.filterData.listPageNumber == undefined) {
             this.listPageNumber = 0;
-            console.log('imhere');
           } else {
             this.listPageNumber = this.filterData.listPageNumber;
           }
@@ -119,8 +121,8 @@ export class HotelListComponent implements OnInit, OnDestroy {
 
           this.hotelService.getFilteredHotelList(this.filterData, this.listPageNumber).subscribe(
             (response: HotelListItemSubListModel) => {
-              console.log('listpagenumber in request: ' + this.listPageNumber);
               this.hotelList = response.hotelSubList;
+              this.createMapBounds();
               this.listPageNumber = response.listPageNumber;
               this.pageNumbers = this.generatePageNumberArray(response.fullNumberOfPages);
             }
@@ -134,6 +136,7 @@ export class HotelListComponent implements OnInit, OnDestroy {
           this.hotelService.listHotel(this.listPageNumber).subscribe(
             (response: HotelListItemSubListModel) => {
               this.hotelList = response.hotelSubList;
+              this.createMapBounds();
               this.listPageNumber = response.listPageNumber;
               this.pageNumbers = this.generatePageNumberArray(response.fullNumberOfPages);
             }
@@ -142,6 +145,14 @@ export class HotelListComponent implements OnInit, OnDestroy {
       );
     }
   };
+
+  createMapBounds() {
+    this.mapBounds = new google.maps.LatLngBounds();
+    this.hotelList.forEach(hotel => {
+      this.mapBounds.extend(new google.maps.LatLng(hotel.latitude - 0.003, hotel.longitude - 0.0030))
+      this.mapBounds.extend(new google.maps.LatLng(hotel.latitude + 0.003, hotel.longitude + 0.0030))
+    });
+  }
 
   onPageNumClick(pageNum: number) {
     if (this.router.url.startsWith('/hotel/filter?')) {
@@ -251,6 +262,14 @@ export class HotelListComponent implements OnInit, OnDestroy {
     this.viewportScroller.setOffset([0, 80]);
     this.viewportScroller.scrollToAnchor(String(id));
 
+  }
+
+  setHoveredHotelId(id: number) {
+    this.hoveredHotelId = id;
+  }
+
+  unsetHoveredHotelId(id: number) {
+    this.hoveredHotelId = -1;
   }
 }
 
