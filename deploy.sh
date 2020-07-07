@@ -5,8 +5,8 @@ set -v
 #INIT PROJECTS RELATED INFO
 #------------- UPDATE ALWAYS CORRESPONDINGLY!
 # pom.xml Artifact id must be 'project'
-#remote_address=hotels-demo.progmasters.hu
-remote_address=18.216.85.81
+remote_address=hotels-demo.progmasters.hu
+#remote_address=18.216.85.81
 frontend_source_location=./hotel/dist/hotel/*
 backend_source_location=./target/project-1.0-SNAPSHOT.jar
 frontend_remote_location=/home/ubuntu/hotel/frontend
