@@ -7,12 +7,11 @@ stages:
 before_script:
 - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
 - eval $(ssh-agent -s)
-- echo "elespeter.pem" | tr -d '\r' | ssh-add - > /dev/null
-- ssh-add <(echo "elespeter.pem")
+- echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+- ssh-add <(echo "$SSH_PRIVATE_KEY")
 - mkdir -p ~/.ssh
 - chmod 600 ~/.ssh
 - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
 
 
 build-be:
