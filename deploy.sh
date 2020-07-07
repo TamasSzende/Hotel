@@ -21,6 +21,6 @@ scp  -o $ssh_options -i $pem_file_full_path -r $frontend_source_location ubuntu@
 scp  -o $ssh_options -i $pem_file_full_path $backend_source_location ubuntu@$remote_address:$backend_remote_location/project-1.0-SNAPSHOT.jar.new
 
 #UPDATE .JAR WITH NEW, AND RESTART
-ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './home/ubuntu/hotel/shutdown.sh'
-ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address 'mv /home/ubuntu/hotel/project-1.0-SNAPSHOT.jar.new /home/ubuntu/hotel/project.jar'
-ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './home/ubuntu/hotel/start.sh'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './hotel/shutdown.sh'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address 'mv /hotel/project-1.0-SNAPSHOT.jar.new /hotel/project.jar'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './hotel/start.sh'
