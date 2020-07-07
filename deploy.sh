@@ -21,4 +21,7 @@ scp  -o $ssh_options -i $pem_file_full_path -r $frontend_source_location ubuntu@
 scp  -o $ssh_options -i $pem_file_full_path $backend_source_location ubuntu@$remote_address:$backend_remote_location/project-1.0-SNAPSHOT.jar.new
 
 #UPDATE .JAR WITH NEW, AND RESTART
-ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './shutdown.sh; mv project-1.0-SNAPSHOT.jar.new project.jar; ./start.sh'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address 'cd $backend_remote_location'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './shutdown.sh'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address 'mv project-1.0-SNAPSHOT.jar.new project.jar'
+ssh  -o $ssh_options -i $pem_file_full_path ubuntu@$remote_address './start.sh'
