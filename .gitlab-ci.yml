@@ -1,6 +1,6 @@
-SERVER_SSH_PRIVATE_KEY=elespeter.pem
-
 image: maven:3.6.1-jdk-11-slim
+
+SERVER_SSH_PRIVATE_KEY=elespeter.pem
 
 stages:
 - build
