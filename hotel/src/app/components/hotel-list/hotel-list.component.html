@@ -2,7 +2,7 @@
 
 <div class="sidenav">
   <agm-map [latitude]="mapCenter.latitude" [longitude]="mapCenter.longitude"
-           [zoom]="11" [fitBounds]="mapBounds">
+            [fitBounds]="mapBounds">
 
     <agm-overlay *ngFor="let hotel of hotelList"
                  [latitude]="hotel?.latitude"

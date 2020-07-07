@@ -259,7 +259,7 @@ export class HotelListComponent implements OnInit, OnDestroy {
   // }
 
   goToHotel(id: number) {
-    this.viewportScroller.setOffset([0, 80]);
+    this.viewportScroller.setOffset([0, 70]);
     this.viewportScroller.scrollToAnchor(String(id));
 
   }
