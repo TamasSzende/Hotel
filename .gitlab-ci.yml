@@ -30,6 +30,8 @@ build-fe:
       expire_in: 1 days
       paths:
           - hotel/dist
+    only: [master]
+
 
         
     
