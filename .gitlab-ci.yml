@@ -12,7 +12,7 @@ build-be:
     artifacts:
         expire_in: 1 days
         paths:
-            - target/prevmed-0.0.1-SNAPSHOT.jar
+            - target/project-1.0-SNAPSHOT.jar
     only: [master]
 
 build-fe:
@@ -32,6 +32,9 @@ build-fe:
           - hotel/dist
     only: [master]
 
-
+deploy:
+    stage: deploy
+    script: 
+        - ./deploy.sh
         
     
