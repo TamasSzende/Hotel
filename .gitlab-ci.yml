@@ -1,8 +1,21 @@
+SERVER_SSH_PRIVATE_KEY=elespeter.pem
+
 image: maven:3.6.1-jdk-11-slim
 
 stages:
 - build
 - deploy
+
+before_script:
+- 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+- eval $(ssh-agent -s)
+- echo "$SERVER_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+- ssh-add <(echo "$SERVER_SSH_PRIVATE_KEY")
+- mkdir -p ~/.ssh
+- chmod 600 ~/.ssh
+- '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+
 
 build-be:
     stage: build
