@@ -35,7 +35,6 @@ build-fe:
 deploy:
     stage: deploy
     script:
-        - cd ..
         - chmod +x ./deploy.sh
         - ./deploy.sh
         
