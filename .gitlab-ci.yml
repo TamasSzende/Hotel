@@ -35,7 +35,7 @@ build-fe:
         - echo "Building Frontend"
         - cd hotel
         - npm i --quiet
-        - npm run build --prod --quiet
+        - npm run build --prod
     artifacts:
       expire_in: 1 days
       paths:
