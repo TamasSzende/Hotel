@@ -43,10 +43,8 @@ public class RegistrationController {
     //----------SEND MAIL AND CREATE USER AT REGISTRATION----------
 
     @PostMapping("/user")
-    public ResponseEntity<Void> createNewUser(@RequestHeader @Valid RegistrationDetails registrationDetails) throws Exception {
+    public ResponseEntity<Void> createNewUser(@RequestBody @Valid RegistrationDetails registrationDetails) throws Exception {
         logger.info("New mail added");
-        System.out.println(registrationDetails);
-
         accountService.saveUserRegistration(registrationDetails);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

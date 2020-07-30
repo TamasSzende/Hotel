@@ -40,13 +40,20 @@ public class AccountService {
     //----------REGISTRATION  -> SAVE A USER----------
 
     public void saveUserRegistration(RegistrationDetails registrationDetails) throws Exception {
-        registrationDetails.setPassword(passwordEncoder.encode(registrationDetails.getPassword()));
-        Account account = new Account(registrationDetails);
-        account.setRole(Role.ROLE_USER);
-        accountRepository.save(account);
-        ConfirmationToken confirmationToken = new ConfirmationToken(account);
-        confirmationTokenRepository.save(confirmationToken);
-        emailService.sendConfirmationMail(account, confirmationToken);
+        Account otherAccount = accountRepository.findByEmail(registrationDetails.getEmail());
+        if (otherAccount == null) {
+            registrationDetails.setPassword(passwordEncoder.encode(registrationDetails.getPassword()));
+            Account account = new Account(registrationDetails);
+            account.setRole(Role.ROLE_USER);
+            accountRepository.save(account);
+            ConfirmationToken confirmationToken = new ConfirmationToken(account);
+            confirmationTokenRepository.save(confirmationToken);
+
+            emailService.sendConfirmationMail(account, confirmationToken);
+
+        } else {
+            throw new Exception("Mail already taken!");
+        }
     }
 
     public void saveHotelOwnerRegistration(RegistrationDetails registrationDetails) throws Exception {
