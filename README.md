@@ -19,6 +19,6 @@ Then you have to move  into the fronted directory ( ..\hotel ), and install all 
 
 If you would like to visualize the Google maps, please use your own API key. And if you got one, create a GoogleApiKey.ts file in your frontend directory, and write the follow in it: 
 export const googleApiKey ={
- 	 apiKey: 'AIzaSyAVS5hNJXgq4uTvWGtWC7WNflBriAtyjSQ'
+ 	 apiKey: 'YourApiKey'
 };
 
