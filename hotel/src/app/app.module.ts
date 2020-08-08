@@ -54,6 +54,7 @@ import {
 } from "saturn-datepicker";
 import {APP_DATE_FORMATS, MyDateAdapter} from "./utils/myDateAdapter";
 import {AgmOverlays} from "agm-overlays";
+import {googleApiKey} from "../environments/GoogleApiKey";
 
 export const cloudinary = {
   Cloudinary: Cloudinary
@@ -107,7 +108,7 @@ export const cloudinary = {
       MDBBootstrapModule.forRoot(),
       CloudinaryModule.forRoot(cloudinary, {cloud_name: 'doaywchwk'}),
       FileUploadModule,
-      AgmCoreModule.forRoot({apiKey: 'AIzaSyAVS5hNJXgq4uTvWGtWC7WNflBriAtyjSQ'}),
+      AgmCoreModule.forRoot({apiKey: googleApiKey.apiKey}),
       AgmOverlays,
       MatDatepickerModule,
       SatNativeDateModule,
