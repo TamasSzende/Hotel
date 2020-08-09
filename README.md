@@ -2,7 +2,7 @@ Created an online hotel reservation website during my time at PROGmasters Co.
 
  
 
-**Methodology**
+### **Methodology**
 
 We are a group of 3 developers using **Agile Scrum** methodology.
 
@@ -24,9 +24,9 @@ sudo apt install -y nodejs
 
 - Windows & Mac - [download the installer](https://nodejs.org/en/#download)
 
-Then you have to move into the fronted directory ( ..\hotel ), and install all modules listed as dependencies in `**[package.json](https://docs.npmjs.com/files/package.json)**`, using the following command:
+Then you have to move into the fronted directory ( ..\hotel ), and install all modules listed as dependencies in "package.json", using the following command:
 
-·     npm install
+- ​	npm install
 
  
 
