@@ -18,9 +18,9 @@ To run the Angular frontend section, first you have to install N ode.js on your 
 
 - Linux - type the following     commands in the terminal:
 
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 
-sudo apt install -y nodejs
+  sudo apt install -y nodejs
 
 - Windows & Mac - [download the installer](https://nodejs.org/en/#download)
 
@@ -32,7 +32,7 @@ Then you have to move into the fronted directory ( ..\hotel ), and install all m
 
  
 
-If you would like to visualize the Google maps, please use your own API key. And if you got one, create a GoogleApiKey.ts file in your frontend directory, and write the follow in it: 
+If you would like to visualize the Google maps, please use your own API key. After you got one, create a GoogleApiKey.ts file inside frontend (..\environments) directory, and write the key into it, like: 
 
 export const ***googleApiKey\*** ={
         apiKey: 'YourApiKey'
